@@ -22,6 +22,9 @@
 hs_err_pid*
 
 #FRC
-/build
-/dist
+/build/
+/dist/
+/bin/
 build.xml
+.project
+
