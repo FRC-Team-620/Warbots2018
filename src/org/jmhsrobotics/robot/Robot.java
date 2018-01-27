@@ -7,10 +7,10 @@
 
 package org.jmhsrobotics.robot;
 
-import org.jmhsrobotics.DashboardControl;
 import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.modules.AutoSwitcher;
+import org.jmhsrobotics.modules.DashboardControl;
 import org.jmhsrobotics.modules.DriveStraight;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.OperatorInterface;

@@ -1,9 +1,8 @@
-package org.jmhsrobotics;
+package org.jmhsrobotics.modules;
 
 import java.util.Optional;
 
 import org.jmhsrobotics.hardwareinterface.Drive;
-import org.jmhsrobotics.modules.SubsystemManager;
 import org.jmhsrobotics.modulesystem.CommandModule;
 import org.jmhsrobotics.modulesystem.Submodule;
 
