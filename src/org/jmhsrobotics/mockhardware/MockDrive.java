@@ -1,9 +1,9 @@
 package org.jmhsrobotics.mockhardware;
 
 import org.jmhsrobotics.hardwareinterface.WheelSwitchingDrive;
+import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.WheelConfiguration;
-import org.jmhsrobotics.modulesystem.Module;
-import org.jmhsrobotics.util.Angle;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;

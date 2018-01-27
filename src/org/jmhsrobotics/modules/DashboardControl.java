@@ -2,9 +2,10 @@ package org.jmhsrobotics.modules;
 
 import java.util.Optional;
 
+import org.jmhsrobotics.core.modules.SubsystemManager;
+import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.Drive;
-import org.jmhsrobotics.modulesystem.CommandModule;
-import org.jmhsrobotics.modulesystem.Submodule;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

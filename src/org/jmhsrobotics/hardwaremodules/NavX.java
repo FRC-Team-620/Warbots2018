@@ -1,10 +1,10 @@
 package org.jmhsrobotics.hardwaremodules;
 
+import org.jmhsrobotics.core.modulesystem.SensorModule;
+import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.Barometer;
 import org.jmhsrobotics.hardwareinterface.Gyro;
-import org.jmhsrobotics.modulesystem.SensorModule;
-import org.jmhsrobotics.modulesystem.annotations.HardwareModule;
-import org.jmhsrobotics.util.Angle;
 
 import com.kauailabs.navx.frc.AHRS;
 

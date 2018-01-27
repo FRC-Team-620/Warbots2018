@@ -1,8 +1,8 @@
 package org.jmhsrobotics.modules;
 
-import org.jmhsrobotics.modulesystem.Module;
-import org.jmhsrobotics.modulesystem.Submodule;
-import org.jmhsrobotics.modulesystem.annotations.CommandFactoryModule;
+import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.modulesystem.annotations.CommandFactoryModule;
 
 import edu.wpi.first.wpilibj.command.Command;
 

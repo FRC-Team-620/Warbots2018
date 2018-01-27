@@ -1,8 +1,8 @@
 package org.jmhsrobotics.modules.autonomous;
 
+import org.jmhsrobotics.core.modulesystem.AutonomousCommand;
+import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.modules.DriveStraightDistance;
-import org.jmhsrobotics.modulesystem.AutonomousCommand;
-import org.jmhsrobotics.modulesystem.Submodule;
 
 public class DriveStraightAutonomous extends AutonomousCommand
 {

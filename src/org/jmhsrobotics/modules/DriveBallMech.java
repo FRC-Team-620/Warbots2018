@@ -1,6 +1,6 @@
 package org.jmhsrobotics.modules;
 
-import org.jmhsrobotics.modulesystem.ControlSchemeModule;
+import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 
 public class DriveBallMech extends ControlSchemeModule
 {

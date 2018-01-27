@@ -1,6 +1,6 @@
-package org.jmhsrobotics.modulesystem;
+package org.jmhsrobotics.core.modulesystem;
 
-import org.jmhsrobotics.modules.OperatorInterface;
+import org.jmhsrobotics.core.modules.OperatorInterface;
 
 import edu.wpi.first.wpilibj.command.Command;
 

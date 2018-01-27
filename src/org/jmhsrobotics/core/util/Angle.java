@@ -1,4 +1,4 @@
-package org.jmhsrobotics.util;
+package org.jmhsrobotics.core.util;
 
 public class Angle
 {

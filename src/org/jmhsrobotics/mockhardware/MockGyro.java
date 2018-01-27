@@ -2,10 +2,10 @@ package org.jmhsrobotics.mockhardware;
 
 import java.util.Optional;
 
+import org.jmhsrobotics.core.modulesystem.SensorModule;
+import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.Gyro;
-import org.jmhsrobotics.modulesystem.SensorModule;
-import org.jmhsrobotics.modulesystem.Submodule;
-import org.jmhsrobotics.util.Angle;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;

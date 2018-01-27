@@ -1,10 +1,10 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.core.modules;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.jmhsrobotics.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.Module;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;

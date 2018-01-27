@@ -1,6 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
-import org.jmhsrobotics.util.Angle;
+import org.jmhsrobotics.core.util.Angle;
 
 import edu.wpi.first.wpilibj.PIDSource;
 

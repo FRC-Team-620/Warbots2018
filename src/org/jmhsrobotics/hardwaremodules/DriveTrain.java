@@ -1,8 +1,8 @@
 package org.jmhsrobotics.hardwaremodules;
 
+import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.Drive;
-import org.jmhsrobotics.modulesystem.Module;
-import org.jmhsrobotics.modulesystem.annotations.HardwareModule;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;

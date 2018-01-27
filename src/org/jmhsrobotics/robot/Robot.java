@@ -8,17 +8,17 @@
 package org.jmhsrobotics.robot;
 
 import org.jmhsrobotics.hardwaremodules.NavX;
+import org.jmhsrobotics.core.modules.OperatorInterface;
+import org.jmhsrobotics.core.modules.SubsystemManager;
+import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.ModuleManager;
+import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.DashboardControl;
 import org.jmhsrobotics.modules.DriveStraight;
 import org.jmhsrobotics.modules.DriveWithJoystick;
-import org.jmhsrobotics.modules.OperatorInterface;
-import org.jmhsrobotics.modules.SubsystemManager;
 import org.jmhsrobotics.modules.TurnAngle;
-import org.jmhsrobotics.modulesystem.CommandModule;
-import org.jmhsrobotics.modulesystem.ModuleManager;
-import org.jmhsrobotics.util.HybridRobot;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
 

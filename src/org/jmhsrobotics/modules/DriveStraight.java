@@ -1,11 +1,11 @@
 package org.jmhsrobotics.modules;
 
+import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.modulesystem.annotations.FunctionModule;
+import org.jmhsrobotics.core.util.DummyPIDOutput;
 import org.jmhsrobotics.hardwareinterface.Drive;
 import org.jmhsrobotics.hardwareinterface.Gyro;
-import org.jmhsrobotics.modulesystem.Module;
-import org.jmhsrobotics.modulesystem.Submodule;
-import org.jmhsrobotics.modulesystem.annotations.FunctionModule;
-import org.jmhsrobotics.util.DummyPIDOutput;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;

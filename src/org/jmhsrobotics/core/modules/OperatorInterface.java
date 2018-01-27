@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.core.modules;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
-import org.jmhsrobotics.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.Module;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;

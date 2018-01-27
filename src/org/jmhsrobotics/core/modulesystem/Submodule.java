@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modulesystem;
+package org.jmhsrobotics.core.modulesystem;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;

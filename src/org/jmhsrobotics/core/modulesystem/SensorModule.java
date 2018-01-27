@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modulesystem;
+package org.jmhsrobotics.core.modulesystem;
 
 import java.util.Arrays;
 

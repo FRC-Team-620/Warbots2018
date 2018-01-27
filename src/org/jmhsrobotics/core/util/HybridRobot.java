@@ -1,4 +1,4 @@
-package org.jmhsrobotics.util;
+package org.jmhsrobotics.core.util;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.IterativeRobotBase;

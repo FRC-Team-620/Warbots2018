@@ -2,10 +2,11 @@ package org.jmhsrobotics.modules;
 
 import java.util.Optional;
 
+import org.jmhsrobotics.core.modules.SubsystemManager;
+import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
+import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.Drive;
-import org.jmhsrobotics.modulesystem.ControlSchemeModule;
-import org.jmhsrobotics.modulesystem.Submodule;
-import org.jmhsrobotics.util.Angle;
 
 import edu.wpi.first.wpilibj.Joystick;
 

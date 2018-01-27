@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.jmhsrobotics.modulesystem.AutonomousCommand;
-import org.jmhsrobotics.modulesystem.Module;
-import org.jmhsrobotics.modulesystem.Submodule;
+import org.jmhsrobotics.core.modulesystem.AutonomousCommand;
+import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.Submodule;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
