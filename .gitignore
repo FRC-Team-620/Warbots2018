@@ -11,3 +11,5 @@
 hs_err_pid*
 /build
 /dist
+/build.xml
+/.project
