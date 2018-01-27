@@ -3,9 +3,10 @@ package org.jmhsrobotics.core.modulesystem;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -14,11 +15,11 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class ModuleManager
 {
-	private Collection<Module> modules;
+	private List<Module> modules;
 
 	public ModuleManager()
 	{
-		modules = new HashSet<>();
+		modules = new ArrayList<>();
 	}
 
 	public static void linkModules(Stream<Module> modules)
@@ -69,7 +70,7 @@ public class ModuleManager
 			});
 
 		module.onLink();
-		modules.add(module);
+		modules.add(0, module);
 	}
 
 	public void addModules(Stream<Module> modules)
@@ -100,7 +101,7 @@ public class ModuleManager
 
 	public <T> Optional<T> getModule(Class<T> type)
 	{
-		return getModules(type).findAny();
+		return getModules(type).findFirst();
 	}
 
 	public AutonomousCommand getModuleTests(Predicate<? super Module> filter, String name)
