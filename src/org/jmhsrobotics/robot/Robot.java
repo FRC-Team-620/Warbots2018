@@ -52,13 +52,13 @@ public class Robot extends HybridRobot
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
-//		modules.addModule(new DashboardControl());
+		modules.addModule(new DashboardControl());
 //		modules.addModule(new DriveStraight());
 //		modules.addModule(new TurnAngle());
 		
-		CommandModule driveWithJoystick = new DriveWithJoystick();
-		modules.addModule(driveWithJoystick);
-		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
+//		CommandModule driveWithJoystick = new DriveWithJoystick();
+//		modules.addModule(driveWithJoystick);
+//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
 		
 //		modules.addModule(modules.getAllModuleTests());
 		autonomous = new AutoSwitcher();

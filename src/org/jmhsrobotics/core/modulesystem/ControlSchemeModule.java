@@ -28,13 +28,13 @@ public abstract class ControlSchemeModule extends CommandModule
 			@Override
 			protected boolean isFinished()
 			{
-				if(timeSinceInitialized() > 30)
-				{
-					ControlSchemeModule.this.cancel();
-					return true;
-				}
-				
-				return false;
+				return timeSinceInitialized() > 30;
+			}
+			
+			@Override
+			protected void end()
+			{
+				ControlSchemeModule.this.cancel();
 			}
 		};
 	}

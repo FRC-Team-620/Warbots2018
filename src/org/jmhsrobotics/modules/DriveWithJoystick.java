@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveWithJoystick extends ControlSchemeModule
 {
-	private @Submodule SubsystemManager subsystems;
+	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule Drive drive;
 	private @Submodule Optional<DriveStraight> straight;
 	private @Submodule Optional<TurnAngle> turnFactory;
@@ -20,7 +20,7 @@ public class DriveWithJoystick extends ControlSchemeModule
 	@Override
 	public void onLink()
 	{
-		requires(subsystems.getSubsystem("DriveTrain"));
+		subsystems.ifPresent(s -> requires(s.getSubsystem("DriveTrain")));
 	}
 
 	@Override
