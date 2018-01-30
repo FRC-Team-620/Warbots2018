@@ -8,6 +8,7 @@ import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.Drive;
 import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -33,8 +34,8 @@ public class DashboardControl extends CommandModule
 		double turn = SmartDashboard.getNumber("Turn Val", 0.);
 		encoders.ifPresent(enc ->
 		{
-			SmartDashboard.putNumber("Left Encoder", enc.getLeft());
-			SmartDashboard.putNumber("Right Encoder", enc.getRight());
+			SmartDashboard.putNumber("Left Encoder", enc.left().getPidValue());
+			SmartDashboard.putNumber("Right Encoder", enc.right().getPidValue());
 		});
 		drive.drive(speed, turn);
 	}
