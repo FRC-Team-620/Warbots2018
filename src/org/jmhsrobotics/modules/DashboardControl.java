@@ -6,6 +6,7 @@ import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.Drive;
+import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,6 +15,7 @@ public class DashboardControl extends CommandModule
 {
 	private @Submodule Drive drive;
 	private @Submodule Optional<SubsystemManager> subsystems;
+	private @Submodule Optional<WheelEncodersInterface> encoders;
 
 	@Override
 	public void onLink()
@@ -29,8 +31,11 @@ public class DashboardControl extends CommandModule
 	{
 		double speed = SmartDashboard.getNumber("Speed Val", 0.);
 		double turn = SmartDashboard.getNumber("Turn Val", 0.);
-		System.out.println("Speed: " + speed + " Turn: " + turn + " Time: " + System.currentTimeMillis());
-		System.out.println(drive);
+		encoders.ifPresent(enc ->
+		{
+			SmartDashboard.putNumber("Left Encoder", enc.getLeft());
+			SmartDashboard.putNumber("Right Encoder", enc.getRight());
+		});
 		drive.drive(speed, turn);
 	}
 

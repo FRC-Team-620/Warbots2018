@@ -10,7 +10,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.SPI.Port;
 
 @HardwareModule
 public class NavX extends SensorModule implements Barometer, Gyro
@@ -19,19 +19,21 @@ public class NavX extends SensorModule implements Barometer, Gyro
 	
 	private AHRS navx;
 
-	public NavX()
+	public NavX(Port port)
 	{
 		super(3);
-		setRefreshRate(40);
+		setRefreshRate(0);
 		
-		navx = new AHRS(Port.kUSB);
+		navx = new AHRS(port);
 		navx.reset();
 	}
 	
 	@Override
 	protected void readSensors(double[] dataArray)
 	{
-		dataArray[ANGLE] = Angle.fromDegrees(navx.getAngle()).measureDegreesUnsigned();
+		double ang = navx.getAngle();
+		System.out.println("Reading NavX at " + ang);
+		dataArray[ANGLE] = Angle.fromDegrees(ang).measureDegreesUnsigned();
 		dataArray[PRESSURE] = navx.getBarometricPressure();
 		dataArray[ALTITUDE] = navx.getAltitude();
 	}
