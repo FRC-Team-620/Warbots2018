@@ -7,19 +7,19 @@
 
 package org.jmhsrobotics.robot;
 
-import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.core.modules.OperatorInterface;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwaremodules.DriveTrain;
+import org.jmhsrobotics.hardwaremodules.NavX;
+import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.DashboardControl;
-import org.jmhsrobotics.modules.DriveStraight;
-import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.TurnAngle;
 
+import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /**
@@ -48,13 +48,16 @@ public class Robot extends HybridRobot
 
 		modules.addModule(new OperatorInterface());
 		modules.addModule(new DriveTrain());
-//		modules.addModule(new NavX());
+		modules.addModule(new NavX(Port.kMXP));
+		modules.addModule(new WheelEncoders());
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
-		modules.addModule(new DashboardControl());
+		CommandModule dbControl = new DashboardControl();
+		modules.addModule(dbControl);
+		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
 //		modules.addModule(new DriveStraight());
-//		modules.addModule(new TurnAngle());
+		modules.addModule(new TurnAngle());
 		
 //		CommandModule driveWithJoystick = new DriveWithJoystick();
 //		modules.addModule(driveWithJoystick);

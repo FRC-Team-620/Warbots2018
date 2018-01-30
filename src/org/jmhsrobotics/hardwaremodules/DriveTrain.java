@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @HardwareModule
 public class DriveTrain implements Drive, Module
@@ -23,6 +24,11 @@ public class DriveTrain implements Drive, Module
 		right.setInverted(true);
 
 		drive = new DifferentialDrive(left, right);
+		
+		SmartDashboard.putNumber("min speed", .35);
+		SmartDashboard.putNumber("speed curve", 1.2);
+		SmartDashboard.putNumber("min turn", .35);
+		SmartDashboard.putNumber("turn curve", 1.2);
 	}
 
 	@Override
@@ -34,6 +40,14 @@ public class DriveTrain implements Drive, Module
 	@Override
 	public void drive(double speed, double turn)
 	{
+		double minSpeed = SmartDashboard.getNumber("min speed", .3);
+		double speedCurve = SmartDashboard.getNumber("speed curve", 1);
+		double minTurn = SmartDashboard.getNumber("min turn", .3);
+		double turnCurve = SmartDashboard.getNumber("turn curve", 1);
+		
+		speed = Math.signum(speed) * (Math.pow(Math.abs(speed), speedCurve) * (1 - minSpeed) + minSpeed);
+		turn = Math.signum(turn) * (Math.pow(Math.abs(turn), turnCurve) * (1 - minTurn) + minTurn);
+		
 		drive.arcadeDrive(speed, turn);
 	}
 }
