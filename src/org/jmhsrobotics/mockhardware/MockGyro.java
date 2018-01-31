@@ -9,11 +9,14 @@ import org.jmhsrobotics.hardwareinterface.Gyro;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public class MockGyro extends SensorModule implements Gyro
 {
 	private @Submodule Optional<MockDrive> drive;
 
+	private String name, system;
+	
 	private PIDSourceType type;
 
 	public MockGyro()
@@ -63,5 +66,35 @@ public class MockGyro extends SensorModule implements Gyro
 	public PIDSource getAnglePIDSource()
 	{
 		return getPIDSource(0);
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String getSubsystem()
+	{
+		return system;
+	}
+
+	@Override
+	public void setSubsystem(String subsystem)
+	{
+		system = subsystem;
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder)
+	{
+		builder.addDoubleProperty("Angle", () -> this.getAngle().measureDegreesUnsigned(), null);
 	}
 }

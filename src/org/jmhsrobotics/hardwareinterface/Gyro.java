@@ -3,9 +3,13 @@ package org.jmhsrobotics.hardwareinterface;
 import org.jmhsrobotics.core.util.Angle;
 
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Sendable;
 
-public interface Gyro
+public interface Gyro extends Sendable
 {
 	public Angle getAngle();
 	public PIDSource getAnglePIDSource();
+	public void setPIDSourceType(PIDSourceType type);
+	public PIDSourceType getPIDSourceType();
 }

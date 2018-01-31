@@ -10,13 +10,11 @@ import edu.wpi.first.wpilibj.interfaces.Gyro;
 public class CorrectiveDrive implements Module, Drive
 {
 	private @Submodule Drive driveTrain;
-	private @Submodule Gyro[] nav;
+	private @Submodule Gyro gyro;
 	
 	@Override
 	public void drive(double speed, double turn)
 	{
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

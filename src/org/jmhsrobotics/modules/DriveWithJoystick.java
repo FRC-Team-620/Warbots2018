@@ -14,7 +14,6 @@ public class DriveWithJoystick extends ControlSchemeModule
 {
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule Drive drive;
-	private @Submodule Optional<DriveStraight> straight;
 	private @Submodule Optional<TurnAngle> turnFactory;
 
 	@Override
@@ -30,23 +29,9 @@ public class DriveWithJoystick extends ControlSchemeModule
 		double speed = -js.getY();
 		double turn = js.getX();
 
-		if (Math.abs(turn) < 0.1) turn = 0;
-		if (Math.abs(speed) < 0.2) speed = 0;
+		if (Math.abs(turn) < 0.2) turn = 0;
+		if (Math.abs(speed) < 0.1) speed = 0;
 
-		if (straight.isPresent() && turn == 0 && speed != 0)
-		{
-			DriveStraight ds = straight.get();
-			
-			if(!ds.isLocked())
-				ds.lock();
-	
-			ds.driveStraight(speed);
-		}
-		else 
-		{
-			straight.ifPresent(DriveStraight::release);
-			drive.drive(-js.getY(), js.getX());
-		}
 		
 		if(js.getRawButton(4))
 			turnFactory.ifPresent(tf -> tf.newInstance(Angle.INVERSE_RIGHT).start());

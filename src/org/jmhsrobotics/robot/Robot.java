@@ -17,6 +17,7 @@ import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.DashboardControl;
+import org.jmhsrobotics.modules.DriveDistance;
 import org.jmhsrobotics.modules.TurnAngle;
 
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -58,6 +59,7 @@ public class Robot extends HybridRobot
 		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
 //		modules.addModule(new DriveStraight());
 		modules.addModule(new TurnAngle());
+		modules.addModule(new DriveDistance());
 		
 //		CommandModule driveWithJoystick = new DriveWithJoystick();
 //		modules.addModule(driveWithJoystick);

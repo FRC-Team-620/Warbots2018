@@ -9,12 +9,16 @@ import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class WheelEncoders extends SensorModule implements WheelEncodersInterface
 {
 	private final static int LEFT = 0, RIGHT = 1, AVERAGE = 2, DIFF = 3;
 	private final static int PID = 0 << 2, DIST = 1 << 2, RATE = 2 << 2, RAW = 3 << 2;
 
+	private String name, system;
+	
 	private final Map<Integer, ToDoubleFunction<Encoder>> operations;
 	
 	private Encoder left;
@@ -23,8 +27,8 @@ public class WheelEncoders extends SensorModule implements WheelEncodersInterfac
 	public WheelEncoders()
 	{
 		super(16);
-		left = new Encoder(2, 3);
-		right = new Encoder(0, 1, true);
+		left = new Encoder(2, 3, true);
+		right = new Encoder(0, 1);
 		setPIDSourceType(PIDSourceType.kDisplacement);
 		
 		operations = new HashMap<>();
@@ -32,6 +36,8 @@ public class WheelEncoders extends SensorModule implements WheelEncodersInterfac
 		operations.put(DIST, Encoder::getDistance);
 		operations.put(RATE, Encoder::getRate);
 		operations.put(RAW, Encoder::getRaw);
+		
+		SmartDashboard.putData("Encoders", this);
 	}
 
 	@Override
@@ -89,5 +95,37 @@ public class WheelEncoders extends SensorModule implements WheelEncodersInterfac
 	public EncoderData diff()
 	{
 		return read(DIFF);
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String getSubsystem()
+	{
+		return system;
+	}
+
+	@Override
+	public void setSubsystem(String subsystem)
+	{
+		system = subsystem;
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder)
+	{
+		builder.addDoubleProperty("Average Dist", () -> this.average().getDist(), null);
+		builder.addDoubleProperty("Left Dist", () -> this.left().getDist(), null);
+		builder.addDoubleProperty("Right Dist", () -> this.right().getDist(), null);
 	}
 }

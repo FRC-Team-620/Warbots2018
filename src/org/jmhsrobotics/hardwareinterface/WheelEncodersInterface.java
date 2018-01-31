@@ -2,8 +2,9 @@ package org.jmhsrobotics.hardwareinterface;
 
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Sendable;
 
-public interface WheelEncodersInterface
+public interface WheelEncodersInterface extends Sendable
 {
 	public EncoderData left();
 	

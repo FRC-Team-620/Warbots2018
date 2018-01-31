@@ -12,6 +12,7 @@ import org.jmhsrobotics.hardwareinterface.Drive;
 import org.jmhsrobotics.hardwareinterface.Gyro;
 
 import edu.wpi.first.wpilibj.PIDController;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,6 +23,9 @@ public class TurnAngle implements Module
 	private @Submodule Drive drive;
 	private @Submodule Optional<SubsystemManager> subsystems;
 
+	private PIDController pid;
+	private DummyPIDOutput output;
+	
 	@Override
 	public void onLink()
 	{
@@ -33,11 +37,16 @@ public class TurnAngle implements Module
 			turnTestCommands[i] = newInstance(Angle.fromDegrees(ang));
 			SmartDashboard.putData("Turn " + ang, turnTestCommands[i]);
 		}
-
-		SmartDashboard.putNumber("P", 0.02);
-		SmartDashboard.putNumber("I", 0);
-		SmartDashboard.putNumber("D", 0.04);
-		SmartDashboard.putNumber("F", 0);
+		
+		output = new DummyPIDOutput();
+		SmartDashboard.putData("Turn Output", output);
+		
+		pid = new PIDController(0.02, 0, 0.04, gyro.getAnglePIDSource(), output);
+		pid.setAbsoluteTolerance(1);
+		pid.setInputRange(0, 360);
+		pid.setOutputRange(-1, 1);
+		pid.setContinuous();
+		SmartDashboard.putData("Turn PID", pid);
 	}
 
 	public Command newInstance(Angle angle)
@@ -47,8 +56,6 @@ public class TurnAngle implements Module
 
 	class TurnAngleCommand extends Command
 	{
-		private PIDController pid;
-		private DummyPIDOutput output;
 		private Angle turnAngle;
 		
 		//constructor
@@ -56,21 +63,12 @@ public class TurnAngle implements Module
 		{
 			turnAngle = angle;
 			subsystems.ifPresent(s -> requires(s.getSubsystem("DriveTrain")));
-			output = new DummyPIDOutput();
-			pid = new PIDController(0, 0, 0, 0, gyro.getAnglePIDSource(), output);
-			pid.setPercentTolerance(.25);
-			pid.setInputRange(0, 360);
-			pid.setOutputRange(-1, 1);
-			pid.setContinuous();
 		}
 
 		@Override
 		protected void initialize()
 		{
-			pid.setP(SmartDashboard.getNumber("P", 0.));
-			pid.setI(SmartDashboard.getNumber("I", 0.));
-			pid.setD(SmartDashboard.getNumber("D", 0.));
-			pid.setF(SmartDashboard.getNumber("F", 0.));
+			gyro.setPIDSourceType(PIDSourceType.kDisplacement);
 			pid.setSetpoint(turnAngle.plus(gyro.getAngle()).measureDegreesUnsigned());
 			pid.enable();
 		}
@@ -78,9 +76,6 @@ public class TurnAngle implements Module
 		@Override
 		protected void execute()
 		{
-			System.out.println(gyro);
-			System.out.println(pid + "[P: " + pid.getP() + "  I: " + pid.getI() + "  D: " + pid.getD() + "  F: " + pid.getF() + "]");
-			System.out.println("Target: " + pid.getSetpoint() + " Current: " + gyro.getAngle());
 			drive.drive(0, output.get());
 		}
 
