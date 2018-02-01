@@ -1,6 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
-public interface WheelSwitchingDrive extends Drive
+public interface WheelSwitchingDrive extends DriveMechanism
 {
 	public void setWheelConfiguration(WheelConfiguration wc);
 

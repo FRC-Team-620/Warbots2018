@@ -6,8 +6,13 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class ControlSchemeModule extends CommandModule
 {
-	protected @Submodule OperatorInterface oi;
+	private @Submodule OperatorInterface oi;
 
+	protected OperatorInterface getOI()
+	{
+		return oi;
+	}
+	
 	@Override
 	protected boolean isFinished()
 	{

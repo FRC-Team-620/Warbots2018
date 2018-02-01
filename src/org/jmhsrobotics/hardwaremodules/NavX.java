@@ -38,7 +38,6 @@ public class NavX extends SensorModule implements Barometer, Gyro
 	protected void readSensors(double[] dataArray)
 	{
 		double ang = navx.getAngle();
-		System.out.println("Reading NavX at " + ang);
 		dataArray[ANGLE] = Angle.fromDegrees(ang).measureDegreesUnsigned();
 		dataArray[PRESSURE] = navx.getBarometricPressure();
 		dataArray[ALTITUDE] = navx.getAltitude();

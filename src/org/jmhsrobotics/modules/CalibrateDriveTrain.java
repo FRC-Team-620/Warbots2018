@@ -1,13 +1,13 @@
 package org.jmhsrobotics.modules;
 
 import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
-import org.jmhsrobotics.hardwareinterface.Drive;
 import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
 public class CalibrateDriveTrain extends CommandModule
 {
-	private @Submodule Drive driveTrain;
+	private @Submodule DriveController driveTrain;
 	private @Submodule WheelEncodersInterface encoders;
 	
 	@Override

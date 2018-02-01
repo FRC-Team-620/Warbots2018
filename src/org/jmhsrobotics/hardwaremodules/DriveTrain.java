@@ -2,7 +2,7 @@ package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
-import org.jmhsrobotics.hardwareinterface.Drive;
+import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @HardwareModule
-public class DriveTrain implements Drive, Module
+public class DriveTrain implements DriveMechanism, Module
 {
 	private DifferentialDrive drive;
 
@@ -34,7 +34,7 @@ public class DriveTrain implements Drive, Module
 	@Override
 	public Command getTest()
 	{
-		return Drive.makeTest(this);
+		return DriveMechanism.makeTest(this);
 	}
 
 	@Override

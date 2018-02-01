@@ -18,10 +18,12 @@ import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.DashboardControl;
 import org.jmhsrobotics.modules.DriveDistance;
+import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.TurnAngle;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -61,8 +63,9 @@ public class Robot extends HybridRobot
 		modules.addModule(new TurnAngle());
 		modules.addModule(new DriveDistance());
 		
-//		CommandModule driveWithJoystick = new DriveWithJoystick();
-//		modules.addModule(driveWithJoystick);
+		CommandModule driveWithJoystick = new DriveWithJoystick();
+		modules.addModule(driveWithJoystick);
+		SmartDashboard.putData("Drive With Joystick", driveWithJoystick);
 //		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
 		
 //		modules.addModule(modules.getAllModuleTests());

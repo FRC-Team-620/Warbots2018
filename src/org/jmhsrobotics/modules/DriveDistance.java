@@ -3,11 +3,11 @@ package org.jmhsrobotics.modules;
 import java.util.Optional;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
+import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.modulesystem.annotations.CommandFactoryModule;
 import org.jmhsrobotics.core.util.DummyPIDOutput;
-import org.jmhsrobotics.hardwareinterface.Drive;
 import org.jmhsrobotics.hardwareinterface.Gyro;
 import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveDistance implements Module
 {
 	private @Submodule Gyro gyro;
-	private @Submodule Drive drive;
+	private @Submodule DriveController drive;
 	private @Submodule WheelEncodersInterface encoders;
 	private @Submodule Optional<SubsystemManager> subsystems;
 	

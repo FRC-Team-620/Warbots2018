@@ -4,15 +4,15 @@ import java.util.Optional;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
-import org.jmhsrobotics.hardwareinterface.Drive;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DashboardControl extends CommandModule
 {
-	private @Submodule Drive drive;
+	private @Submodule DriveController drive;
 	private @Submodule Optional<SubsystemManager> subsystems;
 
 	@Override

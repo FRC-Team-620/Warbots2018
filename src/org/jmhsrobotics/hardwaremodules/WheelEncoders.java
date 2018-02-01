@@ -127,5 +127,6 @@ public class WheelEncoders extends SensorModule implements WheelEncodersInterfac
 		builder.addDoubleProperty("Average Dist", () -> this.average().getDist(), null);
 		builder.addDoubleProperty("Left Dist", () -> this.left().getDist(), null);
 		builder.addDoubleProperty("Right Dist", () -> this.right().getDist(), null);
+		builder.addDoubleProperty("Average Rate", () -> this.average().getRate(), null);
 	}
 }

@@ -2,11 +2,11 @@ package org.jmhsrobotics.hardwareinterface;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public interface Drive
+public interface DriveMechanism
 {
 	public void drive(double speed, double turn);
 
-	public static Command makeTest(Drive d)
+	public static Command makeTest(DriveMechanism d)
 	{
 		return new Command()
 		{
