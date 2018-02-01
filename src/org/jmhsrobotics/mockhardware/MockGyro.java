@@ -16,34 +16,29 @@ public class MockGyro extends SensorModule implements Gyro
 	private @Submodule Optional<MockDrive> drive;
 
 	private String name, system;
-	
+
 	private PIDSourceType type;
 
 	public MockGyro()
 	{
-		super(1);
+		super(2);
 		type = PIDSourceType.kDisplacement;
 	}
 
 	@Override
 	protected void readSensors(double[] dataArray)
 	{
-		if (type == PIDSourceType.kRate)
-		{
-			if (drive.isPresent())
-				dataArray[0] = drive.get().getDDir().plus(Angle.fromDegrees(Math.random() * .1 - .2)).measureDegrees();
-			else dataArray[0] = Math.random() * 10 - 5;
-		}
-		else
-		{
-			if (drive.isPresent())
-				dataArray[0] = drive.get().getDir().plus(Angle.fromDegrees(Math.random() * .2 - .4)).measureDegreesUnsigned();
-			else dataArray[0] = Math.random() * 360;
-		}
-
-		System.out.println("Retrieved gyro data of type " + type + " as " + dataArray[0]);
+		if (drive.isPresent())
+			dataArray[0] = drive.get().getDDir().plus(Angle.fromDegrees(Math.random() * .1 - .2)).measureDegrees();
+		else dataArray[0] = Math.random() * 10 - 5;
+		
+		if (drive.isPresent())
+			dataArray[1] = drive.get().getDir().plus(Angle.fromDegrees(Math.random() * .2 - .4)).measureDegreesUnsigned();
+		else dataArray[1] = Math.random() * 360;
+		
+		dataArray[2] = type == PIDSourceType.kDisplacement ? dataArray[0] : dataArray[1];
 	}
-
+	
 	@Override
 	public void setPIDSourceType(PIDSourceType type)
 	{
@@ -61,11 +56,17 @@ public class MockGyro extends SensorModule implements Gyro
 	{
 		return Angle.fromDegrees(get(0));
 	}
+	
+	@Override
+	public double getRotationRate()
+	{
+		return get(1);
+	}
 
 	@Override
 	public PIDSource getAnglePIDSource()
 	{
-		return getPIDSource(0);
+		return getPIDSource(2);
 	}
 
 	@Override

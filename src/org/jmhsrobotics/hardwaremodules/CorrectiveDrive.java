@@ -2,8 +2,6 @@ package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.DriveController;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 public class CorrectiveDrive extends DriveController
 {
 	@Override

@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 @HardwareModule
 public class NavX extends SensorModule implements Barometer, Gyro
 {
-	private final static int ANGLE = 0, PRESSURE = 1, ALTITUDE = 2;
+	private final static int ANGLE = 0, PRESSURE = 1, ALTITUDE = 2, RATE = 3, PID = 4;
 	
 	private String name, system;
 	
@@ -25,7 +25,7 @@ public class NavX extends SensorModule implements Barometer, Gyro
 
 	public NavX(Port port)
 	{
-		super(3);
+		super(5);
 		setRefreshRate(0);
 		
 		navx = new AHRS(port);
@@ -37,8 +37,9 @@ public class NavX extends SensorModule implements Barometer, Gyro
 	@Override
 	protected void readSensors(double[] dataArray)
 	{
-		double ang = navx.getAngle();
-		dataArray[ANGLE] = Angle.fromDegrees(ang).measureDegreesUnsigned();
+		dataArray[ANGLE] = Angle.fromDegrees(navx.getAngle()).measureDegreesUnsigned();
+		dataArray[RATE] = navx.getRate();
+		dataArray[PID] = navx.pidGet();
 		dataArray[PRESSURE] = navx.getBarometricPressure();
 		dataArray[ALTITUDE] = navx.getAltitude();
 	}
@@ -48,9 +49,14 @@ public class NavX extends SensorModule implements Barometer, Gyro
 		return Angle.fromDegrees(get(ANGLE));
 	}
 	
+	public double getRotationRate()
+	{
+		return get(RATE);
+	}
+	
 	public PIDSource getAnglePIDSource()
 	{
-		return getPIDSource(ANGLE);
+		return getPIDSource(PID);
 	}
 	
 	public double getBarometricPressure()
