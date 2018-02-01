@@ -26,7 +26,8 @@ public class Localization implements Module
 	
 	private void updateSensors()
 	{
-		
+		w = gyro.getRotationRate();
+		t = gyro.getAngle().measureDegreesUnsigned();
 	}
 	
 	public void enable()
