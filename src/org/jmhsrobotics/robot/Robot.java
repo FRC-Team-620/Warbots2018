@@ -16,10 +16,9 @@ import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
-import org.jmhsrobotics.modules.DashboardControl;
-import org.jmhsrobotics.modules.DriveDistance;
-import org.jmhsrobotics.modules.DriveWithJoystick;
-import org.jmhsrobotics.modules.TurnAngle;
+import org.jmhsrobotics.modules.DriveWithXbox;
+import org.jmhsrobotics.modules.drivecontroll.CorrectiveDrive;
+import org.jmhsrobotics.modules.drivecontroll.Localization;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -56,17 +55,17 @@ public class Robot extends HybridRobot
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
-		CommandModule dbControl = new DashboardControl();
-		modules.addModule(dbControl);
-		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
-//		modules.addModule(new DriveStraight());
-		modules.addModule(new TurnAngle());
-		modules.addModule(new DriveDistance());
+		modules.addModule(new Localization());
+		modules.addModule(new CorrectiveDrive());
 		
-		CommandModule driveWithJoystick = new DriveWithJoystick();
+//		CommandModule dbControl = new DashboardControl();
+//		modules.addModule(dbControl);
+//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
+		
+		CommandModule driveWithJoystick = new DriveWithXbox();
 		modules.addModule(driveWithJoystick);
 		SmartDashboard.putData("Drive With Joystick", driveWithJoystick);
-//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
+		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
 		
 //		modules.addModule(modules.getAllModuleTests());
 		autonomous = new AutoSwitcher();

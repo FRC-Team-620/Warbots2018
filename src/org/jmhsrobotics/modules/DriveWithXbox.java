@@ -7,9 +7,10 @@ import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController;
 
-public class DriveWithJoystick extends ControlSchemeModule
+public class DriveWithXbox extends ControlSchemeModule
 {
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule DriveController drive;
@@ -23,13 +24,23 @@ public class DriveWithJoystick extends ControlSchemeModule
 	@Override
 	public void execute()
 	{
-		Joystick js = getOI().getMainDriverJoystick();
-		double speed = -js.getY();
-		double turn = js.getX();
+		XboxController xbox = getOI().getXboxControllers().get(0);
 
-		if (Math.abs(turn) < 0.2) turn = 0;
-		if (Math.abs(speed) < 0.1) speed = 0;
+		double x = xbox.getX(Hand.kLeft);
+		double y = -xbox.getY(Hand.kLeft);
+		
+		double xadjusted = 0;
+		double yadjusted = 0;
+		
+		if (x > .2)
+			xadjusted = (x - .2) / .8;
+		else if (x < -.2)
+			xadjusted = (x + .2) / .8;
+		if (y > .2)
+			yadjusted = (y - .2) / .8;
+		else if (y < -.2)
+			yadjusted = (y + .2) / .8;
 
-		drive.drive(speed, turn);
+		drive.drive(yadjusted, xadjusted);
 	}
 }
