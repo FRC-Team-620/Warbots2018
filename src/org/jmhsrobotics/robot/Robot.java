@@ -17,7 +17,7 @@ import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.DashboardControl;
-import org.jmhsrobotics.modules.DriveWithJoystick;
+import org.jmhsrobotics.modules.DriveWithXbox;
 import org.jmhsrobotics.modules.drivecontroll.CorrectiveDrive;
 
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -57,15 +57,14 @@ public class Robot extends HybridRobot
 		
 		modules.addModule(new CorrectiveDrive());
 		
-		CommandModule dbControl = new DashboardControl();
-		modules.addModule(dbControl);
-		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
-//		modules.addModule(new DriveStraight());
+//		CommandModule dbControl = new DashboardControl();
+//		modules.addModule(dbControl);
+//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
 		
-		CommandModule driveWithJoystick = new DriveWithJoystick();
+		CommandModule driveWithJoystick = new DriveWithXbox();
 		modules.addModule(driveWithJoystick);
 		SmartDashboard.putData("Drive With Joystick", driveWithJoystick);
-//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
+		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
 		
 //		modules.addModule(modules.getAllModuleTests());
 		autonomous = new AutoSwitcher();
