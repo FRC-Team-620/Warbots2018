@@ -16,9 +16,9 @@ import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
-import org.jmhsrobotics.modules.DashboardControl;
 import org.jmhsrobotics.modules.DriveWithXbox;
 import org.jmhsrobotics.modules.drivecontroll.CorrectiveDrive;
+import org.jmhsrobotics.modules.drivecontroll.Localization;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -55,6 +55,7 @@ public class Robot extends HybridRobot
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
+		modules.addModule(new Localization());
 		modules.addModule(new CorrectiveDrive());
 		
 //		CommandModule dbControl = new DashboardControl();

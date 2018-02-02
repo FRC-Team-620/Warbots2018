@@ -27,22 +27,20 @@ public class DriveWithXbox extends ControlSchemeModule
 		XboxController xbox = getOI().getXboxControllers().get(0);
 
 		double x = xbox.getX(Hand.kLeft);
-		double y = xbox.getY(Hand.kLeft);
+		double y = -xbox.getY(Hand.kLeft);
+		
 		double xadjusted = 0;
 		double yadjusted = 0;
-		if (x > 0) {
-		xadjusted = (x -.2) / .8;
-		}
-		if (x < 0) {
-		xadjusted = (x +.2) / .8;
-		if (y > 0) {
-		yadjusted = (y -.2) / .8;
-				}
-		if (y < 0) {
-		yadjusted = (y +.2) / .8;
-					}
 		
-			drive.drive(yadjusted, xadjusted);
-		}
+		if (x > .2)
+			xadjusted = (x - .2) / .8;
+		else if (x < -.2)
+			xadjusted = (x + .2) / .8;
+		if (y > .2)
+			yadjusted = (y - .2) / .8;
+		else if (y < -.2)
+			yadjusted = (y + .2) / .8;
+
+		drive.drive(yadjusted, xadjusted);
 	}
 }
