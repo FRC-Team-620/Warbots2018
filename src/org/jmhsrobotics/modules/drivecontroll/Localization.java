@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.modules.drivecontroll;
 
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
@@ -17,17 +17,35 @@ public class Localization implements Module
 
 	private Notifier updater;
 	
-	private double x, y, dx, dy, t, w;
+	private double x, y, dx, dy, o, w, t;
 	
 	public Localization()
 	{
 		updater = new Notifier(this::updateSensors);
+		t = System.currentTimeMillis() / 1000.;
 	}
 	
+	@SuppressWarnings("unused") //a lot of this data will be used later to develope more sophisticated localization
 	private void updateSensors()
 	{
+		double oldT = t;
+		t = System.currentTimeMillis();
+		double dt = t - oldT;
+		
+		double oldW = w;
 		w = gyro.getRotationRate();
-		t = gyro.getAngle().measureDegreesUnsigned();
+		double oldO = o;
+		o = gyro.getAngle().measureRadians();
+		
+		double speed = wheelEncoders.average().getRate();
+		
+		double oldDx = dx;
+		dx = Math.sin(o) * speed;
+		double oldDy = dy;
+		dy = Math.cos(o) * speed;
+		
+		x += dx;
+		y += dy;
 	}
 	
 	public void enable()
@@ -50,6 +68,11 @@ public class Localization implements Module
 		return y;
 	}
 	
+	public double getPos(Angle axis)
+	{
+		return x * Math.sin(axis.measureRadians()) + y * Math.cos(axis.measureRadians());
+	}
+	
 	public double getDX()
 	{
 		return dx;
@@ -60,9 +83,19 @@ public class Localization implements Module
 		return dy;
 	}
 	
+	public double getSpeed(Angle axis)
+	{
+		return dx * Math.sin(axis.measureRadians()) + dy * Math.cos(axis.measureRadians());
+	}
+	
 	public Angle getAngle()
 	{
-		return Angle.fromDegrees(t);
+		return Angle.fromRadians(o);
+	}
+	
+	public double getAngleDegreesUnsigned()
+	{
+		return getAngle().measureDegreesUnsigned();
 	}
 	
 	public double getRotationRate()
