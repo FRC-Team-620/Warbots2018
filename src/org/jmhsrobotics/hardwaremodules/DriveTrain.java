@@ -2,6 +2,7 @@ package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
+import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 
 import edu.wpi.first.wpilibj.Spark;
@@ -45,8 +46,8 @@ public class DriveTrain implements DriveMechanism, Module
 		double minTurn = SmartDashboard.getNumber("min turn", .3);
 		double turnCurve = SmartDashboard.getNumber("turn curve", 1);
 		
-		speed = Math.signum(speed) * (Math.pow(Math.abs(speed), speedCurve) * (1 - minSpeed) + minSpeed);
-		turn = Math.signum(turn) * (Math.pow(Math.abs(turn), turnCurve) * (1 - minTurn) + minTurn);
+		speed = RobotMath.yKinkedMap(RobotMath.curve(speed, speedCurve), -1, 1, 0, -minSpeed, minSpeed, -1, 1);
+		turn = RobotMath.yKinkedMap(RobotMath.curve(speed, turnCurve), -1, 1, 0, -minTurn, minTurn, -1, 1);
 		
 		drive.arcadeDrive(speed, turn);
 	}
