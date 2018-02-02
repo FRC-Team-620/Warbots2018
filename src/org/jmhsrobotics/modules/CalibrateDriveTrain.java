@@ -19,12 +19,13 @@ public class CalibrateDriveTrain extends CommandModule
 	static double leftOut = 0.5;
 	static double turn = 0;
 	@Override
-	protected void execute() //Driving Straight
+	protected void execute()
 	{
 		double leftSpeed = encoders.left().getRate(); //get speed of left pid
 		double rightSpeed = encoders.right().getRate(); //Get speed of right pid
 		double diffSpeed = encoders.diff().getRate(); //Get the difference in speed for the pids
-		if(200 < diffSpeed) {
+		/*//Dead code; Probably not going to be used.
+		if(100 < diffSpeed) {
 			if(rightSpeed < leftSpeed) {
 				
 			}else if(leftSpeed < rightSpeed) {
@@ -34,6 +35,7 @@ public class CalibrateDriveTrain extends CommandModule
 				leftOut = 0;
 			}
 		}
+		*/
 		driveTrain.drive(0.5, turn);
 	}
 	
