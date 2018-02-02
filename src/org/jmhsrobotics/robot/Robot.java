@@ -17,8 +17,8 @@ import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.DriveWithXbox;
-import org.jmhsrobotics.modules.drivecontroll.CorrectiveDrive;
-import org.jmhsrobotics.modules.drivecontroll.Localization;
+import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
+import org.jmhsrobotics.modules.drivecontrol.Localization;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;

@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modules.drivecontroll;
+package org.jmhsrobotics.modules.drivecontrol;
 
 import edu.wpi.first.wpilibj.command.Command;
 

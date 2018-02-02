@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modules.drivecontroll;
+package org.jmhsrobotics.modules.drivecontrol;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.DriveController;
