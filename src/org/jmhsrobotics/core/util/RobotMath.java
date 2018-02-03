@@ -11,7 +11,7 @@ public abstract class RobotMath
 	{
 		if(n < flatStart)
 			return linearMap(n, sourceMin, flatStart, outputMin, flatVal);
-		else if(n > flatStart)
+		else if(n > flatEnd)
 			return linearMap(n, flatEnd, sourceMax, flatVal, outputMax);
 		else
 			return flatVal;

@@ -16,7 +16,8 @@ import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
-import org.jmhsrobotics.modules.DriveWithXbox;
+import org.jmhsrobotics.modules.CalibrateDriveTrain;
+import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 
@@ -55,6 +56,8 @@ public class Robot extends HybridRobot
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
+		modules.addModule(new CalibrateDriveTrain());
+		
 		modules.addModule(new Localization());
 		modules.addModule(new CorrectiveDrive());
 		
@@ -62,7 +65,7 @@ public class Robot extends HybridRobot
 //		modules.addModule(dbControl);
 //		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
 		
-		CommandModule driveWithJoystick = new DriveWithXbox();
+		CommandModule driveWithJoystick = new DriveWithJoystick();
 		modules.addModule(driveWithJoystick);
 		SmartDashboard.putData("Drive With Joystick", driveWithJoystick);
 		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);

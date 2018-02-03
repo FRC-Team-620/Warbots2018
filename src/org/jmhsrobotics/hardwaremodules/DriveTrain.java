@@ -2,8 +2,8 @@ package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
-import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
+import org.jmhsrobotics.modules.CalibrateDriveTrain;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class DriveTrain implements DriveMechanism, Module
 {
 	private DifferentialDrive drive;
-
+	
 	public DriveTrain()
 	{
 		SpeedController left = new SpeedControllerGroup(new Spark(0), new Spark(2));
@@ -25,7 +25,6 @@ public class DriveTrain implements DriveMechanism, Module
 		right.setInverted(true);
 
 		drive = new DifferentialDrive(left, right);
-		
 		SmartDashboard.putNumber("min speed", .35);
 		SmartDashboard.putNumber("speed curve", 1.2);
 		SmartDashboard.putNumber("min turn", .35);
@@ -46,9 +45,9 @@ public class DriveTrain implements DriveMechanism, Module
 		double minTurn = SmartDashboard.getNumber("min turn", .3);
 		double turnCurve = SmartDashboard.getNumber("turn curve", 1);
 		
-		speed = RobotMath.yKinkedMap(RobotMath.curve(speed, speedCurve), -1, 1, 0, -minSpeed, minSpeed, -1, 1);
-		turn = RobotMath.yKinkedMap(RobotMath.curve(speed, turnCurve), -1, 1, 0, -minTurn, minTurn, -1, 1);
-		
+//		speed = Math.signum(speed) * (Math.pow(Math.abs(speed), speedCurve) * (1 - minSpeed) + minSpeed);
+//		turn = Math.signum(turn) * (Math.pow(Math.abs(turn), turnCurve) * (1 - minTurn) + minTurn);
+		System.out.println("Speed: " + speed + " Turn: " + turn);
 		drive.arcadeDrive(speed, turn);
 	}
 }
