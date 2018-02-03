@@ -2,6 +2,7 @@ package org.jmhsrobotics.modules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
@@ -13,16 +14,18 @@ public class CalibrateDriveTrain implements Module, DriveMechanism
 {
 	private @Submodule DriveMechanism driveTrain;
 	private @Submodule WheelEncodersInterface encoders;
+	//Setting the Jump Mins/Maxes to 0
+	double jumpMinSpeed = 0;
+	double jumpMaxSpeed = 0;
+	double jumpMinTurn = 0;
+	double jumpMaxTurn = 0;
 	
 	@Override
 	public void drive(double speed, double turn){
-		double minSpeed = SmartDashboard.getNumber("min speed", .3);
-		double speedCurve = SmartDashboard.getNumber("speed curve", 1);
-		double minTurn = SmartDashboard.getNumber("min turn", .3);
-		double turnCurve = SmartDashboard.getNumber("turn curve", 1);
-		speed = Math.signum(speed) * (Math.pow(Math.abs(speed), speedCurve) * (1 - minSpeed) + minSpeed);
-		turn = Math.signum(turn) * (Math.pow(Math.abs(turn), turnCurve) * (1 - minTurn) + minTurn);
+		speed = RobotMath.yKinkedMap(speed, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
+		turn = RobotMath.yKinkedMap(turn, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
 		driveTrain.drive(speed, turn);
+		
 	}
 	
 	@Override
