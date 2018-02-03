@@ -1,47 +1,61 @@
 package org.jmhsrobotics.modules;
 
-import org.jmhsrobotics.core.modulesystem.CommandModule;
-import org.jmhsrobotics.core.modulesystem.DriveController;
+import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.RobotMath;
+import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
-public class CalibrateDriveTrain extends CommandModule
+import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+public class CalibrateDriveTrain implements Module, DriveMechanism
 {
-	private @Submodule DriveController driveTrain;
+	private @Submodule DriveMechanism driveTrain;
 	private @Submodule WheelEncodersInterface encoders;
+	//Setting the Jump Mins/Maxes to 0
+	double jumpMinSpeed = 0;
+	double jumpMaxSpeed = 0;
+	double jumpMinTurn = 0;
+	double jumpMaxTurn = 0;
 	
 	@Override
-	protected void initialize()
-	{
-	}
-	
-	static double rightOut = 0.5;
-	static double leftOut = 0.5;
-	static double turn = 0;
-	@Override
-	protected void execute()
-	{
-		double leftSpeed = encoders.left().getRate(); //get speed of left pid
-		double rightSpeed = encoders.right().getRate(); //Get speed of right pid
-		double diffSpeed = encoders.diff().getRate(); //Get the difference in speed for the pids
-		/*//Dead code; Probably not going to be used.
-		if(100 < diffSpeed) {
-			if(rightSpeed < leftSpeed) {
-				
-			}else if(leftSpeed < rightSpeed) {
-				
-			}else {
-				rightOut = 0; //If the code somehow breaks, stop the bot
-				leftOut = 0;
-			}
-		}
-		*/
-		driveTrain.drive(0.5, turn);
+	public void drive(double speed, double turn){
+		speed = RobotMath.yKinkedMap(speed, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
+		turn = RobotMath.yKinkedMap(turn, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
+		driveTrain.drive(speed, turn);
+		
 	}
 	
 	@Override
-	protected boolean isFinished()
+	public Command getTest()
 	{
-		return false;
+		return new InstantCommand(); //TODO: add test command
 	}
+	
+//	
+//	@Override
+//	protected void initialize()
+//	{
+//	}
+//	
+//	static double rightOut = 0.5;
+//	static double leftOut = 0.5;
+//	static double turn = 0;
+//	
+//	@Override
+//	protected void execute()
+//	{
+//		double leftSpeed = encoders.left().getRate(); //get speed of left pid
+//		double rightSpeed = encoders.right().getRate(); //Get speed of right pid
+//		double diffSpeed = encoders.diff().getRate(); //Get the difference in speed for the pids
+//		System.out.println(leftSpeed + " " + rightSpeed + " " + diffSpeed);
+//	}
+//	
+//	@Override
+//	protected boolean isFinished()
+//	{
+//		return false;
+//	}
 }

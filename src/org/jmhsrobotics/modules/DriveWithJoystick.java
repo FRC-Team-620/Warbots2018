@@ -9,6 +9,7 @@ import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.RobotMath;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.command.Command;
 
 public class DriveWithJoystick extends ControlSchemeModule
 {
@@ -30,7 +31,7 @@ public class DriveWithJoystick extends ControlSchemeModule
 
 		double xadjusted = RobotMath.xKinkedMap(x, -1, 1, 0, -.2, .2, -1, 1);
 		double yadjusted = RobotMath.xKinkedMap(y, -1, 1, 0, -.2, .2, -1, 1);
-		
+		System.out.println("X adjusted: " + xadjusted + " Y adjusted: " + yadjusted + " X: " + x + " Y: " + y);
 		drive.drive(yadjusted, xadjusted);
 	}
 }
