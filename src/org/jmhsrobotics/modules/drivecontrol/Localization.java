@@ -73,6 +73,11 @@ public class Localization implements Module
 		return x * Math.sin(axis.measureRadians()) + y * Math.cos(axis.measureRadians());
 	}
 	
+	public double getForwardPos()
+	{
+		return getPos(getAngle());
+	}
+	
 	public double getDX()
 	{
 		return dx;
@@ -86,6 +91,11 @@ public class Localization implements Module
 	public double getSpeed(Angle axis)
 	{
 		return dx * Math.sin(axis.measureRadians()) + dy * Math.cos(axis.measureRadians());
+	}
+	
+	public double getForwardSpeed()
+	{
+		return getSpeed(getAngle());
 	}
 	
 	public Angle getAngle()
