@@ -6,9 +6,9 @@ import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.DummyPIDOutput;
-import org.jmhsrobotics.core.util.DummyPIDSource;
+import org.jmhsrobotics.core.util.PIDCalculator;
+import org.jmhsrobotics.core.util.SensorSource;
 
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,47 +17,64 @@ public class CorrectiveDrive extends DriveController
 {
 	private @Submodule Localization localization;
 	
+	private boolean enabled;
+	
 	private double topSpeed;
 	private double topTurnRate;
 	
 	private Optional<Angle> lockAngle;
 	
-	private DummyPIDSource posSource;
-	private DummyPIDSource angleSource;
+	private SensorSource posSource;
+	private SensorSource angleSource;
 	
 	private DummyPIDOutput speedOutput;
 	private DummyPIDOutput turnOutput;
 	
-	private PIDController angleLockPID;
-	private PIDController turnRatePID;
-	private PIDController posRatePID;
+	private PIDCalculator angleLockPID;
+	private PIDCalculator turnRatePID;
+	private PIDCalculator posRatePID;
 	
 	@Override
 	public void onLink()
 	{
-		posSource = DummyPIDSource.fromDispAndRate(this::getOffsetInLockedDir, this::getSpeedInLockedDir);
-		angleSource = DummyPIDSource.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
+		posSource = SensorSource.fromDispAndRate(this::getOffsetInLockedDir, this::getSpeedInLockedDir);
+		angleSource = SensorSource.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
 		
 		speedOutput = new DummyPIDOutput();
 		turnOutput = new DummyPIDOutput();
 		
-		angleLockPID = new PIDController(0, 0, 0, angleSource, turnOutput);
+		angleLockPID = new PIDCalculator(0.04, 0, 5, angleSource, turnOutput);
+		angleLockPID.setInputRange(0, 360);
+		angleLockPID.setContinuous();
+		angleLockPID.setOutputRange(-1, 1);
 		SmartDashboard.putData("Angle Lock PID", angleLockPID);
 		
-		turnRatePID = new PIDController(0, 0, 0, 0, angleSource, turnOutput);
+		turnRatePID = new PIDCalculator(0, 0, 0, 0, angleSource, turnOutput);
 		SmartDashboard.putData("Turn Rate PID", turnRatePID);
-		posRatePID = new PIDController(0, 0, 0, 0, posSource, speedOutput);
+		posRatePID = new PIDCalculator(0, 0, 0, 0, posSource, speedOutput);
 		SmartDashboard.putData("Speed PID", posRatePID);
 	}
 	
+	@Override
 	public void enable()
 	{
+		if(enabled)
+			return;
+		
+		localization.enable();
+		enabled = true;
 		lockAngle();
 		posRatePID.enable();
 	}
 	
+	@Override
 	public void disable()
 	{
+		if(!enabled)
+			return;
+		
+		localization.disable();
+		enabled = false;
 		posRatePID.disable();
 		turnRatePID.disable();
 	}
@@ -75,8 +92,13 @@ public class CorrectiveDrive extends DriveController
 	@Override
 	public void drive(double speed, double turn)
 	{	
+		if(!enabled)
+			throw new RuntimeException("Attempted to drive without enabling corrective drive");
+		
 		if(turn == 0)
 		{
+			System.out.println("Zero turn, " + lockAngle + " " + turnOutput.get());
+			
 			if(lockAngle.isPresent())
 				driveRaw(speed, turnOutput.get());
 			else
@@ -104,9 +126,8 @@ public class CorrectiveDrive extends DriveController
 	{
 		turnRatePID.disable();
 		angleSource.setPIDSourceType(PIDSourceType.kDisplacement);
-		Angle ang = localization.getAngle();
-		lockAngle = Optional.of(ang);
-		angleLockPID.setSetpoint(ang.measureDegreesUnsigned());
+		lockAngle = Optional.of(localization.getAngle());
+		angleLockPID.setRelativeSetpoint(0);
 		angleLockPID.enable();
 	}
 	

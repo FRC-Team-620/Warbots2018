@@ -7,14 +7,19 @@ import org.jmhsrobotics.hardwareinterface.Gyro;
 import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
 
 import edu.wpi.first.wpilibj.Notifier;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Localization implements Module
+public class Localization implements Module, Sendable
 {	
 	private @Submodule Gyro gyro;
 	private @Submodule WheelEncodersInterface wheelEncoders;
 
+	private String name, system;
+	
 	private Notifier updater;
 	
 	private double x, y, dx, dy, o, w, t;
@@ -23,6 +28,7 @@ public class Localization implements Module
 	{
 		updater = new Notifier(this::updateSensors);
 		t = System.currentTimeMillis() / 1000.;
+		SmartDashboard.putData("Localization", this);
 	}
 	
 	@SuppressWarnings("unused") //a lot of this data will be used later to develope more sophisticated localization
@@ -50,7 +56,7 @@ public class Localization implements Module
 	
 	public void enable()
 	{
-		updater.startPeriodic(10);
+		updater.startPeriodic(.002);
 	}
 	
 	public void disable()
@@ -124,5 +130,41 @@ public class Localization implements Module
 				System.out.println("No code to test localization yet");
 			}
 		};
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String getSubsystem()
+	{
+		return system;
+	}
+
+	@Override
+	public void setSubsystem(String subsystem)
+	{
+		system = subsystem;
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder)
+	{
+		builder.addDoubleProperty("x", this::getX, null);
+		builder.addDoubleProperty("y", this::getY, null);
+		builder.addDoubleProperty("o", this::getAngleDegreesUnsigned, null);
+		builder.addDoubleProperty("dx", this::getDX, null);
+		builder.addDoubleProperty("dy", this::getDX, null);
+		builder.addDoubleProperty("w", this::getRotationRate, null);
+		builder.addDoubleProperty("t", () -> t, null);
 	}
 }

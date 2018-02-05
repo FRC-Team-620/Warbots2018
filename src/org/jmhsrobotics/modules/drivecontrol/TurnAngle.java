@@ -4,7 +4,7 @@ import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.DummyPIDOutput;
-import org.jmhsrobotics.core.util.DummyPIDSource;
+import org.jmhsrobotics.core.util.SensorSource;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -29,7 +29,7 @@ class TurnAngle extends Command
 		output = new DummyPIDOutput();
 		SmartDashboard.putData("Output", output);
 
-		DummyPIDSource source = DummyPIDSource.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
+		SensorSource source = SensorSource.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
 
 		pid = new PIDController(0.02, 0, 0.03, source, output);
 		pid.setAbsoluteTolerance(0.5);
