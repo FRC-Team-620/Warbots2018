@@ -10,6 +10,7 @@ package org.jmhsrobotics.robot;
 import org.jmhsrobotics.core.modules.OperatorInterface;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwaremodules.DriveTrain;
@@ -17,6 +18,7 @@ import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
+import org.jmhsrobotics.modules.DashboardControl;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
@@ -80,6 +82,7 @@ public class Robot extends HybridRobot
 	@Override
 	public void autonomousInit()
 	{
+		modules.getModules(DriveController.class).forEach(DriveController::enable);
 		autonomous.start();
 	}
 
@@ -92,6 +95,7 @@ public class Robot extends HybridRobot
 	@Override
 	public void teleopInit()
 	{
+		modules.getModules(DriveController.class).forEach(DriveController::enable);
 		autonomous.cancel();
 	}
 
@@ -102,10 +106,8 @@ public class Robot extends HybridRobot
 	}
 
 	@Override
-	public void testInit()
-	{}
-
-	@Override
-	public void testPeriodic()
-	{}
+	public void disabledInit()
+	{
+		modules.getModules(DriveController.class).forEach(DriveController::disable);
+	}
 }

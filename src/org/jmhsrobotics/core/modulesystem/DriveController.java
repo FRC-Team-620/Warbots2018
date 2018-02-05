@@ -16,6 +16,8 @@ public abstract class DriveController implements Module
 		driveTrain.drive(speed, turn);
 	}
 	
+	public abstract void enable();
+	public abstract void disable();
 	public abstract void drive(double speed, double turn);
 	public abstract Command getTurnCommand(Angle angle);
 	public abstract Command getDriveCommand(double distance);

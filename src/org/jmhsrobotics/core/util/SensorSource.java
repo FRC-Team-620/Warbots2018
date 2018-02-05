@@ -8,24 +8,38 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
 
-public abstract class DummyPIDSource implements Module, PIDSource
+public abstract class SensorSource implements Module, PIDSource
 {
 	private PIDSourceType sourceType;
 	
-	public static DummyPIDSource fromDispAndRate(DoubleSupplier displacementSource, DoubleSupplier rateSource)
+	public static SensorSource fromDispAndRate(DoubleSupplier displacementSource, DoubleSupplier rateSource)
 	{
 		return new TwoSuppliers(displacementSource, rateSource);
 	}
 	
-	public static DummyPIDSource fromDisp(DoubleSupplier displacementSource)
+	public static SensorSource fromDisp(DoubleSupplier displacementSource)
 	{
 		return new DispSupplier(displacementSource);
+	}
+	
+	public static SensorSource fromPIDSource(PIDSource source)
+	{
+		return new TwoSuppliers(() ->
+		{
+			source.setPIDSourceType(PIDSourceType.kDisplacement);
+			return source.pidGet();
+		},
+		() ->
+		{
+			source.setPIDSourceType(PIDSourceType.kRate);
+			return source.pidGet();
+		});
 	}
 	
 	protected abstract double getDisplacement();
 	protected abstract double getRate();
 	
-	public DummyPIDSource()
+	public SensorSource()
 	{
 		sourceType = PIDSourceType.kDisplacement;
 	}
@@ -79,7 +93,7 @@ public abstract class DummyPIDSource implements Module, PIDSource
 	}
 }
 
-class TwoSuppliers extends DummyPIDSource
+class TwoSuppliers extends SensorSource
 {
 	private DoubleSupplier disp, rate;
 	
@@ -102,7 +116,7 @@ class TwoSuppliers extends DummyPIDSource
 	}
 }
 
-class DispSupplier extends DummyPIDSource
+class DispSupplier extends SensorSource
 {
 	private DoubleSupplier disp;
 	private double lastValue;

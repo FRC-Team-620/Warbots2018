@@ -3,7 +3,7 @@ package org.jmhsrobotics.modules.drivecontrol;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.util.DummyPIDOutput;
-import org.jmhsrobotics.core.util.DummyPIDSource;
+import org.jmhsrobotics.core.util.SensorSource;
 
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -32,7 +32,7 @@ class DriveDistance extends Command
 		SmartDashboard.putData("Dist Output", distOutput);
 
 		//		DummyPIDSource dirSource = DummyPIDSource.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
-		DummyPIDSource distSource = DummyPIDSource.fromDispAndRate(() -> localization.getPos(drive.getLockAngle().get()), () -> localization.getSpeed(drive.getLockAngle().get()));
+		SensorSource distSource = SensorSource.fromDispAndRate(() -> localization.getPos(drive.getLockAngle().get()), () -> localization.getSpeed(drive.getLockAngle().get()));
 
 		//		dirPid = new PIDController(0.01, 0, 0.01, dirSource, dirOutput);
 		//		dirPid.setAbsoluteTolerance(0.5);
