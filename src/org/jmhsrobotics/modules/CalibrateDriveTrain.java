@@ -22,10 +22,12 @@ public class CalibrateDriveTrain implements Module, DriveMechanism
 	
 	@Override
 	public void drive(double speed, double turn){
-		speed = RobotMath.yKinkedMap(speed, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
-		turn = RobotMath.yKinkedMap(turn, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
+		//speed = RobotMath.yKinkedMap(speed, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
+		//turn = RobotMath.yKinkedMap(turn, -1, 1, 0, jumpMinSpeed, jumpMaxSpeed, -1, 1);
+		speed = 0;
+		turn = .5;
 		driveTrain.drive(speed, turn);
-		
+		System.out.println("Encoder Right: " + encoders.right() + " Encoder Left: " + encoders.left());
 	}
 	
 	@Override
