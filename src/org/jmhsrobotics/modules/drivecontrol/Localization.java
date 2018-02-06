@@ -44,7 +44,7 @@ public class Localization implements Module, Sendable
 		o = gyro.getAngle().measureRadians();
 		
 		double speed = wheelEncoders.average().getRate();
-		
+		System.out.println(wheelEncoders.left().getDist());
 		double oldDx = dx;
 		dx = Math.sin(o) * speed;
 		double oldDy = dy;

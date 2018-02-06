@@ -28,7 +28,9 @@ public class WheelEncoders extends SensorModule implements WheelEncodersInterfac
 	{
 		super(16);
 		left = new Encoder(2, 3, true);
+		left.setDistancePerPulse(0.031425);
 		right = new Encoder(0, 1);
+		right.setDistancePerPulse(0.031425);
 		setPIDSourceType(PIDSourceType.kDisplacement);
 		
 		operations = new HashMap<>();
