@@ -7,14 +7,6 @@ import edu.wpi.first.wpilibj.Sendable;
 
 public interface GenericEncoderInterface extends Sendable
 {
-	public EncoderData left();
-
-	public EncoderData right();
-
-	public EncoderData average();
-
-	public EncoderData diff();
-
 	public class EncoderData
 	{
 		private double dist, rate, raw;
