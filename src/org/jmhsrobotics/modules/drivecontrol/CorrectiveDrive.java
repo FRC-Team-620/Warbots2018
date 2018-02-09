@@ -144,6 +144,7 @@ public class CorrectiveDrive extends DriveController
 		return turnRate * topTurnRate;
 	}
 	
+	@SuppressWarnings("unused")
 	private double velocityOf(double speed)
 	{
 		return speed * topSpeed;

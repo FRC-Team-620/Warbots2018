@@ -1,9 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
 import java.util.function.DoubleBinaryOperator;
-import java.util.function.ToDoubleBiFunction;
-
-import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface.EncoderData;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Sendable;
