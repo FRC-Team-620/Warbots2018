@@ -19,7 +19,7 @@ import org.jmhsrobotics.hardwaremodules.WheelEncoders;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
-import org.jmhsrobotics.modules.drivecontrol.Localization;
+import org.jmhsrobotics.modules.RawDriveController;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -60,6 +60,7 @@ public class Robot extends HybridRobot
 		
 //		modules.addModule(new Localization());
 //		modules.addModule(new CorrectiveDrive());
+		modules.addModule(new RawDriveController());
 		
 //		CommandModule dbControl = new DashboardControl();
 //		modules.addModule(dbControl);

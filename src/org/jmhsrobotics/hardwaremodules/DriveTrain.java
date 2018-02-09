@@ -39,14 +39,6 @@ public class DriveTrain implements DriveMechanism, Module
 	@Override
 	public void drive(double speed, double turn)
 	{
-		double minSpeed = SmartDashboard.getNumber("min speed", .3);
-		double speedCurve = SmartDashboard.getNumber("speed curve", 1);
-		double minTurn = SmartDashboard.getNumber("min turn", .3);
-		double turnCurve = SmartDashboard.getNumber("turn curve", 1);
-		
-//		speed = Math.signum(speed) * (Math.pow(Math.abs(speed), speedCurve) * (1 - minSpeed) + minSpeed);
-//		turn = Math.signum(turn) * (Math.pow(Math.abs(turn), turnCurve) * (1 - minTurn) + minTurn);
-		System.out.println("Speed: " + speed + " Turn: " + turn);
 		drive.arcadeDrive(speed, turn);
 	}
 }

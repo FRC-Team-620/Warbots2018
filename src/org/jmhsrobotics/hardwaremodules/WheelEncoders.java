@@ -18,6 +18,8 @@ public class WheelEncoders extends SensorModule implements WheelEncodersInterfac
 	{
 		leftEncoder = new Encoder(2, 3, true);
 		rightEncoder = new Encoder(0, 1);
+		leftEncoder.setDistancePerPulse(0.031425);
+		rightEncoder.setDistancePerPulse(0.031425);
 		SmartDashboard.putData("Encoders", this);
 	}
 	
