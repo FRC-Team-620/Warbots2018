@@ -4,7 +4,7 @@ import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.Gyro;
-import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
+import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.Sendable;
@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Localization implements Module, Sendable
 {	
 	private @Submodule Gyro gyro;
-	private @Submodule WheelEncodersInterface wheelEncoders;
+	private @Submodule WheelEncoders wheelEncoders;
 
 	private String name, system;
 	

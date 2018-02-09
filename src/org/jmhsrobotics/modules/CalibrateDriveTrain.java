@@ -4,7 +4,7 @@ import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
-import org.jmhsrobotics.hardwareinterface.WheelEncodersInterface;
+import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class CalibrateDriveTrain implements Module, DriveMechanism
 {
 	private @Submodule DriveMechanism driveTrain;
-	private @Submodule WheelEncodersInterface encoders;
+	private @Submodule WheelEncoders encoders;
 	// Setting the Jump Mins/Maxes to 0
 	double jumpMinSpeed = -.3;
 	double jumpMaxSpeed = .3;

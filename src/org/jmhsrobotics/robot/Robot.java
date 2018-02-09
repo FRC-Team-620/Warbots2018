@@ -15,7 +15,7 @@ import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.hardwaremodules.NavX;
-import org.jmhsrobotics.hardwaremodules.WheelEncoders;
+import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
@@ -52,7 +52,7 @@ public class Robot extends HybridRobot
 		modules.addModule(new OperatorInterface());
 		modules.addModule(new DriveTrain());
 		modules.addModule(new NavX(Port.kMXP));
-		modules.addModule(new WheelEncoders());
+		modules.addModule(new WheelEncodersHardware());
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
