@@ -31,7 +31,7 @@ public class Localization extends PlainSendable implements Module
 		SmartDashboard.putData("Localization", this);
 	}
 	
-	@SuppressWarnings("unused") //a lot of this data will be used later to develope more sophisticated localization
+	@SuppressWarnings("unused") //a lot of this data will be used later to develop more sophisticated localization
 	private void updateSensors()
 	{
 		double oldT = t;
@@ -52,12 +52,13 @@ public class Localization extends PlainSendable implements Module
 		x += dx;
 		y += dy;
 		
-		System.out.println(dragWheelEncoders.forward().getDist() + " " + dragWheelEncoders.side().getDist());
+		System.out.println("Wheel Encoders: " + wheelEncoders.left().getDist() + " " + wheelEncoders.right().getDist());
+		System.out.println("Drag Encoders: " + dragWheelEncoders.forward().getDist() + " " + dragWheelEncoders.side().getDist());
 	}
 	
 	public void enable()
 	{
-		updater.startPeriodic(.002);
+		updater.startPeriodic(.02);
 	}
 	
 	public void disable()

@@ -14,15 +14,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @HardwareModule
-public class DriveTrain extends PlainSendable implements DriveMechanism, Module
+public class DriveTrainHardware extends PlainSendable implements DriveMechanism, Module
 {
 	private DifferentialDrive drive;
 	
-	public DriveTrain()
+	public DriveTrainHardware(int leftPort1, int leftPort2, int rightPort1, int rightPort2)
 	{
-		SpeedController left = new SpeedControllerGroup(new Spark(0), new Spark(2));
+		SpeedController left = new SpeedControllerGroup(new Spark(leftPort1), new Spark(leftPort2));
 		left.setInverted(true);
-		SpeedController right = new SpeedControllerGroup(new Spark(1), new Spark(3));
+		SpeedController right = new SpeedControllerGroup(new Spark(rightPort1), new Spark(rightPort2));
 		right.setInverted(true);
 
 		drive = new DifferentialDrive(left, right);

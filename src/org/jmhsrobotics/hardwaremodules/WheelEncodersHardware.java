@@ -3,6 +3,7 @@ package org.jmhsrobotics.hardwaremodules;
 import java.io.PrintStream;
 
 import org.jmhsrobotics.core.modulesystem.SensorModule;
+import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.GenericEncoderInterface;
 import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
@@ -10,15 +11,16 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+@HardwareModule
 public class WheelEncodersHardware extends SensorModule implements WheelEncoders
 {
 	private Encoder leftEncoder, rightEncoder;
 	private EncoderData left, right, average, diff;
 
-	public WheelEncodersHardware()
+	public WheelEncodersHardware(int leftEncoderPort1, int leftEncoderPort2, boolean reverseLeftEncoder, int rightEncoderPort1, int rightEncoderPort2, boolean reverseRightEncoder)
 	{
-		leftEncoder = new Encoder(2, 3, true);
-		rightEncoder = new Encoder(0, 1);
+		leftEncoder = new Encoder(leftEncoderPort1, leftEncoderPort2, reverseLeftEncoder);
+		rightEncoder = new Encoder(rightEncoderPort1, rightEncoderPort2, reverseRightEncoder);
 		leftEncoder.setDistancePerPulse(0.031425);
 		rightEncoder.setDistancePerPulse(0.031425);
 		SmartDashboard.putData("Encoders", this);

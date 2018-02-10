@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @HardwareModule
-public class NavX extends SensorModule implements Gyro, Barometer
+public class NavXHardware extends SensorModule implements Gyro, Barometer
 {
 	private AHRS navx;
 
@@ -24,7 +24,7 @@ public class NavX extends SensorModule implements Gyro, Barometer
 	
 	private double pressure;
 	
-	public NavX(Port port)
+	public NavXHardware(Port port)
 	{
 		setRefreshRate(0);
 		

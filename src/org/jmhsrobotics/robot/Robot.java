@@ -8,19 +8,19 @@
 package org.jmhsrobotics.robot;
 
 import org.jmhsrobotics.core.modules.OperatorInterface;
-import org.jmhsrobotics.core.modules.RawDriveController;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwaremodules.DragEncodersHardware;
-import org.jmhsrobotics.hardwaremodules.DriveTrain;
-import org.jmhsrobotics.hardwaremodules.NavX;
+import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
+import org.jmhsrobotics.hardwaremodules.NavXHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
+import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 
 import edu.wpi.first.wpilibj.SPI.Port;
@@ -52,18 +52,18 @@ public class Robot extends HybridRobot
 		subsystems.addEmptySubsystem("DriveTrain");
 
 		modules.addModule(new OperatorInterface());
-		modules.addModule(new DriveTrain());
-		modules.addModule(new NavX(Port.kMXP));
-		modules.addModule(new WheelEncodersHardware());
-		modules.addModule(new DragEncodersHardware());
+		modules.addModule(new DriveTrainHardware(0, 2, 1, 3));
+		modules.addModule(new NavXHardware(Port.kMXP));
+		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
+		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
 		modules.addModule(new CalibrateDriveTrain());
 
 		modules.addModule(new Localization());
-//		modules.addModule(new CorrectiveDrive());
-		modules.addModule(new RawDriveController());
+		modules.addModule(new CorrectiveDrive());
+//		modules.addModule(new RawDriveController());
 		
 //		CommandModule dbControl = new DashboardControl();
 //		modules.addModule(dbControl);
