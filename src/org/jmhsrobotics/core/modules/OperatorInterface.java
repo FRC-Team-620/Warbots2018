@@ -7,6 +7,7 @@ import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -15,7 +16,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class OperatorInterface implements Module
+@HardwareModule
+public class OperatorInterface  implements Module
 {
 	private final static DriverStation ds = DriverStation.getInstance();
 

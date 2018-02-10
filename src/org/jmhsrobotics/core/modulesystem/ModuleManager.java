@@ -15,11 +15,11 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class ModuleManager
 {
-	private List<Module> modules;
+	private List<Module> moduleList;
 
 	public ModuleManager()
 	{
-		modules = new ArrayList<>();
+		moduleList = new ArrayList<>();
 	}
 
 	public static void linkModules(Stream<Module> modules)
@@ -70,7 +70,7 @@ public class ModuleManager
 			});
 
 		module.onLink();
-		modules.add(0, module);
+		moduleList.add(0, module);
 	}
 
 	public void addModules(Stream<Module> modules)
@@ -90,13 +90,13 @@ public class ModuleManager
 
 	public void addModules(ModuleManager otherModuleManager)
 	{
-		addModules(otherModuleManager.modules);
+		addModules(otherModuleManager.moduleList);
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T> Stream<T> getModules(Class<T> type)
 	{
-		return (Stream<T>) modules.stream().filter(o -> type.isAssignableFrom(o.getClass()));
+		return (Stream<T>) moduleList.stream().filter(o -> type.isAssignableFrom(o.getClass()));
 	}
 
 	public <T> Optional<T> getModule(Class<T> type)
@@ -106,7 +106,7 @@ public class ModuleManager
 
 	public AutonomousCommand getModuleTests(Predicate<? super Module> filter, String name)
 	{
-		Stream<Module> toTest = modules.stream().filter(filter);
+		Stream<Module> toTest = moduleList.stream().filter(filter);
 		AutonomousCommand group = new AutonomousCommand()
 		{
 			@Override
@@ -145,6 +145,6 @@ public class ModuleManager
 	@Override
 	public String toString()
 	{
-		return "Module Manager: " + modules;
+		return "Module Manager: " + moduleList;
 	}
 }

@@ -2,6 +2,7 @@ package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
+import org.jmhsrobotics.core.util.PlainSendable;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 
 import edu.wpi.first.wpilibj.Spark;
@@ -9,10 +10,11 @@ import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @HardwareModule
-public class DriveTrain implements DriveMechanism, Module
+public class DriveTrain extends PlainSendable implements DriveMechanism, Module
 {
 	private DifferentialDrive drive;
 	
@@ -40,5 +42,10 @@ public class DriveTrain implements DriveMechanism, Module
 	public void drive(double speed, double turn)
 	{
 		drive.arcadeDrive(speed, turn);
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder)
+	{
 	}
 }

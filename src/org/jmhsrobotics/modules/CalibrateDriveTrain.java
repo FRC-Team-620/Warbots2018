@@ -2,14 +2,16 @@ package org.jmhsrobotics.modules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.PlainSendable;
 import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public class CalibrateDriveTrain implements Module, DriveMechanism
+public class CalibrateDriveTrain extends PlainSendable implements Module, DriveMechanism
 {
 	private @Submodule DriveMechanism driveTrain;
 	private @Submodule WheelEncoders encoders;
@@ -38,5 +40,10 @@ public class CalibrateDriveTrain implements Module, DriveMechanism
 	public Command getTest()	
 	{
 		return new InstantCommand(); // TODO: add test command
+	}
+
+	@Override
+	public void initSendable(SendableBuilder builder)
+	{
 	}
 }

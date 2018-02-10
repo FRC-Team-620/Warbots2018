@@ -7,7 +7,7 @@ import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.DummyPIDOutput;
 import org.jmhsrobotics.core.util.PIDCalculator;
-import org.jmhsrobotics.core.util.SensorSource;
+import org.jmhsrobotics.core.util.PIDSensor;
 
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.command.Command;
@@ -24,8 +24,8 @@ public class CorrectiveDrive extends DriveController
 	
 	private Optional<Angle> lockAngle;
 	
-	private SensorSource posSource;
-	private SensorSource angleSource;
+	private PIDSensor posSource;
+	private PIDSensor angleSource;
 	
 	private DummyPIDOutput speedOutput;
 	private DummyPIDOutput turnOutput;
@@ -37,8 +37,8 @@ public class CorrectiveDrive extends DriveController
 	@Override
 	public void onLink()
 	{
-		posSource = SensorSource.fromDispAndRate(this::getOffsetInLockedDir, this::getSpeedInLockedDir);
-		angleSource = SensorSource.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
+		posSource = PIDSensor.fromDispAndRate(this::getOffsetInLockedDir, this::getSpeedInLockedDir);
+		angleSource = PIDSensor.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
 		
 		speedOutput = new DummyPIDOutput();
 		turnOutput = new DummyPIDOutput();

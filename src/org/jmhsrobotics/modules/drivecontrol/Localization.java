@@ -3,23 +3,23 @@ package org.jmhsrobotics.modules.drivecontrol;
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
+import org.jmhsrobotics.core.util.PlainSendable;
+import org.jmhsrobotics.hardwareinterface.DragWheelEncoders;
 import org.jmhsrobotics.hardwareinterface.Gyro;
 import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Localization implements Module, Sendable
+public class Localization extends PlainSendable implements Module
 {	
 	private @Submodule Gyro gyro;
 	private @Submodule WheelEncoders wheelEncoders;
+	private @Submodule DragWheelEncoders dragWheelEncoders;
 
-	private String name, system;
-	
 	private Notifier updater;
 	
 	private double x, y, dx, dy, o, w, t;
@@ -130,30 +130,6 @@ public class Localization implements Module, Sendable
 				System.out.println("No code to test localization yet");
 			}
 		};
-	}
-
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-
-	@Override
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	@Override
-	public String getSubsystem()
-	{
-		return system;
-	}
-
-	@Override
-	public void setSubsystem(String subsystem)
-	{
-		system = subsystem;
 	}
 
 	@Override

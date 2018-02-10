@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.modules.autonomous;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +11,17 @@ import org.jmhsrobotics.core.modulesystem.Submodule;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoSwitcher implements Module
 {
+	public static enum StartingPosition
+	{
+		left, right, center
+	}
+	
+	private SendableChooser<StartingPosition> startingPosition;
 	private @Submodule AutonomousCommand[] autoCommands;
 	private Map<String, AutonomousCommand> autoCommandMap;
 	private Optional<AutonomousCommand> currentAuto;
@@ -27,6 +35,12 @@ public class AutoSwitcher implements Module
 		autoCommands = null;
 
 		currentAuto = Optional.empty();
+		
+		startingPosition = new SendableChooser<StartingPosition>();
+		startingPosition.addDefault("Center", StartingPosition.center);
+		startingPosition.addObject("Left", StartingPosition.left);
+		startingPosition.addObject("Right", StartingPosition.right);
+		SmartDashboard.putData(startingPosition);
 	}
 
 	public void start()

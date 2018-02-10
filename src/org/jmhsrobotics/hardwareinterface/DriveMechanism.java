@@ -1,8 +1,9 @@
 package org.jmhsrobotics.hardwareinterface;
 
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.command.Command;
 
-public interface DriveMechanism
+public interface DriveMechanism extends Sendable
 {
 	public void drive(double speed, double turn);
 

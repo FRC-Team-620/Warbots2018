@@ -2,14 +2,11 @@ package org.jmhsrobotics.core.util;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PIDOutput;
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public class PIDCalculator implements Sendable
+public class PIDCalculator extends PlainSendable
 {
-	String name, system;
-	
-	private SensorSource source;
+	private PIDSensor source;
 	private double sourceMin = Double.NEGATIVE_INFINITY, sourceMax = Double.POSITIVE_INFINITY;
 	private boolean continuous;
 
@@ -31,7 +28,7 @@ public class PIDCalculator implements Sendable
 	private double period = .02;
 	private boolean enabled;
 	
-	public PIDCalculator(double p, double i, double d, double f, SensorSource source, PIDOutput output)
+	public PIDCalculator(double p, double i, double d, double f, PIDSensor source, PIDOutput output)
 	{
 		this.p = p;
 		this.i = i;
@@ -43,12 +40,12 @@ public class PIDCalculator implements Sendable
 		autoUpdater = new Notifier(this::update);
 	}
 	
-	public PIDCalculator(double p, double i, double d, SensorSource source, PIDOutput output)
+	public PIDCalculator(double p, double i, double d, PIDSensor source, PIDOutput output)
 	{
 		this(p, i, d, 0, source, output);
 	}
 	
-	public PIDCalculator(SensorSource source, PIDOutput output)
+	public PIDCalculator(PIDSensor source, PIDOutput output)
 	{
 		this(0, 0, 0, source, output);
 	}
@@ -274,30 +271,6 @@ public class PIDCalculator implements Sendable
 		accumulator = 0;
 	}
 
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-
-	@Override
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	@Override
-	public String getSubsystem()
-	{
-		return system;
-	}
-
-	@Override
-	public void setSubsystem(String subsystem)
-	{
-		system = subsystem;
-	}
-	
 	@Override
 	public void initSendable(SendableBuilder builder)
 	{

@@ -16,10 +16,10 @@ import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.modules.AutoSwitcher;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.RawDriveController;
+import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
