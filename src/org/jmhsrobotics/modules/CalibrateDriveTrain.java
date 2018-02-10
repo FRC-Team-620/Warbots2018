@@ -33,7 +33,6 @@ public class CalibrateDriveTrain extends PlainSendable implements Module, DriveM
 		if(encoders.average().getRate() > maxSpeed) {
 			maxSpeed = encoders.average().getRate();
 		}
-		System.out.println("maxSpeed: " + maxSpeed);
 	}
 
 	@Override

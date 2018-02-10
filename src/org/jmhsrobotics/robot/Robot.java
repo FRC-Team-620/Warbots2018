@@ -14,12 +14,14 @@ import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.util.HybridRobot;
+import org.jmhsrobotics.hardwaremodules.DragEncodersHardware;
 import org.jmhsrobotics.hardwaremodules.DriveTrain;
 import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
+import org.jmhsrobotics.modules.drivecontrol.Localization;
 
 import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -53,12 +55,13 @@ public class Robot extends HybridRobot
 		modules.addModule(new DriveTrain());
 		modules.addModule(new NavX(Port.kMXP));
 		modules.addModule(new WheelEncodersHardware());
+		modules.addModule(new DragEncodersHardware());
 //		modules.addModule(new MockDrive());
 //		modules.addModule(new MockGyro());
 		
 		modules.addModule(new CalibrateDriveTrain());
-		
-//		modules.addModule(new Localization());
+
+		modules.addModule(new Localization());
 //		modules.addModule(new CorrectiveDrive());
 		modules.addModule(new RawDriveController());
 		

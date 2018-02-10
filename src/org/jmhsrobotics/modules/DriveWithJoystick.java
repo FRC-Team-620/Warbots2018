@@ -30,11 +30,10 @@ public class DriveWithJoystick extends ControlSchemeModule
 
 		double xadjusted = RobotMath.xKinkedMap(x, -1, 1, 0, -.2, .2, -1, 1);
 		double yadjusted = RobotMath.xKinkedMap(y, -1, 1, 0, -.2, .2, -1, 1);
-		String xadjout = String.format("%.2g%n", xadjusted);
-		String yadjout = String.format("%.2g%n", yadjusted);
-		String xout = String.format("%.2g%n", x);
-		String yout = String.format("%.2g%n", y);
-		System.out.print("X adjusted: " + xadjout + " Y adjusted: " + yadjout + " X: " + xout + " Y: " + yout);
+//		String xadjout = String.format("%.2g%n", xadjusted);
+//		String yadjout = String.format("%.2g%n", yadjusted);
+//		String xout = String.format("%.2g%n", x);
+//		String yout = String.format("%.2g%n", y);
 		drive.drive(yadjusted, xadjusted);
 	}
 }

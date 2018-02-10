@@ -11,16 +11,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DragEncodersHardware extends SensorModule implements DragWheelEncoders
-{
+{	
 	private Encoder forwardEncoder, sideEncoder;
 	private EncoderData forward, side;
 	
 	public DragEncodersHardware()
 	{
-		forwardEncoder = new Encoder(-1, -1); //TODO Add ports for forward/backward encoder
-		sideEncoder = new Encoder(-1, -1); //TODO Add ports for sideways encoder
-		forwardEncoder.setDistancePerPulse(-1); //TODO Add distance per pulse for forward/backward encoder
-		sideEncoder.setDistancePerPulse(-1); //TODO Add distance per pulse for sideways encoder
+		forwardEncoder = new Encoder(20, 21);
+		sideEncoder = new Encoder(22, 23);
+		forwardEncoder.setDistancePerPulse(0.031425);
+		sideEncoder.setDistancePerPulse(0.031425);
 		SmartDashboard.putData("Drag Encoders", this);
 	}
 	

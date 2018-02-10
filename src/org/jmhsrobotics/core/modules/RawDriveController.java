@@ -14,16 +14,14 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class RawDriveController extends DriveController implements Module
 {
 	private @Submodule DriveMechanism driveTrain;
-	
+
 	@Override
 	public void enable()
-	{
-	}
+	{}
 
 	@Override
 	public void disable()
-	{
-	}
+	{}
 
 	@Override
 	public void drive(double speed, double turn)

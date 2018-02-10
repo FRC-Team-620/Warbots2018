@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-class Localization extends PlainSendable implements Module
+public class Localization extends PlainSendable implements Module
 {	
 	private @Submodule Gyro gyro;
 	private @Submodule WheelEncoders wheelEncoders;
@@ -44,7 +44,6 @@ class Localization extends PlainSendable implements Module
 		o = gyro.getAngle().measureRadians();
 		
 		double speed = wheelEncoders.average().getRate();
-		System.out.println(wheelEncoders.left().getDist());
 		double oldDx = dx;
 		dx = Math.sin(o) * speed;
 		double oldDy = dy;
@@ -52,6 +51,8 @@ class Localization extends PlainSendable implements Module
 		
 		x += dx;
 		y += dy;
+		
+		System.out.println(dragWheelEncoders.forward().getDist() + " " + dragWheelEncoders.side().getDist());
 	}
 	
 	public void enable()
