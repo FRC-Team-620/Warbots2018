@@ -3,10 +3,11 @@ package org.jmhsrobotics.core.modulesystem;
 import java.io.PrintStream;
 
 import org.jmhsrobotics.core.util.PlainSendable;
+import org.jmhsrobotics.hardwareinterface.Sensor;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public abstract class SensorModule extends PlainSendable implements Module
+public abstract class SensorModule extends PlainSendable implements Sensor, Module
 {
 	public static final double DEFAULT_REFRESH_RATE = 0.02;
 

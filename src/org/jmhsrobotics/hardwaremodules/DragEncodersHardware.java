@@ -27,6 +27,13 @@ public class DragEncodersHardware extends SensorModule implements DragWheelEncod
 	}
 	
 	@Override
+	public void reset()
+	{
+		forwardEncoder.reset();
+		sideEncoder.reset();
+	}
+	
+	@Override
 	public void updateData()
 	{
 		forward = GenericEncoderInterface.read(forwardEncoder);

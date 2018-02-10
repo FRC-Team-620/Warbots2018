@@ -3,9 +3,8 @@ package org.jmhsrobotics.hardwareinterface;
 import java.util.function.DoubleBinaryOperator;
 
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Sendable;
 
-public interface GenericEncoderInterface extends Sendable
+public interface GenericEncoderInterface extends Sensor
 {
 	public class EncoderData
 	{

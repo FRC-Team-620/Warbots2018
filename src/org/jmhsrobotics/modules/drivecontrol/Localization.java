@@ -31,6 +31,20 @@ public class Localization extends PlainSendable implements Module
 		SmartDashboard.putData("Localization", this);
 	}
 	
+	public void enable()
+	{
+		gyro.reset();
+		wheelEncoders.reset();
+		dragWheelEncoders.reset();
+		x = y = dx = dy = o = w = 0;
+		updater.startPeriodic(.02);
+	}
+	
+	public void disable()
+	{
+		updater.stop();
+	}
+	
 	@SuppressWarnings("unused") //a lot of this data will be used later to develop more sophisticated localization
 	private void updateSensors()
 	{
@@ -54,16 +68,6 @@ public class Localization extends PlainSendable implements Module
 		
 		System.out.println("Wheel Encoders: " + wheelEncoders.left().getDist() + " " + wheelEncoders.right().getDist());
 		System.out.println("Drag Encoders: " + dragWheelEncoders.forward().getDist() + " " + dragWheelEncoders.side().getDist());
-	}
-	
-	public void enable()
-	{
-		updater.startPeriodic(.02);
-	}
-	
-	public void disable()
-	{
-		updater.stop();
 	}
 	
 	public double getX()

@@ -33,6 +33,12 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 		
 		SmartDashboard.putData("Navx", this);
 	}
+	
+	@Override
+	public void reset()
+	{
+		navx.reset();
+	}
 
 	@Override
 	public void updateData()

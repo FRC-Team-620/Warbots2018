@@ -27,6 +27,13 @@ public class WheelEncodersHardware extends SensorModule implements WheelEncoders
 	}
 	
 	@Override
+	public void reset()
+	{
+		leftEncoder.reset();
+		rightEncoder.reset();
+	}
+	
+	@Override
 	public void updateData()
 	{
 		left = GenericEncoderInterface.read(leftEncoder);
