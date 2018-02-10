@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Localization extends PlainSendable implements Module
+class Localization extends PlainSendable implements Module
 {	
 	private @Submodule Gyro gyro;
 	private @Submodule WheelEncoders wheelEncoders;
