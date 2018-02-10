@@ -3,48 +3,34 @@ package org.jmhsrobotics.modules.drivecontrol;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.util.DummyPIDOutput;
+import org.jmhsrobotics.core.util.PIDCalculator;
 import org.jmhsrobotics.core.util.PIDSensor;
 
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 class DriveDistance extends Command
 {
 	private DriveController drive;
-//	private Localization localization;
 
-	//	private Angle lockAngle;
 	private double targetDistance;
 
-	private PIDController /*dirPid,*/ distPid;
-	private DummyPIDOutput /*dirOutput,*/ distOutput;
+	private PIDCalculator controller;
+	private DummyPIDOutput output;
 
 	public DriveDistance(DriveController drive, Localization localization, double dist)
 	{
 		this.drive = drive;
-//		this.localization = localization;
 		this.targetDistance = dist;
 
-		//		dirOutput = new DummyPIDOutput();
-		//		SmartDashboard.putData("Dir Output", dirOutput);
-		distOutput = new DummyPIDOutput();
-		SmartDashboard.putData("Dist Output", distOutput);
+		output = new DummyPIDOutput();
+		SmartDashboard.putData("Output", output);
 
-		//		DummyPIDSource dirSource = DummyPIDSource.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
-		PIDSensor distSource = PIDSensor.fromDispAndRate(() -> localization.getPos(drive.getLockAngle().get()), () -> localization.getSpeed(drive.getLockAngle().get()));
-
-		//		dirPid = new PIDController(0.01, 0, 0.01, dirSource, dirOutput);
-		//		dirPid.setAbsoluteTolerance(0.5);
-		//		dirPid.setInputRange(0, 360);
-		//		dirPid.setOutputRange(-1, 1);
-		//		dirPid.setContinuous();
-		//		SmartDashboard.putData("Dir PID", dirPid);
-
-		distPid = new PIDController(0.02, 0, 0.04, distSource, distOutput);
-		distPid.setAbsoluteTolerance(10);
-		distPid.setOutputRange(-1, 1);
-		SmartDashboard.putData("Dist PID", distPid);
+		PIDSensor input = PIDSensor.fromDispAndRate(localization::getForwardPos, localization::getForwardSpeed);
+		
+		controller = new PIDCalculator(0.02, 0, 0.04, input, output);
+		controller.setOutputRange(-1, 1);
+		SmartDashboard.putData("PID Calculator", controller);
 	}
 
 	public DriveDistance(DriveController drive, Localization localization, double dist, SubsystemManager subsystems)
@@ -56,30 +42,25 @@ class DriveDistance extends Command
 	@Override
 	protected void initialize()
 	{
-//		lockAngle = localization.getAngle();
-//		targetDistance += localization.getPos(lockAngle);
-//		dirPid.setSetpoint(lockAngle.measureDegreesUnsigned());
-		distPid.setSetpoint(targetDistance);
-//		dirPid.enable();
-		distPid.enable();
+		controller.setRelativeSetpoint(targetDistance);
+		controller.enable();
 	}
 
 	@Override
 	protected void execute()
 	{
-		drive.drive(distOutput.get(), /*dirOutput.get()*/ 0);
+		drive.drive(output.get(), 0);
 	}
 
 	@Override
 	protected boolean isFinished()
 	{
-		return distPid.onTarget();
+		return controller.getAbsoluteError() < 10;
 	}
 
 	@Override
 	protected void end()
 	{
-//		dirPid.disable();
-		distPid.disable();
+		controller.disable();
 	}
 }

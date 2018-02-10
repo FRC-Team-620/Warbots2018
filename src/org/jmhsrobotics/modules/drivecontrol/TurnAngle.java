@@ -4,39 +4,36 @@ import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.DummyPIDOutput;
+import org.jmhsrobotics.core.util.PIDCalculator;
 import org.jmhsrobotics.core.util.PIDSensor;
 
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 class TurnAngle extends Command
 {
 	private DriveController drive;
-	private Localization localization;
 
 	private Angle targetAngle;
 	
-	private PIDController pid;
+	private PIDCalculator controller;
 	private DummyPIDOutput output;
 
 	public TurnAngle(DriveController drive, Localization localization, Angle angle)
 	{
 		this.drive = drive;
-		this.localization = localization;
 		this.targetAngle = angle;
 		
 		output = new DummyPIDOutput();
 		SmartDashboard.putData("Output", output);
 
-		PIDSensor source = PIDSensor.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
+		PIDSensor input = PIDSensor.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
 
-		pid = new PIDController(0.02, 0, 0.03, source, output);
-		pid.setAbsoluteTolerance(0.5);
-		pid.setInputRange(0, 360);
-		pid.setOutputRange(-1, 1);
-		pid.setContinuous();
-		SmartDashboard.putData("PID", pid);
+		controller = new PIDCalculator(0.02, 0, 0.03, input, output);
+		controller.setInputRange(0, 360);
+		controller.setOutputRange(-1, 1);
+		controller.setContinuous();
+		SmartDashboard.putData("PID", controller);
 	}
 
 	public TurnAngle(DriveController drive, Localization localization, Angle angle, SubsystemManager subsystems)
@@ -48,9 +45,8 @@ class TurnAngle extends Command
 	@Override
 	protected void initialize()
 	{
-		targetAngle = targetAngle.plus(localization.getAngle());
-		pid.setSetpoint(targetAngle.measureDegreesUnsigned());
-		pid.enable();
+		controller.setRelativeSetpoint(targetAngle.measureDegreesUnsigned());
+		controller.enable();
 	}
 
 	@Override
@@ -62,12 +58,12 @@ class TurnAngle extends Command
 	@Override
 	protected boolean isFinished()
 	{
-		return pid.onTarget();
+		return controller.getAbsoluteError() < 1;
 	}
 
 	@Override
 	protected void end()
 	{
-		pid.disable();
+		controller.disable();
 	}
 }

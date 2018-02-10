@@ -17,8 +17,8 @@ public class PIDCalculator extends PlainSendable
 	
 	private double lastValueRead;
 	private double lastP;
-	private double lastD;
 	private double lastI;
+	private double lastD;
 	private double lastF;
 
 	private double p, i, d, f;
@@ -271,6 +271,11 @@ public class PIDCalculator extends PlainSendable
 		accumulator = 0;
 	}
 
+	public double getAbsoluteError()
+	{
+		return Math.abs(target - lastValueRead);
+	}
+	
 	@Override
 	public void initSendable(SendableBuilder builder)
 	{
