@@ -8,6 +8,7 @@
 package org.jmhsrobotics.robot;
 
 import org.jmhsrobotics.core.modules.OperatorInterface;
+import org.jmhsrobotics.core.modules.RawDriveController;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
@@ -18,7 +19,6 @@ import org.jmhsrobotics.hardwaremodules.NavX;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
-import org.jmhsrobotics.modules.RawDriveController;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
 
 import edu.wpi.first.wpilibj.SPI.Port;

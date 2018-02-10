@@ -1,8 +1,7 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.core.modules;
 
 import java.util.Optional;
 
-import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
@@ -19,16 +18,16 @@ public class DashboardControl extends CommandModule
 	public void onLink()
 	{
 		subsystems.ifPresent(s -> requires(s.getSubsystem("DriveTrain")));
-		SmartDashboard.putNumber("Speed Val", 0.);
-		SmartDashboard.putNumber("Turn Val", 0.);
+		SmartDashboard.putNumber("Speed", 0.);
+		SmartDashboard.putNumber("Turn", 0.);
 		SmartDashboard.putData("Move Controlled", this);
 	}
 
 	@Override
 	protected void execute()
 	{
-		double speed = SmartDashboard.getNumber("Speed Val", 0.);
-		double turn = SmartDashboard.getNumber("Turn Val", 0.);
+		double speed = SmartDashboard.getNumber("Speed", 0.);
+		double turn = SmartDashboard.getNumber("Turn", 0.);
 		drive.drive(speed, turn);
 	}
 
