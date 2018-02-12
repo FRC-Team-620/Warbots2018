@@ -6,7 +6,9 @@ import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 
-public class DriveBallMech extends ControlSchemeModule
+import edu.wpi.first.wpilibj.Joystick;
+
+public class DriveBallMechWithOneJoystick extends ControlSchemeModule
 {
 	private @Submodule Optional<SubsystemManager> subsystems;
 	
@@ -19,6 +21,6 @@ public class DriveBallMech extends ControlSchemeModule
 	@Override
 	protected void execute()
 	{
-		
+		Joystick js = getOI().getMainDriverJoystick();
 	}
 }

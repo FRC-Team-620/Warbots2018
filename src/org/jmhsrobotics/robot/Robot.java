@@ -84,7 +84,7 @@ public class Robot extends HybridRobot
 	@Override
 	public void autonomousInit()
 	{
-		modules.getModules(DriveController.class).forEach(DriveController::enable);
+		activate();
 		autonomous.start();
 	}
 
@@ -97,8 +97,7 @@ public class Robot extends HybridRobot
 	@Override
 	public void teleopInit()
 	{
-		modules.getModules(DriveController.class).forEach(DriveController::enable);
-		autonomous.cancel();
+		activate();
 	}
 
 	@Override
@@ -110,6 +109,15 @@ public class Robot extends HybridRobot
 	@Override
 	public void disabledInit()
 	{
+		Scheduler.getInstance().removeAll();
+		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::enableJoystickRefresh);
 		modules.getModules(DriveController.class).forEach(DriveController::disable);
+	}
+	
+	private void activate()
+	{
+		Scheduler.getInstance().removeAll();
+		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::disableJoystickRefresh);
+		modules.getModules(DriveController.class).forEach(DriveController::enable);
 	}
 }

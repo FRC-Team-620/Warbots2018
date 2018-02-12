@@ -12,6 +12,7 @@ import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
@@ -21,27 +22,46 @@ public class OperatorInterface  implements Module
 {
 	private final static DriverStation ds = DriverStation.getInstance();
 
-	private List<XboxController> xboxControllers;
-	private List<Joystick> joysticks;
+	private volatile List<XboxController> xboxControllers;
+	private volatile List<Joystick> joysticks;
 
+	private Notifier joystickUpdater;
+	
 	public OperatorInterface()
 	{
-		xboxControllers = new ArrayList<>();
-		joysticks = new ArrayList<>();
-
+		updateJoysticks();
+		
+		joystickUpdater = new Notifier(this::updateJoysticks);
+	}
+	
+	private void updateJoysticks()
+	{
+		List<XboxController> localXboxControllers = new ArrayList<>();
+		List<Joystick> localJoysticks = new ArrayList<>();
+		
 		for (int i = 0; i < DriverStation.kJoystickPorts; ++i)
 		{
 			if (ds.getJoystickType(i) == -1) break;
 
 			if (ds.getJoystickIsXbox(i))
-				xboxControllers.add(new XboxController(i));
-			else joysticks.add(new Joystick(i));
+				localXboxControllers.add(new XboxController(i));
+			else localJoysticks.add(new Joystick(i));
 		}
 
-		xboxControllers = Collections.unmodifiableList(xboxControllers);
-		joysticks = Collections.unmodifiableList(joysticks);
+		this.xboxControllers = Collections.unmodifiableList(localXboxControllers);
+		this.joysticks = Collections.unmodifiableList(localJoysticks);
 	}
 
+	public void enableJoystickRefresh()
+	{
+		joystickUpdater.startPeriodic(0.25);
+	}
+	
+	public void disableJoystickRefresh()
+	{
+		joystickUpdater.stop();
+	}
+	
 	public List<XboxController> getXboxControllers()
 	{
 		return xboxControllers;
