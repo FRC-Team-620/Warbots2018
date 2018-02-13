@@ -1,11 +1,33 @@
 package org.jmhsrobotics.hardwareinterface;
 
+import org.jmhsrobotics.core.util.RobotMath;
+
 public interface TurnTable
 {
 	public static enum Position
 	{
-		farLeft, left, center, right, farRight
+		left, center, right;
+		
+		static
+		{
+			RobotMath.linkNextAndPrevWithSelfReferencingCaps(values(), (p, t) -> p.next = t, (p, t) -> p.prev = t);
+		}
+		
+		private Position prev, next;
+		
+		public Position getRightAdjacent()
+		{
+			return next;
+		}
+		
+		public Position getLeftAdjacent()
+		{
+			return prev;
+		}
+
 	}
 	
 	public void goTo(Position position);
+	
+	public Position getCurrentTurnTablePosition();
 }

@@ -4,12 +4,15 @@ import org.jmhsrobotics.hardwareinterface.HybridLifter;
 
 public class HybridElevatorController implements HybridLifter
 {
-
+	private Position currentPosition;
+	
 	@Override
 	public void goTo(Position position)
 	{
-		// TODO Auto-generated method stub
+		if(currentPosition == position)
+			return;
 		
+		currentPosition = position;
 	}
 
 	@Override
@@ -33,4 +36,9 @@ public class HybridElevatorController implements HybridLifter
 		
 	}
 
+	@Override
+	public Position getCurrentLifterPosition()
+	{
+		return currentPosition;
+	}
 }

@@ -65,9 +65,6 @@ public class Localization extends PlainSendable implements Module
 		
 		x += dx;
 		y += dy;
-		
-		System.out.println("Wheel Encoders: " + wheelEncoders.left().getDist() + " " + wheelEncoders.right().getDist());
-		System.out.println("Drag Encoders: " + dragWheelEncoders.forward().getDist() + " " + dragWheelEncoders.side().getDist());
 	}
 	
 	public double getX()

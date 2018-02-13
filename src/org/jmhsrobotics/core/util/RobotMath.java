@@ -1,5 +1,7 @@
 package org.jmhsrobotics.core.util;
 
+import java.util.function.BiConsumer;
+
 public abstract class RobotMath
 {
 	public static double linearMap(double n, double sourceMin, double sourceMax, double outputMin, double outputMax)
@@ -30,5 +32,19 @@ public abstract class RobotMath
 	public static double curve(double n, double curve)
 	{
 		return Math.signum(n) * Math.pow(Math.abs(n), curve);
+	}
+	
+	public static <T> void linkNextAndPrevWithSelfReferencingCaps(T[] array, BiConsumer<T, T> setNext, BiConsumer<T, T> setPrev)
+	{
+		T first = array[0];
+		setPrev.accept(first, first);
+		
+		for(int i = 1; i < array.length; ++i)
+			setPrev.accept(array[i], array[i - 1]);
+		for(int i = 0; i < array.length - 1; ++i)
+			setNext.accept(array[i], array[i + 1]);
+		
+		T last = array[array.length - 1];
+		setNext.accept(last, last);
 	}
 }

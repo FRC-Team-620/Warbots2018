@@ -4,19 +4,24 @@ import org.jmhsrobotics.hardwareinterface.Grabber;
 
 public class GrabberController implements Grabber
 {
-
+	private Position currentLeftPosition, currentRightPosition;
+	
 	@Override
 	public void setLeftArm(Position position)
 	{
-		// TODO Auto-generated method stub
+		if(currentLeftPosition == position)
+			return;
 		
+		currentLeftPosition = position;
 	}
 
 	@Override
 	public void setRightArm(Position position)
 	{
-		// TODO Auto-generated method stub
+		if(currentRightPosition == position)
+			return;
 		
+		currentRightPosition = position;
 	}
 
 	@Override
@@ -31,6 +36,18 @@ public class GrabberController implements Grabber
 	{
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Position getLeftArmPosition()
+	{
+		return currentLeftPosition;
+	}
+
+	@Override
+	public Position getRightArmPosition()
+	{
+		return currentRightPosition;
 	}
 
 }

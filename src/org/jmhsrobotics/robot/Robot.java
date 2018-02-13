@@ -17,8 +17,9 @@ import org.jmhsrobotics.hardwaremodules.DragEncodersHardware;
 import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
+import org.jmhsrobotics.mockhardware.MockElevatorAndGrabber;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
-import org.jmhsrobotics.modules.DriveWithJoystick;
+import org.jmhsrobotics.modules.DriveClawMechWithTwoJoysticks;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
@@ -50,14 +51,13 @@ public class Robot extends HybridRobot
 		subsystems = new SubsystemManager();
 		modules.addModule(subsystems);
 		subsystems.addEmptySubsystem("DriveTrain");
+		subsystems.addEmptySubsystem("Grabber");
 
 		modules.addModule(new OperatorInterface());
 		modules.addModule(new DriveTrainHardware(0, 2, 1, 3));
 		modules.addModule(new NavXHardware(Port.kMXP));
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
 		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
-//		modules.addModule(new MockDrive());
-//		modules.addModule(new MockGyro());
 		
 		modules.addModule(new CalibrateDriveTrain());
 
@@ -69,10 +69,17 @@ public class Robot extends HybridRobot
 //		modules.addModule(dbControl);
 //		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
 		
-		CommandModule driveWithJoystick = new DriveWithJoystick();
-		modules.addModule(driveWithJoystick);
-		SmartDashboard.putData("Drive With Joystick", driveWithJoystick);
-		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveWithJoystick);
+//		CommandModule driveDriveTrain = new DriveWithJoystick();
+//		modules.addModule(driveDriveTrain);
+//		SmartDashboard.putData("Drive With Joystick", driveDriveTrain);
+//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveDriveTrain);
+		
+		modules.addModule(new MockElevatorAndGrabber());
+		
+		CommandModule driveGrabber = new DriveClawMechWithTwoJoysticks();
+		modules.addModule(driveGrabber);
+		SmartDashboard.putData("Drive Grabber with Two Joysticks", driveGrabber);
+		subsystems.getSubsystem("Grabber").setDefaultCommand(driveGrabber);
 		
 //		modules.addModule(modules.getAllModuleTests());
 		autonomous = new AutoSwitcher();
