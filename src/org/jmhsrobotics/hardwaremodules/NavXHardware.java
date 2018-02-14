@@ -10,7 +10,6 @@ import org.jmhsrobotics.hardwareinterface.Gyro;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.SPI.Port;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -24,14 +23,25 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	
 	private double pressure;
 	
-	public NavXHardware(Port port)
+	/**
+	 * @param port The Port that the navx is connected to. This should be either an instance of
+	 * SerialPort.Port, I2C.Port, or SPI.Port.
+	 */
+	public NavXHardware(Enum<?> port)
 	{
 		setRefreshRate(0);
 		
-		navx = new AHRS(port);
-		navx.reset();
-		
-		SmartDashboard.putData("Navx", this);
+		try
+		{
+			navx = AHRS.class.getConstructor(port.getClass()).newInstance(port);
+			navx.reset();
+			
+			SmartDashboard.putData("Navx", this);
+		}
+		catch (ReflectiveOperationException e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
