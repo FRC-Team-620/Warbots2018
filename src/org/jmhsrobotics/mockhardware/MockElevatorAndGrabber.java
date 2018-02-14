@@ -64,13 +64,13 @@ public class MockElevatorAndGrabber implements Module, Grabber, TurnTable, Hybri
 	@Override
 	public void spinLeftWheels(double speed)
 	{
-		System.out.println("Spinning left grabber wheels at " + speed);
+//		System.out.println("Spinning left grabber wheels at " + speed);
 	}
 
 	@Override
 	public void spinRightWheels(double speed)
 	{
-		System.out.println("Spinning right grabber wheels at " + speed);
+//		System.out.println("Spinning right grabber wheels at " + speed);
 	}
 
 	@Override

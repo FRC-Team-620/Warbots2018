@@ -4,7 +4,7 @@ public interface Grabber
 {
 	public static enum Position
 	{
-		contracted, middle, extended
+		contracted, extended, raised;
 	}
 	
 	public void setLeftArm(Position position);

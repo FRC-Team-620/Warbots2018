@@ -403,6 +403,16 @@ public class Angle
 		return sum(this, other);
 	}
 
+	public static Angle product(Angle a, double scalar)
+	{
+		return new Angle(a.value * scalar);
+	}
+	
+	public Angle times(double scalar)
+	{
+		return product(this, scalar);
+	}
+	
 	@Override
 	public String toString()
 	{

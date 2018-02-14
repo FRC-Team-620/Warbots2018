@@ -9,24 +9,21 @@ package org.jmhsrobotics.robot;
 
 import org.jmhsrobotics.core.modules.OperatorInterface;
 import org.jmhsrobotics.core.modules.SubsystemManager;
-import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.util.HybridRobot;
-import org.jmhsrobotics.hardwaremodules.DragEncodersHardware;
-import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
-import org.jmhsrobotics.hardwaremodules.NavXHardware;
-import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.mockhardware.MockElevatorAndGrabber;
-import org.jmhsrobotics.modules.CalibrateDriveTrain;
+import org.jmhsrobotics.mockhardware.MockGrabberPneumatics;
+import org.jmhsrobotics.mockhardware.MockGrabberWheels;
+import org.jmhsrobotics.mockhardware.MockTurnTable;
 import org.jmhsrobotics.modules.DriveClawMechWithTwoJoysticks;
+import org.jmhsrobotics.modules.GrabberController;
+import org.jmhsrobotics.modules.TurnTableController;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
-import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
-import org.jmhsrobotics.modules.drivecontrol.Localization;
 
-import edu.wpi.first.wpilibj.SPI.Port;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -50,36 +47,43 @@ public class Robot extends HybridRobot
 
 		subsystems = new SubsystemManager();
 		modules.addModule(subsystems);
-		subsystems.addEmptySubsystem("DriveTrain");
+//		subsystems.addEmptySubsystem("DriveTrain");
+		subsystems.addEmptySubsystem("TurnTable");
 		subsystems.addEmptySubsystem("Grabber");
 
 		modules.addModule(new OperatorInterface());
-		modules.addModule(new DriveTrainHardware(0, 2, 1, 3));
-		modules.addModule(new NavXHardware(Port.kMXP));
-		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
-		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
 		
-		modules.addModule(new CalibrateDriveTrain());
-
-		modules.addModule(new Localization());
-		modules.addModule(new CorrectiveDrive());
+//		modules.addModule(new DriveTrainHardware(0, 2, 1, 3));
+//		modules.addModule(new NavXHardware(Port.kMXP));
+//		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
+//		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
+//		
+//		modules.addModule(new CalibrateDriveTrain());
+//
+//		modules.addModule(new Localization());
+//		modules.addModule(new CorrectiveDrive());
 //		modules.addModule(new RawDriveController());
 		
 //		CommandModule dbControl = new DashboardControl();
 //		modules.addModule(dbControl);
 //		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
 		
-//		CommandModule driveDriveTrain = new DriveWithJoystick();
-//		modules.addModule(driveDriveTrain);
-//		SmartDashboard.putData("Drive With Joystick", driveDriveTrain);
-//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveDriveTrain);
+//		modules.addModule(new DriveWithJoystick());
 		
 		modules.addModule(new MockElevatorAndGrabber());
 		
-		CommandModule driveGrabber = new DriveClawMechWithTwoJoysticks();
-		modules.addModule(driveGrabber);
-		SmartDashboard.putData("Drive Grabber with Two Joysticks", driveGrabber);
-		subsystems.getSubsystem("Grabber").setDefaultCommand(driveGrabber);
+		modules.addModule(new MockGrabberPneumatics());
+		modules.addModule(new MockGrabberWheels());
+		
+		modules.addModule(new MockTurnTable());
+		
+		modules.addModule(new GrabberController());
+		
+		TurnTableController turnTableController = new TurnTableController();
+		modules.addModule(turnTableController);
+		subsystems.getSubsystem("TurnTable").setDefaultCommand(turnTableController);
+		
+		modules.addModule(new DriveClawMechWithTwoJoysticks());
 		
 //		modules.addModule(modules.getAllModuleTests());
 		autonomous = new AutoSwitcher();
@@ -105,6 +109,7 @@ public class Robot extends HybridRobot
 	public void teleopInit()
 	{
 		activate();
+		modules.getModules(ControlSchemeModule.class).forEach(Command::start);
 	}
 
 	@Override
