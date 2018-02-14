@@ -4,7 +4,7 @@ import java.util.function.DoubleBinaryOperator;
 
 import edu.wpi.first.wpilibj.Encoder;
 
-public interface GenericEncoderInterface extends Sensor
+public interface EncoderGroup extends Sensor
 {
 	public class EncoderData
 	{

@@ -1,6 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
-public interface LifterPneumatics
+public interface ElevatorMotor
 {
 
 }

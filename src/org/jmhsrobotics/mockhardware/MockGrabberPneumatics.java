@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class MockGrabberPneumatics implements Module, GrabberPneumatics
 {
 	@Override
-	public void setLateralLeftEncoderExtended(boolean val)
+	public void setLateralLeftPistonExtended(boolean val)
 	{
 		System.out.println("Setting lateral left solenoid to " + (val ? "extended" : "retracted"));
 	}
@@ -21,7 +21,7 @@ public class MockGrabberPneumatics implements Module, GrabberPneumatics
 	}
 
 	@Override
-	public void setVerticalLeftEncoderExtended(boolean val)
+	public void setVerticalLeftPistonExtended(boolean val)
 	{
 		System.out.println("Setting vertical left solenoid to " + (val ? "extended" : "retracted"));
 	}

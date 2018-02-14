@@ -1,13 +1,13 @@
 package org.jmhsrobotics.mockhardware;
 
 import org.jmhsrobotics.core.modulesystem.Module;
-import org.jmhsrobotics.hardwareinterface.TurnTableMotorWithLimitSwitches;
+import org.jmhsrobotics.hardwareinterface.TurnTableMotor;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class MockTurnTable implements Module, TurnTableMotorWithLimitSwitches
+public class MockTurnTable implements Module, TurnTableMotor
 {
 	private final static double LEFT_LIMIT_SWITCH = -.3, MIDDLE_LIMIT_SWITCH = 0, RIGHT_LIMIT_SWITCH = .3;
 	private final static double MIDDLE_LIMIT_SWITCH_THRESHOLD_SIZE = 0.1;
@@ -38,7 +38,7 @@ public class MockTurnTable implements Module, TurnTableMotorWithLimitSwitches
 	}
 
 	@Override
-	public synchronized boolean readMiddleEncoder()
+	public synchronized boolean readMiddleLimitSwitch()
 	{
 		return Math.abs(position - MIDDLE_LIMIT_SWITCH) < MIDDLE_LIMIT_SWITCH_THRESHOLD_SIZE;
 	}

@@ -4,7 +4,7 @@ import java.io.PrintStream;
 
 import org.jmhsrobotics.core.modulesystem.SensorModule;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
-import org.jmhsrobotics.hardwareinterface.GenericEncoderInterface;
+import org.jmhsrobotics.hardwareinterface.EncoderGroup;
 import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -36,10 +36,10 @@ public class WheelEncodersHardware extends SensorModule implements WheelEncoders
 	@Override
 	public void updateData()
 	{
-		left = GenericEncoderInterface.read(leftEncoder);
-		right =  GenericEncoderInterface.read(rightEncoder);
-		average = GenericEncoderInterface.combine(left, right, (l, r) -> (l + r) / 2);
-		diff = GenericEncoderInterface.combine(left, right, (l, r) -> l - r);
+		left = EncoderGroup.read(leftEncoder);
+		right =  EncoderGroup.read(rightEncoder);
+		average = EncoderGroup.combine(left, right, (l, r) -> (l + r) / 2);
+		diff = EncoderGroup.combine(left, right, (l, r) -> l - r);
 	}
 	
 	@Override

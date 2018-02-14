@@ -18,8 +18,8 @@ import org.jmhsrobotics.mockhardware.MockGrabberPneumatics;
 import org.jmhsrobotics.mockhardware.MockGrabberWheels;
 import org.jmhsrobotics.mockhardware.MockTurnTable;
 import org.jmhsrobotics.modules.DriveClawMechWithTwoJoysticks;
-import org.jmhsrobotics.modules.GrabberController;
-import org.jmhsrobotics.modules.TurnTableController;
+import org.jmhsrobotics.modules.GrabberControlCommand;
+import org.jmhsrobotics.modules.TurnTableControlCommand;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -77,9 +77,9 @@ public class Robot extends HybridRobot
 		
 		modules.addModule(new MockTurnTable());
 		
-		modules.addModule(new GrabberController());
+		modules.addModule(new GrabberControlCommand());
 		
-		TurnTableController turnTableController = new TurnTableController();
+		TurnTableControlCommand turnTableController = new TurnTableControlCommand();
 		modules.addModule(turnTableController);
 		subsystems.getSubsystem("TurnTable").setDefaultCommand(turnTableController);
 		

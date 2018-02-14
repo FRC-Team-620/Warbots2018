@@ -2,7 +2,7 @@ package org.jmhsrobotics.hardwareinterface;
 
 import org.jmhsrobotics.core.util.RobotMath;
 
-public interface HybridLifter
+public interface ElevatorController
 {
 	public static enum Position
 	{
@@ -26,6 +26,8 @@ public interface HybridLifter
 		}
 	}
 	
+	public void start();
+	public void cancel();
 	public void goTo(Position position);
 	public Position getCurrentLifterPosition();
 	public void goToRaw(double linearHeight, boolean raisePneumatics);

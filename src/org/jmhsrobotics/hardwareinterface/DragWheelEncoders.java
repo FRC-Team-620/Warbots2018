@@ -1,6 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
-public interface DragWheelEncoders extends GenericEncoderInterface
+public interface DragWheelEncoders extends EncoderGroup
 {
 	public EncoderData forward();
 	

@@ -1,22 +1,22 @@
 package org.jmhsrobotics.mockhardware;
 
 import org.jmhsrobotics.core.modulesystem.Module;
-import org.jmhsrobotics.hardwareinterface.Grabber;
-import org.jmhsrobotics.hardwareinterface.HybridLifter;
-import org.jmhsrobotics.hardwareinterface.TurnTable;
+import org.jmhsrobotics.hardwareinterface.GrabberController;
+import org.jmhsrobotics.hardwareinterface.ElevatorController;
+import org.jmhsrobotics.hardwareinterface.TurnTableController;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class MockElevatorAndGrabber implements Module, Grabber, TurnTable, HybridLifter
+public class MockElevatorAndGrabber implements Module, GrabberController, TurnTableController, ElevatorController
 {
-	private HybridLifter.Position lifterPosition;
-	private TurnTable.Position turnTablePosition;
-	private Grabber.Position leftArmPosition;
-	private Grabber.Position rightArmPosition;
+	private ElevatorController.Position lifterPosition;
+	private TurnTableController.Position turnTablePosition;
+	private GrabberController.Position leftArmPosition;
+	private GrabberController.Position rightArmPosition;
 	
 	@Override
-	public void goTo(HybridLifter.Position position)
+	public void goTo(ElevatorController.Position position)
 	{
 		System.out.println("Moving lifter to " + position);
 		lifterPosition = position;
@@ -41,21 +41,21 @@ public class MockElevatorAndGrabber implements Module, Grabber, TurnTable, Hybri
 	}
 
 	@Override
-	public void goTo(TurnTable.Position position)
+	public void goTo(TurnTableController.Position position)
 	{
 		System.out.println("Turning turntable to " + position);
 		turnTablePosition = position;
 	}
 
 	@Override
-	public void setLeftArm(Grabber.Position position)
+	public void setLeftArm(GrabberController.Position position)
 	{
 		System.out.println("Moving grabber left arm to " + position);
 		leftArmPosition = position;
 	}
 
 	@Override
-	public void setRightArm(Grabber.Position position)
+	public void setRightArm(GrabberController.Position position)
 	{
 		System.out.println("Moving grabber right arm to " + position);
 		rightArmPosition = position;
@@ -87,25 +87,25 @@ public class MockElevatorAndGrabber implements Module, Grabber, TurnTable, Hybri
 	}
 
 	@Override
-	public Grabber.Position getLeftArmPosition()
+	public GrabberController.Position getLeftArmPosition()
 	{
 		return leftArmPosition;
 	}
 
 	@Override
-	public Grabber.Position getRightArmPosition()
+	public GrabberController.Position getRightArmPosition()
 	{
 		return rightArmPosition;
 	}
 
 	@Override
-	public HybridLifter.Position getCurrentLifterPosition()
+	public ElevatorController.Position getCurrentLifterPosition()
 	{
 		return lifterPosition;
 	}
 
 	@Override
-	public TurnTable.Position getCurrentTurnTablePosition()
+	public TurnTableController.Position getCurrentTurnTablePosition()
 	{
 		return turnTablePosition;
 	}

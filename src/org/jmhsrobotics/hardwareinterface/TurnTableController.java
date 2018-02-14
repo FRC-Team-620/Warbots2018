@@ -3,7 +3,7 @@ package org.jmhsrobotics.hardwareinterface;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.RobotMath;
 
-public interface TurnTable
+public interface TurnTableController
 {
 	public static enum Position
 	{

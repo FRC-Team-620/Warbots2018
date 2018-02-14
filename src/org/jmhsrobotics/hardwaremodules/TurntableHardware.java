@@ -1,8 +1,8 @@
 package org.jmhsrobotics.hardwaremodules;
 
-import org.jmhsrobotics.hardwareinterface.TurnTableMotorWithLimitSwitches;
+import org.jmhsrobotics.hardwareinterface.TurnTableMotor;
 
-public class TurntableHardware implements TurnTableMotorWithLimitSwitches
+public class TurntableHardware implements TurnTableMotor
 {
 	@Override
 	public void driveTurnTableMotor(double speed)
@@ -10,7 +10,7 @@ public class TurntableHardware implements TurnTableMotorWithLimitSwitches
 	}
 
 	@Override
-	public boolean readMiddleEncoder()
+	public boolean readMiddleLimitSwitch()
 	{
 		return false;
 	}

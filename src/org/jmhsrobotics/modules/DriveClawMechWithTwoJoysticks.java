@@ -3,10 +3,10 @@ package org.jmhsrobotics.modules;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.RobotMath;
-import org.jmhsrobotics.hardwareinterface.Grabber;
-import org.jmhsrobotics.hardwareinterface.Grabber.Position;
-import org.jmhsrobotics.hardwareinterface.HybridLifter;
-import org.jmhsrobotics.hardwareinterface.TurnTable;
+import org.jmhsrobotics.hardwareinterface.GrabberController;
+import org.jmhsrobotics.hardwareinterface.GrabberController.Position;
+import org.jmhsrobotics.hardwareinterface.ElevatorController;
+import org.jmhsrobotics.hardwareinterface.TurnTableController;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -14,9 +14,9 @@ public class DriveClawMechWithTwoJoysticks extends ControlSchemeModule
 {
 	private final static double THRESHOLD_OPEN = 0.7, THRESHOLD_CLOSE = 0.7;
 	
-	private @Submodule TurnTable turnTable;
-	private @Submodule HybridLifter elevator;
-	private @Submodule Grabber claw;
+	private @Submodule TurnTableController turnTable;
+	private @Submodule ElevatorController elevator;
+	private @Submodule GrabberController claw;
 	
 	@Override
 	protected void execute()

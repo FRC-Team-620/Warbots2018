@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import org.jmhsrobotics.core.modulesystem.SensorModule;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.DragWheelEncoders;
-import org.jmhsrobotics.hardwareinterface.GenericEncoderInterface;
+import org.jmhsrobotics.hardwareinterface.EncoderGroup;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
@@ -36,8 +36,8 @@ public class DragEncodersHardware extends SensorModule implements DragWheelEncod
 	@Override
 	public void updateData()
 	{
-		forward = GenericEncoderInterface.read(forwardEncoder);
-		side = GenericEncoderInterface.read(sideEncoder);
+		forward = EncoderGroup.read(forwardEncoder);
+		side = EncoderGroup.read(sideEncoder);
 	}
 	
 	@Override

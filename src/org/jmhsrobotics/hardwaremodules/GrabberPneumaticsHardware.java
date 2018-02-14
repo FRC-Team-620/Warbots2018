@@ -5,7 +5,7 @@ import org.jmhsrobotics.hardwareinterface.GrabberPneumatics;
 public class GrabberPneumaticsHardware implements GrabberPneumatics
 {
 	@Override
-	public void setLateralLeftEncoderExtended(boolean val)
+	public void setLateralLeftPistonExtended(boolean val)
 	{
 	}
 
@@ -15,7 +15,7 @@ public class GrabberPneumaticsHardware implements GrabberPneumatics
 	}
 
 	@Override
-	public void setVerticalLeftEncoderExtended(boolean val)
+	public void setVerticalLeftPistonExtended(boolean val)
 	{
 	}
 

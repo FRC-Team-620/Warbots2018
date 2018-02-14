@@ -5,15 +5,15 @@ import java.util.Optional;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
-import org.jmhsrobotics.hardwareinterface.TurnTable;
-import org.jmhsrobotics.hardwareinterface.TurnTableMotorWithLimitSwitches;
+import org.jmhsrobotics.hardwareinterface.TurnTableController;
+import org.jmhsrobotics.hardwareinterface.TurnTableMotor;
 
-public class TurnTableController extends CommandModule implements TurnTable
+public class TurnTableControlCommand extends CommandModule implements TurnTableController
 {
 	private final static double TURN_SPEED = 0.3;
 	
 	private @Submodule Optional<SubsystemManager> subsystems;
-	private @Submodule TurnTableMotorWithLimitSwitches tableHardware;
+	private @Submodule TurnTableMotor tableHardware;
 	
 	private Position currentPosition;
 	private Position targetPosition;
@@ -50,7 +50,7 @@ public class TurnTableController extends CommandModule implements TurnTable
 		{
 			tableHardware.driveTurnTableMotor(Math.signum(targetPosition.compareTo(currentPosition)) * TURN_SPEED);
 			
-			if(tableHardware.readMiddleEncoder())
+			if(tableHardware.readMiddleLimitSwitch())
 				currentPosition = Position.center;
 			else if(currentPosition == Position.center)
 				currentPosition = targetPosition;

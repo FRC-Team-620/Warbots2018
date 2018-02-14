@@ -1,6 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
-public interface WheelEncoders extends GenericEncoderInterface
+public interface WheelEncoders extends EncoderGroup
 {
 	public EncoderData left();
 

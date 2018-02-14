@@ -1,6 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
-public interface Grabber
+public interface GrabberController
 {
 	public static enum Position
 	{

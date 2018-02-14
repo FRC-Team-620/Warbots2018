@@ -1,8 +1,8 @@
 package org.jmhsrobotics.hardwaremodules;
 
-import org.jmhsrobotics.hardwareinterface.LifterPneumatics;
+import org.jmhsrobotics.hardwareinterface.ElevatorPneumatics;
 
-public class LifterPneumaticsHardware implements LifterPneumatics
+public class LifterPneumaticsHardware implements ElevatorPneumatics
 {
 
 }
