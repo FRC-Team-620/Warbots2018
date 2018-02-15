@@ -42,8 +42,6 @@ public class Localization extends CommandModule
 	@Override
 	protected void execute()
 	{
-		System.out.println("Updating sensors at " + System.currentTimeMillis());
-		
 		leftEncoder = wheelEncoders.left().getDist();
 		rightEncoder = wheelEncoders.right().getDist();
 		averageEncoder = wheelEncoders.average().getDist();
@@ -90,7 +88,7 @@ public class Localization extends CommandModule
 	public double getDistanceTo(Point target)
 	{
 		double dx = target.getX() - getX();
-		double dy = target.getX() - getY();
+		double dy = target.getY() - getY();
 		return Math.sqrt(dx * dx + dy * dy);
 	}
 	

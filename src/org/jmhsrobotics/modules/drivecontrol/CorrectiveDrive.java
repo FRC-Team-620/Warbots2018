@@ -38,8 +38,8 @@ public class CorrectiveDrive extends DriveController
 		angleController.setOutputRange(-.5, .5);
 		
 		distanceSensor = PIDSensor.fromDispAndRate(() -> localization.getDistanceTo(target.get()), () -> localization.getSpeedToward(target.get()));
-		distanceController = new PIDCalculator(0.03, 0, 1, distanceSensor, o -> speed = o);
-		distanceController.setOutputRange(-.5, .5);
+		distanceController = new PIDCalculator(0.3, 0, 1, distanceSensor, o -> speed = -o);
+		distanceController.setOutputRange(-.7, .7);
 		distanceController.setSetpoint(0);
 		
 		angleController.setName("Angle Controller PID");
@@ -76,16 +76,18 @@ public class CorrectiveDrive extends DriveController
 		if(target.isPresent())
 		{
 			Point targetPoint = target.get();
-			System.out.println("Pointing at " + targetPoint);
 			
 			Angle targetAngle = localization.getAngleTo(targetPoint);
-			System.out.println("Pointing in dir " + targetAngle);
 			
 			angleController.setSetpoint(targetAngle.measureDegreesUnsigned());
 			angleController.update();
 			
 			distanceController.update();
-			System.out.println("Speed: " + speed);
+			
+			System.out.println("At X:" + localization.getX() + " Y:" + localization.getY());
+			System.out.println("Target X:" + target.get().getX() + " Y:" + target.get().getY());
+			
+			System.out.println(localization.getDistanceTo(target.get()));
 		}
 			
 		driveRaw(speed, turn);
