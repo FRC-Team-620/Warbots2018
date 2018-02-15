@@ -1,8 +1,5 @@
 package org.jmhsrobotics.modules;
 
-import java.util.Optional;
-
-import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
@@ -12,14 +9,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveWithJoystick extends ControlSchemeModule
 {
-	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule DriveController drive;
-
-	@Override
-	public void onLink()
-	{
-		subsystems.ifPresent(s -> requires(s.getSubsystem("DriveTrain")));
-	}
 
 	@Override
 	public void execute()
@@ -34,6 +24,12 @@ public class DriveWithJoystick extends ControlSchemeModule
 //		String yadjout = String.format("%.2g%n", yadjusted);
 //		String xout = String.format("%.2g%n", x);
 //		String yout = String.format("%.2g%n", y);
+		
+		if(js.getTriggerReleased())
+		{
+			drive.setTarget(0, 96);
+		}
+		
 		drive.drive(yadjusted, xadjusted);
 	}
 }

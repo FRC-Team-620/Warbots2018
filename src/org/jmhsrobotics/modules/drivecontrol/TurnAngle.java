@@ -27,7 +27,7 @@ class TurnAngle extends Command
 		output = new DummyPIDOutput();
 		SmartDashboard.putData("Output", output);
 
-		PIDSensor input = PIDSensor.fromDispAndRate(localization::getAngleDegreesUnsigned, localization::getRotationRate);
+		PIDSensor input = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getRotationRate);
 
 		controller = new PIDCalculator(0.02, 0, 0.03, input, output);
 		controller.setInputRange(0, 360);

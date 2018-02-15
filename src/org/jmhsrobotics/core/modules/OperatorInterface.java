@@ -50,6 +50,10 @@ public class OperatorInterface  implements Module
 
 		this.xboxControllers = Collections.unmodifiableList(localXboxControllers);
 		this.joysticks = Collections.unmodifiableList(localJoysticks);
+		
+		if(!localJoysticks.isEmpty() || !localXboxControllers.isEmpty())
+			if(joystickUpdater != null)
+				joystickUpdater.stop();
 	}
 
 	public void enableJoystickRefresh()

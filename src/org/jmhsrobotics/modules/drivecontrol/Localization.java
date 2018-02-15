@@ -1,70 +1,76 @@
 package org.jmhsrobotics.modules.drivecontrol;
 
-import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
-import org.jmhsrobotics.core.util.PlainSendable;
 import org.jmhsrobotics.hardwareinterface.DragWheelEncoders;
 import org.jmhsrobotics.hardwareinterface.Gyro;
 import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Localization extends PlainSendable implements Module
+public class Localization extends CommandModule
 {	
 	private @Submodule Gyro gyro;
 	private @Submodule WheelEncoders wheelEncoders;
 	private @Submodule DragWheelEncoders dragWheelEncoders;
 
-	private Notifier updater;
+	private double x, y, speed, angle, rotationRate;
 	
-	private double x, y, dx, dy, o, w, t;
+	private double totalDist;
+	
+	private double leftEncoder, rightEncoder, averageEncoder, diffEncoder, backEncoder, sideEncoder;
 	
 	public Localization()
 	{
-		updater = new Notifier(this::updateSensors);
-		t = System.currentTimeMillis() / 1000.;
 		SmartDashboard.putData("Localization", this);
 	}
 	
-	public void enable()
+	@Override
+	protected void initialize()
 	{
 		gyro.reset();
 		wheelEncoders.reset();
 		dragWheelEncoders.reset();
-		x = y = dx = dy = o = w = 0;
-		updater.startPeriodic(.02);
+		
+		totalDist = x = y = speed = angle = rotationRate = 0;
+	}
+
+	@Override
+	protected void execute()
+	{
+		System.out.println("Starting sensor update");
+		
+		leftEncoder = wheelEncoders.left().getDist();
+		rightEncoder = wheelEncoders.right().getDist();
+		averageEncoder = wheelEncoders.average().getDist();
+		diffEncoder = wheelEncoders.diff().getDist();
+		
+		backEncoder = dragWheelEncoders.forward().getDist();
+		sideEncoder = dragWheelEncoders.side().getDist();
+		
+		
+		double distanceMoved = wheelEncoders.average().getDist() - totalDist;
+//		double distanceMoved = dragWheelEncoders.forward().getDist() - totalDist;
+		totalDist += distanceMoved;
+		
+//		speed = dragWheelEncoders.forward().getRate();
+		speed = wheelEncoders.average().getRate();
+		
+		x += Math.sin(Angle.fromDegrees(angle).measureRadians()) * distanceMoved;
+		y += Math.cos(Angle.fromDegrees(angle).measureRadians()) * distanceMoved;
+		
+		angle = gyro.getAngle().measureDegreesUnsigned();
+		rotationRate = gyro.getRotationRate();
+		
+		System.out.println("Ending sensor update");
 	}
 	
-	public void disable()
+	@Override
+	protected boolean isFinished()
 	{
-		updater.stop();
-	}
-	
-	@SuppressWarnings("unused") //a lot of this data will be used later to develop more sophisticated localization
-	private void updateSensors()
-	{
-		double oldT = t;
-		t = System.currentTimeMillis();
-		double dt = t - oldT;
-		
-		double oldW = w;
-		w = gyro.getRotationRate();
-		double oldO = o;
-		o = gyro.getAngle().measureRadians();
-		
-		double speed = wheelEncoders.average().getRate();
-		double oldDx = dx;
-		dx = Math.sin(o) * speed;
-		double oldDy = dy;
-		dy = Math.cos(o) * speed;
-		
-		x += dx;
-		y += dy;
+		return false;
 	}
 	
 	public double getX()
@@ -77,73 +83,46 @@ public class Localization extends PlainSendable implements Module
 		return y;
 	}
 	
-	public double getPos(Angle axis)
+	public double getTotalDistanceDriven()
 	{
-		return x * Math.sin(axis.measureRadians()) + y * Math.cos(axis.measureRadians());
+		return totalDist;
 	}
 	
-	public double getForwardPos()
+	public double getSpeed()
 	{
-		return getPos(getAngle());
-	}
-	
-	public double getDX()
-	{
-		return dx;
-	}
-	
-	public double getDY()
-	{
-		return dy;
-	}
-	
-	public double getSpeed(Angle axis)
-	{
-		return dx * Math.sin(axis.measureRadians()) + dy * Math.cos(axis.measureRadians());
-	}
-	
-	public double getForwardSpeed()
-	{
-		return getSpeed(getAngle());
+		return speed;
 	}
 	
 	public Angle getAngle()
 	{
-		return Angle.fromRadians(o);
+		return Angle.fromDegrees(angle);
 	}
 	
-	public double getAngleDegreesUnsigned()
+	public double getAngleDegrees()
 	{
 		return getAngle().measureDegreesUnsigned();
 	}
 	
 	public double getRotationRate()
 	{
-		return w;
+		return rotationRate;
 	}
 	
-	@Override
-	public Command getTest()
-	{
-		return new InstantCommand()
-		{
-			@Override
-			protected void initialize()
-			{
-				System.out.println("No code to test localization yet");
-			}
-		};
-	}
-
 	@Override
 	public void initSendable(SendableBuilder builder)
 	{
 		builder.addDoubleProperty("x", this::getX, null);
 		builder.addDoubleProperty("y", this::getY, null);
-		builder.addDoubleProperty("o", this::getAngleDegreesUnsigned, null);
-		builder.addDoubleProperty("dx", this::getDX, null);
-		builder.addDoubleProperty("dy", this::getDX, null);
-		builder.addDoubleProperty("w", this::getRotationRate, null);
-		builder.addDoubleProperty("t", () -> t, null);
+		builder.addDoubleProperty("angle", this::getAngleDegrees, null);
+		builder.addDoubleProperty("speed", this::getSpeed, null);
+		builder.addDoubleProperty("rotationRate", this::getRotationRate, null);
+		builder.addDoubleProperty("total distance", this::getTotalDistanceDriven, null);
+		
+		builder.addDoubleProperty("encoders/wheels/left encoder", () -> leftEncoder, null);
+		builder.addDoubleProperty("encoders/wheels/right encoder", () -> rightEncoder, null);
+		builder.addDoubleProperty("encoders/wheels/average encoder", () -> averageEncoder, null);
+		builder.addDoubleProperty("encoders/wheels/diff encoder", () -> diffEncoder, null);
+		builder.addDoubleProperty("encoders/drag/back encoder", () -> backEncoder, null);
+		builder.addDoubleProperty("encoders/drag/side encoder", () -> sideEncoder, null);
 	}
 }

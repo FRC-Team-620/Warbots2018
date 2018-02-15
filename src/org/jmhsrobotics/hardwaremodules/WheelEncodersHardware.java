@@ -19,6 +19,7 @@ public class WheelEncodersHardware extends SensorModule implements WheelEncoders
 
 	public WheelEncodersHardware(int leftEncoderPort1, int leftEncoderPort2, boolean reverseLeftEncoder, int rightEncoderPort1, int rightEncoderPort2, boolean reverseRightEncoder)
 	{
+		setRefreshRate(4);
 		leftEncoder = new Encoder(leftEncoderPort1, leftEncoderPort2, reverseLeftEncoder);
 		rightEncoder = new Encoder(rightEncoderPort1, rightEncoderPort2, reverseRightEncoder);
 		leftEncoder.setDistancePerPulse(0.031425);

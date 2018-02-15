@@ -29,14 +29,14 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	 */
 	public NavXHardware(Enum<?> port)
 	{
-		setRefreshRate(0);
+		setRefreshRate(4);
 		
 		try
 		{
 			navx = AHRS.class.getConstructor(port.getClass()).newInstance(port);
 			navx.reset();
 			
-			SmartDashboard.putData("Navx", this);
+			SmartDashboard.putData("Navx ", this);
 		}
 		catch (ReflectiveOperationException e)
 		{

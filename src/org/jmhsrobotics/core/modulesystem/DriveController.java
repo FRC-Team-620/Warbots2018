@@ -1,11 +1,8 @@
 package org.jmhsrobotics.core.modulesystem;
 
-import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 
-import edu.wpi.first.wpilibj.command.Command;
-
-public abstract class DriveController implements Module
+public abstract class DriveController extends CommandModule
 {
 	private @Submodule DriveMechanism driveTrain;
 
@@ -14,22 +11,12 @@ public abstract class DriveController implements Module
 		driveTrain.drive(speed, turn);
 	}
 	
-	public abstract void enable();
-	public abstract void disable();
 	public abstract void drive(double speed, double turn);
-	public abstract Command getTurnCommand(Angle angle);
-	public abstract Command getDriveCommand(double distance);
+	public abstract void setTarget(double x, double y);
 	
 	@Override
-	public Command getTest()
+	protected boolean isFinished()
 	{
-		return new Command()
-		{
-			@Override
-			protected boolean isFinished()
-			{
-				return timeSinceInitialized() > 5;
-			}
-		};
+		return false;
 	}
 }

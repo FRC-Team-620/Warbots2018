@@ -26,7 +26,7 @@ class DriveDistance extends Command
 		output = new DummyPIDOutput();
 		SmartDashboard.putData("Output", output);
 
-		PIDSensor input = PIDSensor.fromDispAndRate(localization::getForwardPos, localization::getForwardSpeed);
+		PIDSensor input = PIDSensor.fromDispAndRate(localization::getTotalDistanceDriven, localization::getSpeed);
 		
 		controller = new PIDCalculator(0.02, 0, 0.04, input, output);
 		controller.setOutputRange(-1, 1);
