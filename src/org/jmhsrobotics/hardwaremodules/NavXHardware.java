@@ -29,7 +29,7 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	 */
 	public NavXHardware(Enum<?> port)
 	{
-		setRefreshRate(4);
+		setRefreshRate(0.004);
 		
 		try
 		{

@@ -413,6 +413,21 @@ public class Angle
 		return product(this, scalar);
 	}
 	
+	public double sin()
+	{
+		return Math.sin(measureRadians());
+	}
+	
+	public double cos()
+	{
+		return Math.cos(measureRadians());
+	}
+	
+	public double tan()
+	{
+		return Math.tan(measureRadians());
+	}
+	
 	@Override
 	public String toString()
 	{

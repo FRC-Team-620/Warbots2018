@@ -6,12 +6,10 @@ import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
-import org.jmhsrobotics.core.util.DummyPIDOutput;
 import org.jmhsrobotics.core.util.PIDCalculator;
 import org.jmhsrobotics.core.util.PIDSensor;
 import org.jmhsrobotics.core.util.Point;
 
-import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CorrectiveDrive extends DriveController
@@ -23,12 +21,10 @@ public class CorrectiveDrive extends DriveController
 	private double speed, turn;
 	
 	private PIDSensor angleSensor;
-	private DummyPIDOutput angleOutput;
 	private PIDCalculator angleController;
 	
 	private PIDSensor distanceSensor;
-	private DummyPIDOutput distanceOutput;
-	private PIDController distanceController;
+	private PIDCalculator distanceController;
 	
 	@Override
 	public void onLink()
@@ -36,11 +32,15 @@ public class CorrectiveDrive extends DriveController
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("DriveTrain")));
 		
 		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getRotationRate);
-		angleOutput = new DummyPIDOutput();
-		angleController = new PIDCalculator(0.03, 0, 0.5, angleSensor, angleOutput);
+		angleController = new PIDCalculator(0.03, 0, 1, angleSensor, o -> turn = o);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
 		angleController.setOutputRange(-.5, .5);
+		
+		distanceSensor = PIDSensor.fromDispAndRate(() -> localization.getDistanceTo(target.get()), () -> localization.getSpeedToward(target.get()));
+		distanceController = new PIDCalculator(0.03, 0, 1, distanceSensor, o -> speed = o);
+		distanceController.setOutputRange(-.5, .5);
+		distanceController.setSetpoint(0);
 		
 		angleController.setName("Angle Controller PID");
 		SmartDashboard.putData(angleController);
@@ -77,16 +77,18 @@ public class CorrectiveDrive extends DriveController
 		{
 			Point targetPoint = target.get();
 			System.out.println("Pointing at " + targetPoint);
-			double xOffset = targetPoint.getX() - localization.getX();
-			double yOffset = targetPoint.getY() - localization.getY();
-			double targetAngle = Angle.fromRiseAndRun(xOffset, yOffset).measureDegreesUnsigned();
-			System.out.println(targetAngle);
-			angleController.setSetpoint(targetAngle);
+			
+			Angle targetAngle = localization.getAngleTo(targetPoint);
+			System.out.println("Pointing in dir " + targetAngle);
+			
+			angleController.setSetpoint(targetAngle.measureDegreesUnsigned());
 			angleController.update();
-			driveRaw(0, angleOutput.get());
+			
+			distanceController.update();
+			System.out.println("Speed: " + speed);
 		}
-		else
-			driveRaw(speed, turn);
+			
+		driveRaw(speed, turn);
 	}
 	
 	@Override

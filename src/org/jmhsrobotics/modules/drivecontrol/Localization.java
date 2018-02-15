@@ -3,7 +3,9 @@ package org.jmhsrobotics.modules.drivecontrol;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
+import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwareinterface.DragWheelEncoders;
+import org.jmhsrobotics.hardwareinterface.EncoderGroup.EncoderData;
 import org.jmhsrobotics.hardwareinterface.Gyro;
 import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
@@ -40,7 +42,7 @@ public class Localization extends CommandModule
 	@Override
 	protected void execute()
 	{
-		System.out.println("Starting sensor update");
+		System.out.println("Updating sensors at " + System.currentTimeMillis());
 		
 		leftEncoder = wheelEncoders.left().getDist();
 		rightEncoder = wheelEncoders.right().getDist();
@@ -50,21 +52,18 @@ public class Localization extends CommandModule
 		backEncoder = dragWheelEncoders.forward().getDist();
 		sideEncoder = dragWheelEncoders.side().getDist();
 		
+		EncoderData forwardMovement = wheelEncoders.average();
 		
-		double distanceMoved = wheelEncoders.average().getDist() - totalDist;
-//		double distanceMoved = dragWheelEncoders.forward().getDist() - totalDist;
+		double distanceMoved = forwardMovement.getDist() - totalDist;
 		totalDist += distanceMoved;
 		
-//		speed = dragWheelEncoders.forward().getRate();
-		speed = wheelEncoders.average().getRate();
+		speed = forwardMovement.getRate();
 		
 		x += Math.sin(Angle.fromDegrees(angle).measureRadians()) * distanceMoved;
 		y += Math.cos(Angle.fromDegrees(angle).measureRadians()) * distanceMoved;
 		
 		angle = gyro.getAngle().measureDegreesUnsigned();
 		rotationRate = gyro.getRotationRate();
-		
-		System.out.println("Ending sensor update");
 	}
 	
 	@Override
@@ -86,6 +85,27 @@ public class Localization extends CommandModule
 	public double getTotalDistanceDriven()
 	{
 		return totalDist;
+	}
+	
+	public double getDistanceTo(Point target)
+	{
+		double dx = target.getX() - getX();
+		double dy = target.getX() - getY();
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	public Angle getAngleTo(Point target)
+	{
+		double dx = target.getX() - getX();
+		double dy = target.getY() - getY();
+		return Angle.fromRiseAndRun(dx, dy);
+	}
+	
+	public double getSpeedToward(Point target)
+	{
+		Angle toTarget = getAngleTo(target);
+		
+		return getSpeed() * toTarget.minus(getAngle()).cos();
 	}
 	
 	public double getSpeed()
