@@ -37,7 +37,7 @@ public class PIDCalculator extends PlainSendable
 		this.source = source;
 		this.output = output;
 		
-//		autoUpdater = new Notifier(this::update);
+		autoUpdater = new Notifier(this::update);
 	}
 	
 	public PIDCalculator(double p, double i, double d, PIDSensor source, PIDOutput output)
