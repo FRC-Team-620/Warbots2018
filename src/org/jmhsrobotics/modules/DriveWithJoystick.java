@@ -25,11 +25,6 @@ public class DriveWithJoystick extends ControlSchemeModule
 //		String xout = String.format("%.2g%n", x);
 //		String yout = String.format("%.2g%n", y);
 		
-		if(js.getTriggerReleased())
-		{
-			drive.setTarget(0, 96);
-		}
-		
 		drive.drive(yadjusted, xadjusted);
 	}
 }
