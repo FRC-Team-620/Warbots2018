@@ -1,5 +1,6 @@
 package org.jmhsrobotics.core.modulesystem;
 
+import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 
 public abstract class DriveController extends CommandModule
@@ -12,7 +13,14 @@ public abstract class DriveController extends CommandModule
 	}
 	
 	public abstract void drive(double speed, double turn);
-	public abstract void setTarget(double x, double y);
+	public abstract void setTarget(Point point);
+	public abstract void removeTarget();
+	public abstract double getDistanceToTarget();
+	
+	public void setTarget(double x, double y)
+	{
+		setTarget(new Point(x, y));
+	}
 	
 	@Override
 	protected boolean isFinished()

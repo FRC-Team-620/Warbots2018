@@ -1,6 +1,7 @@
 package org.jmhsrobotics.core.modules;
 
 import org.jmhsrobotics.core.modulesystem.DriveController;
+import org.jmhsrobotics.core.util.Point;
 
 public class RawDriveController extends DriveController
 {
@@ -15,8 +16,19 @@ public class RawDriveController extends DriveController
 	}
 	
 	@Override
-	public void setTarget(double x, double y)
+	public void setTarget(Point point)
 	{
+	}
+	
+	@Override
+	public void removeTarget()
+	{
+	}
+	
+	@Override
+	public double getDistanceToTarget()
+	{
+		return 0;
 	}
 	
 	@Override

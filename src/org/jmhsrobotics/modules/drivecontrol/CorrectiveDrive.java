@@ -37,7 +37,7 @@ public class CorrectiveDrive extends DriveController
 		angleController.setContinuous();
 		angleController.setOutputRange(-.5, .5);
 		
-		distanceSensor = PIDSensor.fromDispAndRate(() -> localization.getDistanceTo(target.get()), () -> localization.getSpeedToward(target.get()));
+		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTarget, () -> localization.getSpeedToward(target.get()));
 		distanceController = new PIDCalculator(0.3, 0, 1, distanceSensor, o -> speed = -o);
 		distanceController.setOutputRange(-.7, .7);
 		distanceController.setSetpoint(0);
@@ -50,22 +50,41 @@ public class CorrectiveDrive extends DriveController
 	@SuppressWarnings("hiding")
 	public void drive(double speed, double turn)
 	{	
-		if(speed != 0 || turn != 0)
+		System.out.println("Manually driving");
+		
+		if((speed != 0 || turn != 0) && target.isPresent())
+		{
+			System.out.println("Switching to manual drive");
 			target = Optional.empty();
+		}
 		
 		this.speed = speed;
 		this.turn = turn;
 	}
 	
 	@Override
-	public void setTarget(double x, double y)
+	public void setTarget(Point point)
 	{
-		target = Optional.of(new Point(x, y));
+		System.out.println("Setting target to: " + point);
+		target = Optional.of(point);
+	}
+	
+	public void removeTarget()
+	{
+		target = Optional.empty();
+		turn = speed = 0;
+	}
+	
+	@Override
+	public double getDistanceToTarget()
+	{
+		return localization.getDistanceTo(target.get());
 	}
 	
 	@Override
 	protected void initialize()
 	{
+		System.out.println("Initializing corrective drive");
 		target = Optional.empty();
 		localization.start();
 	}
@@ -83,11 +102,6 @@ public class CorrectiveDrive extends DriveController
 			angleController.update();
 			
 			distanceController.update();
-			
-			System.out.println("At X:" + localization.getX() + " Y:" + localization.getY());
-			System.out.println("Target X:" + target.get().getX() + " Y:" + target.get().getY());
-			
-			System.out.println(localization.getDistanceTo(target.get()));
 		}
 			
 		driveRaw(speed, turn);

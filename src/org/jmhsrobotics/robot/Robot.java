@@ -11,17 +11,20 @@ import org.jmhsrobotics.core.modules.OperatorInterface;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.HybridRobot;
+import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwaremodules.DragEncodersHardware;
 import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
-import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
+import org.jmhsrobotics.modules.autonomous.PathFollower;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -37,11 +40,14 @@ public class Robot extends HybridRobot
 {
 	private ModuleManager modules;
 	private SubsystemManager subsystems;
-	private AutoSwitcher autonomous;
+	private Command autonomous;
 
 	@Override
 	public void robotInit()
 	{
+		CameraServer.getInstance().startAutomaticCapture();
+		
+		
 		long time = System.nanoTime();
 
 		modules = new ModuleManager();
@@ -90,9 +96,15 @@ public class Robot extends HybridRobot
 //		modules.addModule(new DriveClawMechWithTwoJoysticks());
 		
 //		modules.addModule(modules.getAllModuleTests());
-		autonomous = new AutoSwitcher();
-		modules.addModule(autonomous);
+//		autonomous = new AutoSwitcher();
+//		modules.addModule(autonomous);
 
+		PathFollower auto = new PathFollower(24, Angle.ZERO, 6,
+				new Point(0, 84),
+				new Point(84, 84));
+		modules.addModule(auto);
+		autonomous = auto;
+		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");
 	}
 
