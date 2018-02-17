@@ -2,11 +2,11 @@ package org.jmhsrobotics.modules.drivecontrol;
 
 import org.jmhsrobotics.core.util.Point;
 
-public class LinearAccelReimanInterpolator implements PositionInterpolator
+public class LinearAccelRiemannInterpolator implements PositionInterpolator
 {
 	private int accuracy;
 	
-	public LinearAccelReimanInterpolator(int accuracy)
+	public LinearAccelRiemannInterpolator(int accuracy)
 	{
 		this.accuracy = accuracy;
 	}
