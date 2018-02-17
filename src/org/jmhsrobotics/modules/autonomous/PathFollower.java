@@ -20,7 +20,9 @@ public class PathFollower extends CommandModule
 	private Angle finalAngle;
 	private Angle finalAngleRange;
 	private List<Point> points;
+
 	private int currentPoint;
+	private double nextRange;
 	private boolean onLastPoint;
 
 	public PathFollower(List<Point> points, double range, double finalRange, Angle finalAngle, Angle finalAngleRange)
@@ -42,6 +44,8 @@ public class PathFollower extends CommandModule
 	{
 		System.out.println("Starting path follower");
 		currentPoint = 0;
+		nextRange = range;
+		onLastPoint = false;
 	}
 
 	@Override
@@ -53,12 +57,12 @@ public class PathFollower extends CommandModule
 		{
 			drive.setTarget(points.get(currentPoint));
 			
-			if (drive.getDistanceToTargetPoint() < range)
+			if (drive.getDistanceToTargetPoint() < nextRange)
 			{
 				++currentPoint;
 				
 				if(currentPoint == points.size() - 1)
-					range = finalRange;
+					nextRange = finalRange;
 				else if(currentPoint == points.size())
 				{
 					drive.setTarget(finalAngle);

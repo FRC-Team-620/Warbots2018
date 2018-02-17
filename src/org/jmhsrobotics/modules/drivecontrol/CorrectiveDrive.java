@@ -34,14 +34,14 @@ public class CorrectiveDrive extends DriveController
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("DriveTrain")));
 		
 		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getDegreesPerSecond);
-		angleController = new PIDCalculator(0.03, 0, 1, angleSensor, o -> turn = o);
+		angleController = new PIDCalculator(0.03, 0, 4, angleSensor, o -> turn = o);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
-		angleController.setOutputRange(-.5, .5);
+		angleController.setOutputRange(-.6, .6);
 		
 		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTargetPoint, this::getSpeedTowardTarget);
-		distanceController = new PIDCalculator(0.05, 0, 1, distanceSensor, o -> speed = -o);
-		distanceController.setOutputRange(-.6, .6);
+		distanceController = new PIDCalculator(0.03, 0, 4, distanceSensor, o -> speed = -o);
+		distanceController.setOutputRange(-.8, .8);
 		distanceController.setSetpoint(0);
 		
 		angleController.setName("Angle Controller PID");

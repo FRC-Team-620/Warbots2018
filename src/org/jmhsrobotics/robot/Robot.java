@@ -100,8 +100,11 @@ public class Robot extends HybridRobot
 //		autonomous = new AutoSwitcher();
 //		modules.addModule(autonomous);
 
-		PathFollower auto = new PathFollower(18, 6, Angle.STRAIGHT, Angle.fromDegrees(10),
-				new Point(0, 60));
+		PathFollower auto = new PathFollower(24, 6, Angle.REVERSE, Angle.fromDegrees(10),
+				new Point(121, 72),
+				new Point(121, 164),
+				new Point(-100, 164),
+				new Point(-100, 134));
 		modules.addModule(auto);
 		autonomous = auto;
 		
