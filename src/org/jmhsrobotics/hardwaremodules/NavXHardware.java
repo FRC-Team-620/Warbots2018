@@ -19,7 +19,7 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	private AHRS navx;
 
 	private Angle angle;
-	private double rotationRate;
+	private Angle rotationRate;
 	
 	private double pressure;
 	
@@ -54,7 +54,7 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	public void updateData()
 	{
 		angle = Angle.fromDegrees(navx.getAngle());
-		rotationRate = navx.getRate();
+		rotationRate = Angle.fromDegrees(navx.getRate());
 		pressure = navx.getBarometricPressure();
 	}
 
@@ -73,7 +73,7 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	}
 
 	@Override
-	public double getRotationRate()
+	public Angle getRotationPerSecond()
 	{
 		updateIfNeeded();
 		return rotationRate;
@@ -83,7 +83,7 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	public void initSendable(SendableBuilder builder)
 	{
 		builder.addDoubleProperty("Angle", getAngle()::measureDegrees, null);
-		builder.addDoubleProperty("Rotation Rate", this::getRotationRate, null);
+		builder.addDoubleProperty("Rotation Rate", getRotationPerSecond()::measureDegrees, null);
 		builder.addDoubleProperty("Pressure", this::getBarometricPressure, null);
 	}
 
@@ -91,7 +91,7 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 	public void printData(PrintStream out)
 	{
 		out.println("Angle: " + getAngle());
-		out.println("Rotation Rate: " + getRotationRate());
+		out.println("Rotation Rate: " + getRotationPerSecond());
 		out.println("Barometric Pressure: " + getBarometricPressure());
 	}
 }

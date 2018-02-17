@@ -17,8 +17,8 @@ public class CorrectiveDrive extends DriveController
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule Localization localization;
 	
-	private Optional<Point> target;
-	private double speed, turn;
+	private Optional<Point> targetPoint;
+	private Optional<Angle> targetAngle;
 	
 	private PIDSensor angleSensor;
 	private PIDCalculator angleController;
@@ -26,20 +26,22 @@ public class CorrectiveDrive extends DriveController
 	private PIDSensor distanceSensor;
 	private PIDCalculator distanceController;
 	
+	private double speed, turn;
+	
 	@Override
 	public void onLink()
 	{
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("DriveTrain")));
 		
-		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getRotationRate);
+		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getDegreesPerSecond);
 		angleController = new PIDCalculator(0.03, 0, 1, angleSensor, o -> turn = o);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
 		angleController.setOutputRange(-.5, .5);
 		
-		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTarget, () -> localization.getSpeedToward(target.get()));
-		distanceController = new PIDCalculator(0.3, 0, 1, distanceSensor, o -> speed = -o);
-		distanceController.setOutputRange(-.7, .7);
+		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTarget, this::getSpeedTowardTarget);
+		distanceController = new PIDCalculator(0.05, 0, 1, distanceSensor, o -> speed = -o);
+		distanceController.setOutputRange(-.6, .6);
 		distanceController.setSetpoint(0);
 		
 		angleController.setName("Angle Controller PID");
@@ -52,10 +54,11 @@ public class CorrectiveDrive extends DriveController
 	{	
 		System.out.println("Manually driving");
 		
-		if((speed != 0 || turn != 0) && target.isPresent())
+		if((speed != 0 || turn != 0) && targetPoint.isPresent())
 		{
 			System.out.println("Switching to manual drive");
-			target = Optional.empty();
+			targetPoint = Optional.empty();
+			targetAngle = Optional.empty();
 		}
 		
 		this.speed = speed;
@@ -66,44 +69,59 @@ public class CorrectiveDrive extends DriveController
 	public void setTarget(Point point)
 	{
 		System.out.println("Setting target to: " + point);
-		target = Optional.of(point);
+		targetPoint = Optional.of(point);
+	}
+	
+	@Override
+	public void setTarget(Angle angle)
+	{
+		System.out.println("Setting target to angle: " + angle);
+		targetPoint = Optional.empty();
+		targetAngle = Optional.of(angle);
 	}
 	
 	public void removeTarget()
 	{
-		target = Optional.empty();
+		targetAngle = Optional.empty();
+		targetPoint = Optional.empty();
 		turn = speed = 0;
 	}
 	
 	@Override
 	public double getDistanceToTarget()
 	{
-		return localization.getDistanceTo(target.get());
+		return localization.getDistanceTo(targetPoint.get());
+	}
+	
+	private double getSpeedTowardTarget()
+	{
+		return localization.getSpeedToward(targetPoint.get());
 	}
 	
 	@Override
 	protected void initialize()
 	{
 		System.out.println("Initializing corrective drive");
-		target = Optional.empty();
+		targetPoint = Optional.empty();
+		targetAngle = Optional.empty();
 		localization.start();
 	}
 	
 	@Override
 	protected void execute()
 	{
-		if(target.isPresent())
+		if(targetPoint.isPresent())
 		{
-			Point targetPoint = target.get();
-			
-			Angle targetAngle = localization.getAngleTo(targetPoint);
-			
-			angleController.setSetpoint(targetAngle.measureDegreesUnsigned());
-			angleController.update();
-			
 			distanceController.update();
+			targetAngle = Optional.of(localization.getAngleTo(targetPoint.get()));
 		}
-			
+		
+		if(targetAngle.isPresent())
+		{
+			angleController.setSetpoint(targetAngle.get().measureDegreesUnsigned());
+			angleController.update();
+		}
+		
 		driveRaw(speed, turn);
 	}
 	

@@ -23,6 +23,7 @@ import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.autonomous.PathFollower;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
+import org.jmhsrobotics.modules.drivecontrol.SimplePositionInterpolator;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
@@ -67,7 +68,7 @@ public class Robot extends HybridRobot
 		
 		modules.addModule(new CalibrateDriveTrain());
 
-		modules.addModule(new Localization());
+		modules.addModule(new Localization(new SimplePositionInterpolator()));
 		
 		CorrectiveDrive driveController = new CorrectiveDrive();
 		modules.addModule(driveController);
@@ -99,9 +100,23 @@ public class Robot extends HybridRobot
 //		autonomous = new AutoSwitcher();
 //		modules.addModule(autonomous);
 
-		PathFollower auto = new PathFollower(24, Angle.ZERO, 6,
-				new Point(0, 84),
-				new Point(84, 84));
+		PathFollower auto = new PathFollower(18, Angle.ZERO, 6,
+				new Point(0, 96),//
+				new Point(96, 96),
+				new Point(96, 0),
+				new Point(0, 0),
+				new Point(0, 96),//
+				new Point(96, 96),
+				new Point(96, 0),
+				new Point(0, 0),
+				new Point(0, 96),//
+				new Point(96, 96),
+				new Point(96, 0),
+				new Point(0, 0),
+				new Point(0, 96),//
+				new Point(96, 96),
+				new Point(96, 0),
+				new Point(0, 0));
 		modules.addModule(auto);
 		autonomous = auto;
 		

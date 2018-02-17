@@ -1,5 +1,6 @@
 package org.jmhsrobotics.core.modulesystem;
 
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 
@@ -14,6 +15,7 @@ public abstract class DriveController extends CommandModule
 	
 	public abstract void drive(double speed, double turn);
 	public abstract void setTarget(Point point);
+	public abstract void setTarget(Angle angle);
 	public abstract void removeTarget();
 	public abstract double getDistanceToTarget();
 	

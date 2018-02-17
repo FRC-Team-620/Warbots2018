@@ -18,14 +18,17 @@ public class Localization extends CommandModule
 	private @Submodule WheelEncoders wheelEncoders;
 	private @Submodule DragWheelEncoders dragWheelEncoders;
 
-	private double x, y, speed, angle, rotationRate;
-	
+	private double x, y, speed;
+	private Angle angle, rotationRate;
 	private double totalDist;
+	private long lastMeasureNanoTime;
+	private PositionInterpolator interpolator;
 	
-	private double leftEncoder, rightEncoder, averageEncoder, diffEncoder, backEncoder, sideEncoder;
+//	private double leftEncoder, rightEncoder, averageEncoder, diffEncoder, backEncoder, sideEncoder;
 	
-	public Localization()
+	public Localization(PositionInterpolator interpolator)
 	{
+		this.interpolator = interpolator;
 		SmartDashboard.putData("Localization", this);
 	}
 	
@@ -36,32 +39,53 @@ public class Localization extends CommandModule
 		wheelEncoders.reset();
 		dragWheelEncoders.reset();
 		
-		totalDist = x = y = speed = angle = rotationRate = 0;
+		lastMeasureNanoTime = System.nanoTime();
+		
+		totalDist = x = y = speed;
+		angle = rotationRate = Angle.ZERO;
 	}
 
 	@Override
 	protected void execute()
 	{
-		leftEncoder = wheelEncoders.left().getDist();
-		rightEncoder = wheelEncoders.right().getDist();
-		averageEncoder = wheelEncoders.average().getDist();
-		diffEncoder = wheelEncoders.diff().getDist();
+		long currentNanoTime = System.nanoTime();
+		double dt = (currentNanoTime - lastMeasureNanoTime) / 1E9;
+		lastMeasureNanoTime = currentNanoTime;
 		
-		backEncoder = dragWheelEncoders.forward().getDist();
-		sideEncoder = dragWheelEncoders.side().getDist();
+//		leftEncoder = wheelEncoders.left().getDist();
+//		rightEncoder = wheelEncoders.right().getDist();
+//		averageEncoder = wheelEncoders.average().getDist();
+//		diffEncoder = wheelEncoders.diff().getDist();
+//		
+//		backEncoder = dragWheelEncoders.forward().getDist();
+//		sideEncoder = dragWheelEncoders.side().getDist();
+		
 		
 		EncoderData forwardMovement = wheelEncoders.average();
 		
 		double distanceMoved = forwardMovement.getDist() - totalDist;
 		totalDist += distanceMoved;
 		
+		double oldSpeed = speed;
 		speed = forwardMovement.getRate();
 		
-		x += Math.sin(Angle.fromDegrees(angle).measureRadians()) * distanceMoved;
-		y += Math.cos(Angle.fromDegrees(angle).measureRadians()) * distanceMoved;
+		Angle oldAngle = angle;
+		angle = gyro.getAngle();
 		
-		angle = gyro.getAngle().measureDegreesUnsigned();
-		rotationRate = gyro.getRotationRate();
+		Angle oldRotationRate = rotationRate;
+		rotationRate = gyro.getRotationPerSecond();
+		
+		double w0 = oldRotationRate.measureRadians();
+		double wt = rotationRate.measureRadians();
+		double theta0 = oldAngle.measureRadians();
+		double thetat = angle.measureRadians();
+		double v0 = oldSpeed;
+		double vt = speed;
+		double s = distanceMoved;
+		Point relativePosition = interpolator.getRelativePosition(w0, wt, theta0, thetat, v0, vt, s, dt);
+		
+		x += relativePosition.getX();
+		y += relativePosition.getY();
 	}
 	
 	@Override
@@ -113,7 +137,9 @@ public class Localization extends CommandModule
 	
 	public Angle getAngle()
 	{
-		return Angle.fromDegrees(angle);
+		if(angle == null)
+			return Angle.ZERO;
+		return angle;
 	}
 	
 	public double getAngleDegrees()
@@ -121,9 +147,16 @@ public class Localization extends CommandModule
 		return getAngle().measureDegreesUnsigned();
 	}
 	
-	public double getRotationRate()
+	public Angle getRotationPerSecond()
 	{
+		if(rotationRate == null)
+			return Angle.ZERO;
 		return rotationRate;
+	}
+	
+	public double getDegreesPerSecond()
+	{
+		return getRotationPerSecond().measureDegrees();
 	}
 	
 	@Override
@@ -133,14 +166,14 @@ public class Localization extends CommandModule
 		builder.addDoubleProperty("y", this::getY, null);
 		builder.addDoubleProperty("angle", this::getAngleDegrees, null);
 		builder.addDoubleProperty("speed", this::getSpeed, null);
-		builder.addDoubleProperty("rotationRate", this::getRotationRate, null);
+		builder.addDoubleProperty("rotationRate", this::getDegreesPerSecond, null);
 		builder.addDoubleProperty("total distance", this::getTotalDistanceDriven, null);
 		
-		builder.addDoubleProperty("encoders/wheels/left encoder", () -> leftEncoder, null);
-		builder.addDoubleProperty("encoders/wheels/right encoder", () -> rightEncoder, null);
-		builder.addDoubleProperty("encoders/wheels/average encoder", () -> averageEncoder, null);
-		builder.addDoubleProperty("encoders/wheels/diff encoder", () -> diffEncoder, null);
-		builder.addDoubleProperty("encoders/drag/back encoder", () -> backEncoder, null);
-		builder.addDoubleProperty("encoders/drag/side encoder", () -> sideEncoder, null);
+//		builder.addDoubleProperty("encoders/wheels/left encoder", () -> leftEncoder, null);
+//		builder.addDoubleProperty("encoders/wheels/right encoder", () -> rightEncoder, null);
+//		builder.addDoubleProperty("encoders/wheels/average encoder", () -> averageEncoder, null);
+//		builder.addDoubleProperty("encoders/wheels/diff encoder", () -> diffEncoder, null);
+//		builder.addDoubleProperty("encoders/drag/back encoder", () -> backEncoder, null);
+//		builder.addDoubleProperty("encoders/drag/side encoder", () -> sideEncoder, null);
 	}
 }

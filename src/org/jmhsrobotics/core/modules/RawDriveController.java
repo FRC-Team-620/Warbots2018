@@ -1,6 +1,7 @@
 package org.jmhsrobotics.core.modules;
 
 import org.jmhsrobotics.core.modulesystem.DriveController;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
 
 public class RawDriveController extends DriveController
@@ -17,6 +18,11 @@ public class RawDriveController extends DriveController
 	
 	@Override
 	public void setTarget(Point point)
+	{
+	}
+	
+	@Override
+	public void setTarget(Angle angle)
 	{
 	}
 	
