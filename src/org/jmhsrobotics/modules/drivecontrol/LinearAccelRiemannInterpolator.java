@@ -14,7 +14,10 @@ public class LinearAccelRiemannInterpolator implements PositionInterpolator
 	@Override
 	public Point getRelativePosition(double w0, double wt, double theta0, double thetat, double v0, double vt, double s, double dt)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		double xval = 0;
+		double yval = 0;
+		//for loop
+		
+		return new Point(xval, yval);
 	}
 }
