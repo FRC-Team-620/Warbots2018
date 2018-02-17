@@ -39,7 +39,7 @@ public class CorrectiveDrive extends DriveController
 		angleController.setContinuous();
 		angleController.setOutputRange(-.5, .5);
 		
-		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTarget, this::getSpeedTowardTarget);
+		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTargetPoint, this::getSpeedTowardTarget);
 		distanceController = new PIDCalculator(0.05, 0, 1, distanceSensor, o -> speed = -o);
 		distanceController.setOutputRange(-.6, .6);
 		distanceController.setSetpoint(0);
@@ -72,12 +72,22 @@ public class CorrectiveDrive extends DriveController
 		targetPoint = Optional.of(point);
 	}
 	
+	public void setRelativeTarget(Point point)
+	{
+		setTarget(localization.getX() + point.getX(), localization.getY() + point.getY());
+	}
+	
 	@Override
 	public void setTarget(Angle angle)
 	{
 		System.out.println("Setting target to angle: " + angle);
 		targetPoint = Optional.empty();
 		targetAngle = Optional.of(angle);
+	}
+	
+	public void setRelativeTarget(Angle angle)
+	{
+		setTarget(localization.getAngle().plus(angle));
 	}
 	
 	public void removeTarget()
@@ -88,14 +98,23 @@ public class CorrectiveDrive extends DriveController
 	}
 	
 	@Override
-	public double getDistanceToTarget()
+	public double getDistanceToTargetPoint()
 	{
-		return localization.getDistanceTo(targetPoint.get());
+		return targetPoint.map(localization::getDistanceTo)
+				.orElseThrow(() -> new RuntimeException("No target point set"));
+	}
+	
+	@Override
+	public Angle getDistanceToTargetAngle()
+	{
+		return targetAngle.map(localization.getAngle()::minus).map(Angle::absoluteValue)
+				.orElseThrow(() -> new RuntimeException("No target angle set"));
 	}
 	
 	private double getSpeedTowardTarget()
 	{
-		return localization.getSpeedToward(targetPoint.get());
+		return targetPoint.map(localization::getSpeedToward)
+				.orElseThrow(() -> new RuntimeException("No target point set"));
 	}
 	
 	@Override

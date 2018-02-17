@@ -3,6 +3,7 @@ package org.jmhsrobotics.modules;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.RobotMath;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -27,6 +28,10 @@ public class DriveWithJoystick extends ControlSchemeModule
 		
 		if(js.getTriggerPressed())
 			drive.setTarget(0, 0);
+		else if(js.getRawButtonPressed(4))
+			drive.setRelativeTarget(Angle.INVERSE_RIGHT);
+		else if(js.getRawButtonPressed(5))
+			drive.setRelativeTarget(Angle.RIGHT);
 		
 		drive.drive(yadjusted, xadjusted);
 	}

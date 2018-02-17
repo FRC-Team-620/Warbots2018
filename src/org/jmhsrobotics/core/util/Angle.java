@@ -1,6 +1,6 @@
 package org.jmhsrobotics.core.util;
 
-public class Angle
+public class Angle implements Comparable<Angle>
 {
 	/**
 	 * <p>
@@ -428,6 +428,11 @@ public class Angle
 		return Math.tan(measureRadians());
 	}
 	
+	public Angle absoluteValue()
+	{
+		return new Angle(Math.abs(value));
+	}
+	
 	@Override
 	public String toString()
 	{
@@ -437,7 +442,8 @@ public class Angle
 	@Override
 	public boolean equals(Object other)
 	{
-		if (other instanceof Angle) return value == ((Angle) other).value;
+		if (other instanceof Angle) 
+			return value == ((Angle) other).value;
 		return false;
 	}
 
@@ -445,5 +451,11 @@ public class Angle
 	public int hashCode()
 	{
 		return Double.hashCode(value);
+	}
+
+	@Override
+	public int compareTo(Angle o)
+	{
+		return Double.compare(value, o.value);
 	}
 }

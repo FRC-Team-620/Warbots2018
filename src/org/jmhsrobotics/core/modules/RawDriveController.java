@@ -22,7 +22,17 @@ public class RawDriveController extends DriveController
 	}
 	
 	@Override
+	public void setRelativeTarget(Point point)
+	{
+	}
+	
+	@Override
 	public void setTarget(Angle angle)
+	{
+	}
+	
+	@Override
+	public void setRelativeTarget(Angle angle)
 	{
 	}
 	
@@ -32,9 +42,15 @@ public class RawDriveController extends DriveController
 	}
 	
 	@Override
-	public double getDistanceToTarget()
+	public double getDistanceToTargetPoint()
 	{
 		return 0;
+	}
+	
+	@Override
+	public Angle getDistanceToTargetAngle()
+	{
+		return Angle.ZERO;
 	}
 	
 	@Override

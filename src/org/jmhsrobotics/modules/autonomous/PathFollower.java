@@ -18,21 +18,23 @@ public class PathFollower extends CommandModule
 	private double range;
 	private double finalRange;
 	private Angle finalAngle;
+	private Angle finalAngleRange;
 	private List<Point> points;
 	private int currentPoint;
 	private boolean onLastPoint;
 
-	public PathFollower(List<Point> points, double range, Angle finalAngle, double finalRange)
+	public PathFollower(List<Point> points, double range, double finalRange, Angle finalAngle, Angle finalAngleRange)
 	{
 		this.points = points;
 		this.range = range;
-		this.finalAngle = finalAngle;
 		this.finalRange = finalRange;
+		this.finalAngle = finalAngle;
+		this.finalAngleRange = finalAngleRange;
 	}
 
-	public PathFollower(double range, Angle finalAngle, double finalRange, Point... points)
+	public PathFollower(double range, double finalRange, Angle finalAngle, Angle finalAngleRange, Point... points)
 	{
-		this(Arrays.stream(points).collect(Collectors.toCollection(LinkedList::new)), range, finalAngle, finalRange);
+		this(Arrays.stream(points).collect(Collectors.toCollection(LinkedList::new)), range, finalRange, finalAngle, finalAngleRange);
 	}
 
 	@Override
@@ -45,21 +47,31 @@ public class PathFollower extends CommandModule
 	@Override
 	protected void execute()
 	{
-		drive.setTarget(points.get(currentPoint));
-		
-		if (currentPoint < points.size() - 1 && drive.getDistanceToTarget() < range)
+		if(onLastPoint)
+			drive.setTarget(finalAngle);
+		else
 		{
-			++currentPoint;
+			drive.setTarget(points.get(currentPoint));
 			
-			if(currentPoint == points.size() - 1)
-				onLastPoint = true;
+			if (drive.getDistanceToTargetPoint() < range)
+			{
+				++currentPoint;
+				
+				if(currentPoint == points.size() - 1)
+					range = finalRange;
+				else if(currentPoint == points.size())
+				{
+					drive.setTarget(finalAngle);
+					onLastPoint = true;
+				}
+			}
 		}
 	}
 
 	@Override
 	protected boolean isFinished()
 	{
-		return onLastPoint && drive.getDistanceToTarget() < finalRange;
+		return onLastPoint && drive.getDistanceToTargetAngle().compareTo(finalAngleRange) <= 0;
 	}
 	
 	@Override

@@ -20,6 +20,11 @@ public class Point
 		return y;
 	}
 	
+	public Point plus(Point otherPoint)
+	{
+		return new Point(getX() + otherPoint.getX(), getY() + otherPoint.getY());
+	}
+	
 	@Override
 	public String toString()
 	{
