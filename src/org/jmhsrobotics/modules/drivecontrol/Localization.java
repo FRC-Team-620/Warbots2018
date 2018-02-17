@@ -1,5 +1,7 @@
 package org.jmhsrobotics.modules.drivecontrol;
 
+import java.util.Optional;
+
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
@@ -16,7 +18,7 @@ public class Localization extends CommandModule
 {	
 	private @Submodule Gyro gyro;
 	private @Submodule WheelEncoders wheelEncoders;
-	private @Submodule DragWheelEncoders dragWheelEncoders;
+	private @Submodule Optional<DragWheelEncoders> dragWheelEncoders;
 
 	private double x, y, speed;
 	private Angle angle, rotationRate;
@@ -37,7 +39,7 @@ public class Localization extends CommandModule
 	{
 		gyro.reset();
 		wheelEncoders.reset();
-		dragWheelEncoders.reset();
+		dragWheelEncoders.ifPresent(DragWheelEncoders::reset);
 		
 		lastMeasureNanoTime = System.nanoTime();
 		

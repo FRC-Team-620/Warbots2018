@@ -46,8 +46,7 @@ public class Robot extends HybridRobot
 	@Override
 	public void robotInit()
 	{
-		CameraServer.getInstance().startAutomaticCapture();
-		
+//		CameraServer.getInstance().startAutomaticCapture();
 		
 		long time = System.nanoTime();
 
@@ -61,12 +60,13 @@ public class Robot extends HybridRobot
 
 		modules.addModule(new OperatorInterface());
 		
-		modules.addModule(new DriveTrainHardware(0, 2, 1, 3));
+//		modules.addModule(new TestbotDriveTrainHardware(0, 2, 1, 3));
+		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
 		modules.addModule(new NavXHardware(SPI.Port.kMXP));
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
-		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
+//		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
 		
-		modules.addModule(new CalibrateDriveTrain());
+//		modules.addModule(new CalibrateDriveTrain());
 
 		modules.addModule(new Localization(new SimplePositionInterpolator()));
 		
@@ -100,10 +100,10 @@ public class Robot extends HybridRobot
 //		autonomous = new AutoSwitcher();
 //		modules.addModule(autonomous);
 
-		PathFollower auto = new PathFollower(24, 6, Angle.REVERSE, Angle.fromDegrees(10),
+		PathFollower auto = new PathFollower(40, 6, Angle.ZERO, Angle.fromDegrees(10),
 				new Point(121, 72),
-				new Point(121, 164),
-				new Point(-100, 164),
+				new Point(121, 175),
+				new Point(-100, 175),
 				new Point(-100, 134));
 		modules.addModule(auto);
 		autonomous = auto;

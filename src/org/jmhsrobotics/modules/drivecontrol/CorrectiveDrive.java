@@ -34,14 +34,14 @@ public class CorrectiveDrive extends DriveController
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("DriveTrain")));
 		
 		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getDegreesPerSecond);
-		angleController = new PIDCalculator(0.03, 0, 4, angleSensor, o -> turn = o);
+		angleController = new PIDCalculator(0.02, 0, 7, angleSensor, o -> turn = o);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
-		angleController.setOutputRange(-.6, .6);
+		angleController.setOutputRange(-1, 1);
 		
 		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTargetPoint, this::getSpeedTowardTarget);
-		distanceController = new PIDCalculator(0.03, 0, 4, distanceSensor, o -> speed = -o);
-		distanceController.setOutputRange(-.8, .8);
+		distanceController = new PIDCalculator(0.005, 0, 5, distanceSensor, o -> speed = -o);
+		distanceController.setOutputRange(-1, 1);
 		distanceController.setSetpoint(0);
 		
 		angleController.setName("Angle Controller PID");
@@ -52,13 +52,10 @@ public class CorrectiveDrive extends DriveController
 	@SuppressWarnings("hiding")
 	public void drive(double speed, double turn)
 	{	
-		System.out.println("Manually driving");
-		
-		if((speed != 0 || turn != 0) && targetPoint.isPresent())
+		if((speed != 0 || turn != 0) && (targetPoint.isPresent() || targetAngle.isPresent()))
 		{
 			System.out.println("Switching to manual drive");
-			targetPoint = Optional.empty();
-			targetAngle = Optional.empty();
+			removeTarget();
 		}
 		
 		this.speed = speed;
