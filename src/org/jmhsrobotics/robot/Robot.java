@@ -16,7 +16,7 @@ import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
-import org.jmhsrobotics.hardwaremodules.TurntableHardware;
+import org.jmhsrobotics.hardwaremodules.TurnTableHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.autonomous.PathFollower;
@@ -64,7 +64,7 @@ public class Robot extends HybridRobot
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
 //		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
 		
-		modules.addModule(new TurntableHardware(3));
+		modules.addModule(new TurnTableHardware(3));
 		
 //		modules.addModule(new CalibrateDriveTrain());
 

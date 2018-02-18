@@ -5,7 +5,8 @@ import org.jmhsrobotics.hardwareinterface.ElevatorController;
 
 public class ElevatorControlCommand extends CommandModule implements ElevatorController
 {
-
+	private final static Position lowestRaisedPosition = Position.scaleLow;
+	
 	@Override
 	protected boolean isFinished()
 	{

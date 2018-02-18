@@ -6,14 +6,14 @@ import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.TurnTableController;
-import org.jmhsrobotics.hardwareinterface.TurnTableMotor;
+import org.jmhsrobotics.hardwareinterface.TurnTable;
 
 public class TurnTableControlCommand extends CommandModule implements TurnTableController
 {
 	private final static double TURN_SPEED = 0.3;
 	
 	private @Submodule Optional<SubsystemManager> subsystems;
-	private @Submodule TurnTableMotor tableHardware;
+	private @Submodule TurnTable tableHardware;
 	
 	private Position currentPosition;
 	private Position targetPosition;

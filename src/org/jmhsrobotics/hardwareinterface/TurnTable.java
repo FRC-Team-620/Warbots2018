@@ -1,6 +1,6 @@
 package org.jmhsrobotics.hardwareinterface;
 
-public interface TurnTableMotor
+public interface TurnTable
 {
 	public void driveTurnTableMotor(double speed);
 	public boolean readMiddleLimitSwitch();

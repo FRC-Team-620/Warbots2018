@@ -1,13 +1,13 @@
 package org.jmhsrobotics.mockhardware;
 
 import org.jmhsrobotics.core.modulesystem.Module;
-import org.jmhsrobotics.hardwareinterface.TurnTableMotor;
+import org.jmhsrobotics.hardwareinterface.TurnTable;
 
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class MockTurnTable implements Module, TurnTableMotor
+public class MockTurnTable implements Module, TurnTable
 {
 	private final static double LEFT_LIMIT_SWITCH = -.3, MIDDLE_LIMIT_SWITCH = 0, RIGHT_LIMIT_SWITCH = .3;
 	private final static double MIDDLE_LIMIT_SWITCH_THRESHOLD_SIZE = 0.1;

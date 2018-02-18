@@ -5,14 +5,14 @@ import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.RobotMath;
-import org.jmhsrobotics.hardwaremodules.TurntableHardware;
+import org.jmhsrobotics.hardwaremodules.TurnTableHardware;
 
 import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveWithJoystick extends ControlSchemeModule
 {
 	private @Submodule DriveController drive;
-	private @Submodule TurntableHardware motor;
+	private @Submodule TurnTableHardware motor;
 	
 	@Override
 	public void execute()

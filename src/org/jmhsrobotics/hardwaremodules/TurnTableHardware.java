@@ -1,17 +1,17 @@
 package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
-import org.jmhsrobotics.hardwareinterface.TurnTableMotor;
+import org.jmhsrobotics.hardwareinterface.TurnTable;
 
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 
-public class TurntableHardware implements Module, TurnTableMotor
+public class TurnTableHardware implements Module, TurnTable
 {
 	SpeedController motor;
 	
-	public TurntableHardware(int port)
+	public TurnTableHardware(int port)
 	{
 		motor = new Spark(port);
 	}
