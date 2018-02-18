@@ -37,7 +37,7 @@ public class CorrectiveDrive extends DriveController
 		angleController = new PIDCalculator(0.02, 0, 7, angleSensor, o -> turn = o);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
-		angleController.setOutputRange(-1, 1);
+		angleController.setOutputRange(-.6, .6);
 		
 		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTargetPoint, this::getSpeedTowardTarget);
 		distanceController = new PIDCalculator(0.005, 0, 5, distanceSensor, o -> speed = -o);

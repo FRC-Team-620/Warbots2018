@@ -24,10 +24,10 @@ public class LinearAccelRiemannInterpolator implements PositionInterpolator
 		double xVal = 0;
 		double yVal = 0;
 		
-		for(int k=0;k<dt;k+=delta)
+		for(double k=0;k<dt;k+=delta)
 		{
-			xVal += delta*(av*k*k+bv*k+cv)*Math.sin((1/3)*at*k*k*k+(1/2)*bt*k*k+ct*k+thetao);
-			yVal += delta*(av*k*k+bv*k+cv)*Math.cos((1/3)*at*k*k*k+(1/2)*bt*k*k+ct*k+thetao);
+			xVal += delta*(av*k*k+bv*k+cv)*Math.sin((1./3)*at*k*k*k+(1./2)*bt*k*k+ct*k+thetao);
+			yVal += delta*(av*k*k+bv*k+cv)*Math.cos((1./3)*at*k*k*k+(1./2)*bt*k*k+ct*k+thetao);
 		}
 		return new Point(xVal, yVal);
 	}

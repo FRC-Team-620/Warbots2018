@@ -14,18 +14,15 @@ import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.core.util.Point;
-import org.jmhsrobotics.hardwaremodules.DragEncodersHardware;
 import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.autonomous.PathFollower;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
+import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
-import org.jmhsrobotics.modules.drivecontrol.SimplePositionInterpolator;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
@@ -68,7 +65,7 @@ public class Robot extends HybridRobot
 		
 //		modules.addModule(new CalibrateDriveTrain());
 
-		modules.addModule(new Localization(new SimplePositionInterpolator()));
+		modules.addModule(new Localization(new LinearAccelRiemannInterpolator(100)));
 		
 		CorrectiveDrive driveController = new CorrectiveDrive();
 		modules.addModule(driveController);
@@ -100,7 +97,7 @@ public class Robot extends HybridRobot
 //		autonomous = new AutoSwitcher();
 //		modules.addModule(autonomous);
 
-		PathFollower auto = new PathFollower(40, 6, Angle.ZERO, Angle.fromDegrees(10),
+		PathFollower auto = new PathFollower(24, 6, Angle.ZERO, Angle.fromDegrees(10),
 				new Point(121, 72),
 				new Point(121, 175),
 				new Point(-100, 175),

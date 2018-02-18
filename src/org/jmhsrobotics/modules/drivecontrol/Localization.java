@@ -62,7 +62,6 @@ public class Localization extends CommandModule
 //		backEncoder = dragWheelEncoders.forward().getDist();
 //		sideEncoder = dragWheelEncoders.side().getDist();
 		
-		
 		EncoderData forwardMovement = wheelEncoders.average();
 		
 		double distanceMoved = forwardMovement.getDist() - totalDist;
@@ -84,6 +83,7 @@ public class Localization extends CommandModule
 		double v0 = oldSpeed;
 		double vt = speed;
 		double s = distanceMoved;
+		
 		Point relativePosition = interpolator.getRelativePosition(w0, wt, theta0, thetat, v0, vt, s, dt);
 		
 		x += relativePosition.getX();
