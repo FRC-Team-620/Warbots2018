@@ -5,13 +5,15 @@ import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.RobotMath;
+import org.jmhsrobotics.hardwaremodules.TurntableHardware;
 
 import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveWithJoystick extends ControlSchemeModule
 {
 	private @Submodule DriveController drive;
-
+	private @Submodule TurntableHardware motor;
+	
 	@Override
 	public void execute()
 	{
@@ -28,10 +30,13 @@ public class DriveWithJoystick extends ControlSchemeModule
 		
 		if(js.getTriggerPressed())
 			drive.setTarget(0, 0);
-		else if(js.getRawButtonPressed(4))
-			drive.setRelativeTarget(Angle.INVERSE_RIGHT);
-		else if(js.getRawButtonPressed(5))
-			drive.setRelativeTarget(Angle.RIGHT);
+		
+		if(js.getRawButton(4))
+			motor.driveTurnTableMotor(.4);
+		else if(js.getRawButton(5))
+			motor.driveTurnTableMotor(-.4);
+		else
+			motor.driveTurnTableMotor(0);
 		
 		drive.drive(yadjusted, xadjusted);
 	}

@@ -34,13 +34,13 @@ public class CorrectiveDrive extends DriveController
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("DriveTrain")));
 		
 		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getDegreesPerSecond);
-		angleController = new PIDCalculator(0.02, 0, 7, angleSensor, o -> turn = o);
+		angleController = new PIDCalculator(0.03, 0, 9, angleSensor, o -> turn = o);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
-		angleController.setOutputRange(-.6, .6);
+		angleController.setOutputRange(-1, 1);
 		
 		distanceSensor = PIDSensor.fromDispAndRate(this::getDistanceToTargetPoint, this::getSpeedTowardTarget);
-		distanceController = new PIDCalculator(0.005, 0, 5, distanceSensor, o -> speed = -o);
+		distanceController = new PIDCalculator(0.004, 0, 10, distanceSensor, o -> speed = -o);
 		distanceController.setOutputRange(-1, 1);
 		distanceController.setSetpoint(0);
 		
@@ -79,6 +79,7 @@ public class CorrectiveDrive extends DriveController
 	{
 		System.out.println("Setting target to angle: " + angle);
 		targetPoint = Optional.empty();
+		speed = 0;
 		targetAngle = Optional.of(angle);
 	}
 	
