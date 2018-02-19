@@ -1,7 +1,10 @@
 package org.jmhsrobotics.calibration;
 
+import java.util.Date;
+
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.hardwareinterface.TurnTableController.Position;
 import org.jmhsrobotics.hardwaremodules.TurnTableHardware;
 import org.jmhsrobotics.modules.PersistantDataModule;
 
@@ -10,18 +13,34 @@ public class CalibrateTurnTable extends CommandModule
 	private @Submodule PersistantDataModule fileHandler;
 	private @Submodule TurnTableHardware turnTable;
 
-	protected void initialize()
-	{
-	}
-	
 	@Override
 	protected void execute()
 	{
+		if (timeSinceInitialized() < 6)
+			turnTable.drive(.4);
+		else
+			turnTable.drive(-.4);
 	}
-	
+
 	@Override
 	protected boolean isFinished()
 	{
-		return false;
+		return turnTable.readMiddleLimitSwitch() == false;
+	}
+	
+	@Override
+	protected void end()
+	{
+		String[] data = new String[2];
+		data[0] = new Date().toString();
+		data[1] = Position.center.toString();
+		
+		try
+		{
+			fileHandler.write(fileHandler.getDataFile("turntable"), data);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
