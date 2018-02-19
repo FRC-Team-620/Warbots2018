@@ -1,5 +1,9 @@
 package org.jmhsrobotics.modules;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Optional;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
@@ -15,7 +19,11 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 	private final static double MAX_SPEED_BOOST = 0.6;
 	
 	private @Submodule Optional<SubsystemManager> subsystems;
+	private @Submodule Optional<PersistantDataModule> fileHandler;
 	private @Submodule TurnTable tableHardware;
+	
+	private File dataFile;
+	private Date lastCalibrated;
 	
 	private double positionEstimate;
 	private Position currentPosition;
@@ -28,6 +36,23 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 		
 		currentPosition = Position.left;
 		targetPosition = Position.left;
+		
+		fileHandler.ifPresent(handler ->
+		{
+			dataFile = handler.getDataFile("turntable");
+			String[] data = handler.read(dataFile);
+			try
+			{
+				lastCalibrated = DateFormat.getDateInstance().parse(data[0]);
+			}
+			catch(ParseException e)
+			{
+				e.printStackTrace();
+			}
+			currentPosition = Position.valueOf(data[1]);
+			targetPosition = currentPosition;
+		});
+		
 		positionEstimate = -1;
 	}
 	
@@ -91,5 +116,17 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 	protected boolean isFinished()
 	{
 		return false;
+	}
+	
+	@Override
+	protected void end()
+	{
+		fileHandler.ifPresent(handler ->
+		{
+			String[] data = new String[2];
+			data[0] = lastCalibrated.toString();
+			data[1] = currentPosition.toString();
+			handler.write(dataFile, data);
+		});
 	}
 }
