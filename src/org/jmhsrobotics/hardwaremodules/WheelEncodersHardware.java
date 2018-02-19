@@ -1,7 +1,5 @@
 package org.jmhsrobotics.hardwaremodules;
 
-import java.io.PrintStream;
-
 import org.jmhsrobotics.core.modulesystem.SensorModule;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.EncoderGroup;
@@ -78,14 +76,5 @@ public class WheelEncodersHardware extends SensorModule implements WheelEncoders
 		builder.addDoubleProperty("Left Dist", () -> this.left().getDist(), null);
 		builder.addDoubleProperty("Right Dist", () -> this.right().getDist(), null);
 		builder.addDoubleProperty("Average Rate", () -> this.average().getRate(), null);
-	}
-	
-	@Override
-	public void printData(PrintStream out)
-	{
-		out.println("Average Dist" + this.average().getDist());
-		out.println("Left Dist" + this.left().getDist());
-		out.println("Right Dist" + this.right().getDist());
-		out.println("Average Rate" + this.average().getRate());
 	}
 }

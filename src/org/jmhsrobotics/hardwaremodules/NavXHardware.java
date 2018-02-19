@@ -1,7 +1,5 @@
 package org.jmhsrobotics.hardwaremodules;
 
-import java.io.PrintStream;
-
 import org.jmhsrobotics.core.modulesystem.SensorModule;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.core.util.Angle;
@@ -85,13 +83,5 @@ public class NavXHardware extends SensorModule implements Gyro, Barometer
 		builder.addDoubleProperty("Angle", getAngle()::measureDegrees, null);
 		builder.addDoubleProperty("Rotation Rate", getRotationPerSecond()::measureDegrees, null);
 		builder.addDoubleProperty("Pressure", this::getBarometricPressure, null);
-	}
-
-	@Override
-	public void printData(PrintStream out)
-	{
-		out.println("Angle: " + getAngle());
-		out.println("Rotation Rate: " + getRotationPerSecond());
-		out.println("Barometric Pressure: " + getBarometricPressure());
 	}
 }
