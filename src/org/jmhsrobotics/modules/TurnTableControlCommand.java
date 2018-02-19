@@ -2,7 +2,6 @@ package org.jmhsrobotics.modules;
 
 import java.io.File;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -39,18 +38,18 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 		
 		fileHandler.ifPresent(handler ->
 		{
-			dataFile = handler.getDataFile("turntable");
-			String[] data = handler.read(dataFile);
 			try
 			{
+				dataFile = handler.getDataFile("turntable");
+				String[] data = handler.read(dataFile);
 				lastCalibrated = DateFormat.getDateInstance().parse(data[0]);
+				currentPosition = Position.valueOf(data[1]);
+				targetPosition = currentPosition;
 			}
-			catch(ParseException e)
+			catch(Exception e)
 			{
 				e.printStackTrace();
 			}
-			currentPosition = Position.valueOf(data[1]);
-			targetPosition = currentPosition;
 		});
 		
 		positionEstimate = -1;
@@ -126,7 +125,14 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 			String[] data = new String[2];
 			data[0] = lastCalibrated.toString();
 			data[1] = currentPosition.toString();
-			handler.write(dataFile, data);
+			try
+			{
+				handler.write(dataFile, data);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		});
 	}
 }
