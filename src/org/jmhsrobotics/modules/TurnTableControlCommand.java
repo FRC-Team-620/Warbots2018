@@ -1,6 +1,5 @@
 package org.jmhsrobotics.modules;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
@@ -13,7 +12,7 @@ import org.jmhsrobotics.hardwareinterface.TurnTableController;
 public class TurnTableControlCommand extends CommandModule implements TurnTableController
 {
 	private final static double BASE_TURN_SPEED = 0.4;
-	private final static double MAX_SPEED_BOOST = 0.1;
+	private final static double MAX_SPEED_BOOST = 0.6;
 	
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule TurnTable tableHardware;
@@ -27,8 +26,8 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 	{
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("TurnTable")));
 		
-		currentPosition = Position.right;
-		targetPosition = Position.right;
+		currentPosition = Position.left;
+		targetPosition = Position.left;
 		positionEstimate = -1;
 	}
 	
@@ -51,11 +50,9 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 	@Override
 	protected void execute()
 	{
-		positionEstimate += RobotMath.curve(tableHardware.getSpeed(), 2) * .05;
+		positionEstimate += RobotMath.curve(tableHardware.getSpeed(), 2) * .06;
 		if(currentPosition == Position.center)
 			positionEstimate = 0;
-		
-		System.out.println(positionEstimate);
 		
 		double targetPos;
 		switch(targetPosition)
@@ -73,10 +70,12 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 		
 		double distanceFromTarget = Math.abs(targetPos - positionEstimate);
 		
-		double speedBoost = RobotMath.xKinkedMap(distanceFromTarget, -1, 1, 0, -.2, .2, -MAX_SPEED_BOOST, MAX_SPEED_BOOST);
-		System.out.println("Speed Boost: " + speedBoost);
+		double speedBoost = RobotMath.xKinkedMap(distanceFromTarget, -1, 1, 0, -.3, .3, -MAX_SPEED_BOOST, MAX_SPEED_BOOST);
+//		System.out.println("Speed Boost: " + speedBoost);
 		
-		double turnSpeed = BASE_TURN_SPEED ;
+		System.out.println("Boost: " + speedBoost + " Absolute: " + currentPosition + " Estimate: " + positionEstimate + " Target: " + targetPosition);
+		
+		double turnSpeed = BASE_TURN_SPEED + speedBoost;
 		
 		if(currentPosition == targetPosition)
 			if(Math.abs(positionEstimate) < 1.2)

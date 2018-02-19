@@ -28,7 +28,7 @@ public class DriveWithJoystick extends ControlSchemeModule
 //		String yout = String.format("%.2g%n", y);
 		
 		if(js.getTriggerPressed())
-			drive.setTarget(0, 0);
+			cancel();
 		
 		if(js.getRawButtonPressed(4))
 			turnTableDrive.goTo(turnTableDrive.getCurrentTurnTablePosition().getLeftAdjacent());
