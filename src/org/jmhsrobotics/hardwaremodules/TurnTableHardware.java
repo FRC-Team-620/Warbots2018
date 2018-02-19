@@ -1,6 +1,7 @@
 package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.TurnTable;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 
+@HardwareModule
 public class TurnTableHardware implements Module, TurnTable
 {
 	private SpeedController motor;

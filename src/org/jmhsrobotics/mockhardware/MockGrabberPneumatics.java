@@ -11,27 +11,33 @@ public class MockGrabberPneumatics implements Module, GrabberPneumatics
 	@Override
 	public void setLeftWristExtended(boolean val)
 	{
-		System.out.println("Setting lateral left solenoid to " + (val ? "extended" : "retracted"));
+		System.out.println("Setting left wrist solenoid to " + (val ? "extended" : "retracted"));
 	}
 
 	@Override
 	public void setRightWristExtended(boolean val)
 	{
-		System.out.println("Setting lateral right solenoid to " + (val ? "extended" : "retracted"));
+		System.out.println("Setting right wrist solenoid to " + (val ? "extended" : "retracted"));
 	}
 
 	@Override
 	public void setLeftArmExtended(boolean val)
 	{
-		System.out.println("Setting vertical left solenoid to " + (val ? "extended" : "retracted"));
+		System.out.println("Setting left arm solenoid to " + (val ? "extended" : "retracted"));
 	}
 
 	@Override
 	public void setRightArmExtended(boolean val)
 	{
-		System.out.println("Setting vercial right solenoid to " + (val ? "extended" : "retracted"));
+		System.out.println("Setting right arm solenoid to " + (val ? "extended" : "retracted"));
 	}
 
+	@Override
+	public void setRaised(boolean val)
+	{
+		System.out.println((val ? "Rais" : "lower") + "ing grabber");
+	}
+	
 	@Override
 	public Command getTest()
 	{
