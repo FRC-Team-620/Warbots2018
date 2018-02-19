@@ -18,4 +18,11 @@ public class TowerHardware implements Tower
 	public void climb()
 	{
 	}
+
+	@Override
+	public boolean isExtended()
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

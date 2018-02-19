@@ -14,6 +14,17 @@ public interface ElevatorController
 		}
 		
 		private Position prev, next;
+//		private double height;
+//		
+//		Position(double height)
+//		{
+//			this.height = height;
+//		}
+//		
+//		public double getHeight()
+//		{
+//			return height;
+//		}
 		
 		public Position getAdjacentAbove()
 		{

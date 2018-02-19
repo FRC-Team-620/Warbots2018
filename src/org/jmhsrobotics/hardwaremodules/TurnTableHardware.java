@@ -20,11 +20,17 @@ public class TurnTableHardware implements Module, TurnTable
 	}
 	
 	@Override
-	public void driveTurnTableMotor(double speed)
+	public void drive(double speed)
 	{
 		motor.set(speed);
 	}
 
+	@Override
+	public double getSpeed()
+	{
+		return motor.get();
+	}
+	
 	@Override
 	public boolean readMiddleLimitSwitch()
 	{

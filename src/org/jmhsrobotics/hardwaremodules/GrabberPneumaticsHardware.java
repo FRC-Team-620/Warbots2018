@@ -21,25 +21,25 @@ public class GrabberPneumaticsHardware implements Module, GrabberPneumatics
 	}
 
 	@Override
-	public void setLateralLeftPistonExtended(boolean val)
+	public void setLeftWristExtended(boolean val)
 	{
 		latleft.set(val);
 	}
 
 	@Override
-	public void setLateralRightEncoderExtended(boolean val)
+	public void setRightWristExtended(boolean val)
 	{
 		latright.set(val);
 	}
 
 	@Override
-	public void setVerticalLeftPistonExtended(boolean val)
+	public void setLeftArmExtended(boolean val)
 	{
 		vertleft.set(val);
 	}
 
 	@Override
-	public void setVerticalRightEncoderExtended(boolean val)
+	public void setRightArmExtended(boolean val)
 	{
 		vertright.set(val);
 	}

@@ -29,10 +29,10 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	@Override
 	protected void execute()
 	{
-		pneumatics.setLateralLeftPistonExtended(pistonSideLeft);
-		pneumatics.setLateralRightEncoderExtended(pistonSideRight);
-		pneumatics.setVerticalLeftPistonExtended(pistonTopLeft);
-		pneumatics.setVerticalRightEncoderExtended(pistonTopRight);
+		pneumatics.setLeftWristExtended(pistonSideLeft);
+		pneumatics.setRightWristExtended(pistonSideRight);
+		pneumatics.setLeftArmExtended(pistonTopLeft);
+		pneumatics.setRightArmExtended(pistonTopRight);
 		
 		wheels.setLeftWheels(leftWheelSpeed);
 		wheels.setRightWheels(rightWheelSpeed);
