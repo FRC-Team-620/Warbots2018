@@ -31,7 +31,7 @@ public abstract class RobotMath
 	
 	public static double curve(double n, double curve)
 	{
-		return Math.signum(n) * Math.pow(Math.abs(n), curve);
+		return Math.copySign(Math.pow(Math.abs(n), curve), n);
 	}
 	
 	public static <T> void linkNextAndPrevWithSelfReferencingCaps(T[] array, BiConsumer<T, T> setNext, BiConsumer<T, T> setPrev)

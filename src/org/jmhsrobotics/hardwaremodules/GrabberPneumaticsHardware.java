@@ -1,47 +1,55 @@
 package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.GrabberPneumatics;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
+@HardwareModule
 public class GrabberPneumaticsHardware implements Module, GrabberPneumatics
 {
-	Solenoid latleft, latright, vertleft, vertright;
+	Solenoid leftWrist, rightWrist, leftArm, rightArm, raise;
+	
+	public GrabberPneumaticsHardware(int leftArmPort, int leftWristPort, int rightArmPort, int rightWristPort, int raisePort)
+	{
+		leftArm = new Solenoid(leftArmPort);
+		leftWrist = new Solenoid(leftWristPort);
+		rightArm = new Solenoid(rightArmPort);
+		rightWrist = new Solenoid(rightWristPort);
+		raise = new Solenoid(raisePort);
+	}
 	
 	@Override
-	public void onLink()
+	public void setLeftWristExtended(boolean val)
 	{
-		latleft = new Solenoid(1);
-		latright = new Solenoid(2);
-		vertleft = new Solenoid(3);
-		vertright = new Solenoid(4);
+		leftWrist.set(val);
 	}
 
 	@Override
-	public void setLateralLeftPistonExtended(boolean val)
+	public void setRightWristExtended(boolean val)
 	{
-		latleft.set(val);
+		rightWrist.set(val);
 	}
 
 	@Override
-	public void setLateralRightEncoderExtended(boolean val)
+	public void setLeftArmExtended(boolean val)
 	{
-		latright.set(val);
+		leftArm.set(val);
 	}
 
 	@Override
-	public void setVerticalLeftPistonExtended(boolean val)
+	public void setRightArmExtended(boolean val)
 	{
-		vertleft.set(val);
+		rightArm.set(val);
 	}
-
+	
 	@Override
-	public void setVerticalRightEncoderExtended(boolean val)
+	public void setRaised(boolean val)
 	{
-		vertright.set(val);
+		raise.set(val);
 	}
 
 	@Override

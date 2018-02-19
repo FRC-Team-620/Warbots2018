@@ -1,7 +1,5 @@
 package org.jmhsrobotics.hardwaremodules;
 
-import java.io.PrintStream;
-
 import org.jmhsrobotics.core.modulesystem.SensorModule;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.DragWheelEncoders;
@@ -67,12 +65,5 @@ public class DragEncodersHardware extends SensorModule implements DragWheelEncod
 	{
 		builder.addDoubleProperty("Forward", forward()::getDist, null);
 		builder.addDoubleProperty("Unadjusted side dist", side()::getDist, null);
-	}
-
-	@Override
-	public void printData(PrintStream out)
-	{
-		out.println("Forward dist " + forward().getDist());
-		out.println("Unadjusted side dist " + side().getDist());
 	}
 }

@@ -1,31 +1,19 @@
 package org.jmhsrobotics.hardwareinterface;
 
-import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.RobotMath;
 
 public interface TurnTableController
 {
 	public static enum Position
 	{
-		left(Angle.INVERSE_RIGHT), center(Angle.ZERO), right(Angle.RIGHT);
+		right, center, left;
 		
 		static
 		{
 			RobotMath.linkNextAndPrevWithSelfReferencingCaps(values(), (p, t) -> p.next = t, (p, t) -> p.prev = t);
 		}
 		
-		private Angle location;
 		private Position prev, next;
-		
-		Position(Angle location)
-		{
-			this.location = location;
-		}
-		
-		public Angle getPosition()
-		{
-			return location;
-		}
 		
 		public Position getRightAdjacent()
 		{
@@ -36,7 +24,6 @@ public interface TurnTableController
 		{
 			return prev;
 		}
-
 	}
 	
 	public void goTo(Position position);
