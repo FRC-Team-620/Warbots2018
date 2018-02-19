@@ -69,14 +69,8 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 		}
 		
 		double distanceFromTarget = Math.abs(targetPos - positionEstimate);
-		
 		double speedBoost = RobotMath.xKinkedMap(distanceFromTarget, -1, 1, 0, -.3, .3, -MAX_SPEED_BOOST, MAX_SPEED_BOOST);
-//		System.out.println("Speed Boost: " + speedBoost);
-		
-		System.out.println("Boost: " + speedBoost + " Absolute: " + currentPosition + " Estimate: " + positionEstimate + " Target: " + targetPosition);
-		
 		double turnSpeed = BASE_TURN_SPEED + speedBoost;
-		
 		if(currentPosition == targetPosition)
 			if(Math.abs(positionEstimate) < 1.2)
 				tableHardware.drive(Math.signum(targetPosition.compareTo(Position.center)) * turnSpeed);
