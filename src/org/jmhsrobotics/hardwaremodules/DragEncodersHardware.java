@@ -19,7 +19,7 @@ public class DragEncodersHardware extends SensorModule implements DragWheelEncod
 	
 	public DragEncodersHardware(int forwardEncoderPort1, int forwardEncoderPort2, boolean reverseForwardEncoder, int sideEncoderPort1, int sideEncoderPort2, boolean reverseSideEncoder)
 	{
-		setRefreshRate(0.004);
+		setCachePeriod(0.004);
 		forwardEncoder = new Encoder(forwardEncoderPort1, forwardEncoderPort2, reverseForwardEncoder);
 		forwardEncoder.setDistancePerPulse(0.01308997);
 		sideEncoder = new Encoder(sideEncoderPort1, sideEncoderPort2, reverseSideEncoder);

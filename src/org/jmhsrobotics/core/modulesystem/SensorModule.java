@@ -9,25 +9,37 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class SensorModule extends PlainSendable implements Sensor, Module
 {
-	public static final double DEFAULT_REFRESH_RATE = 0.02;
-
+	public static final double DEFAULT_CACHE_PERIOD = 0.02;
+	
+	private DummySendableBuilder relevantData;
+	
 	private long lastTimeMeasured;
-	private double refreshRate;
+	private double cachePeriod;
 
 	public SensorModule()
 	{
-		refreshRate = DEFAULT_REFRESH_RATE;
+		cachePeriod = DEFAULT_CACHE_PERIOD;
 		lastTimeMeasured = 0;
 	}
 
 	public abstract void updateData();
 
-	public abstract void printData(PrintStream out);
+	public void printData(PrintStream out)
+	{
+		if(relevantData == null)
+		{
+			relevantData = new DummySendableBuilder();
+			initSendable(relevantData);
+		}
+		
+		out.println("-- " + relevantData.getType() + " --");
+		relevantData.entries().forEach(e -> out.println("\t" + e.getName() + " = " + e.getValue()));
+	}
 
 	protected SensorModule updateIfNeeded()
 	{
 		long time = System.currentTimeMillis();
-		if (time - lastTimeMeasured >= refreshRate * 1000)
+		if (time - lastTimeMeasured >= cachePeriod * 1000)
 		{
 			updateData();
 			lastTimeMeasured = time;
@@ -36,14 +48,14 @@ public abstract class SensorModule extends PlainSendable implements Sensor, Modu
 		return this;
 	}
 
-	public void setRefreshRate(double rate)
+	public void setCachePeriod(double rate)
 	{
-		refreshRate = rate;
+		cachePeriod = rate;
 	}
 
-	public double getRefreshRate()
+	public double getCachePeriod()
 	{
-		return refreshRate;
+		return cachePeriod;
 	}
 
 	@Override

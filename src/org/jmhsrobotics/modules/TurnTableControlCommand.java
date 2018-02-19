@@ -21,15 +21,17 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 	@Override
 	public void onLink()
 	{
-		subsystems.ifPresent(sm -> requires(sm.getSubsystem("Grabber")));
+		subsystems.ifPresent(sm -> requires(sm.getSubsystem("TurnTable")));
 		
-		currentPosition = Position.center;
+		currentPosition = Position.left;
 		targetPosition = Position.center;
 	}
 	
 	@Override
 	public void goTo(Position position)
 	{
+		System.out.println("going to " + position);
+		
 		if(position == targetPosition)
 			return;
 		targetPosition = position;
@@ -44,6 +46,8 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 	@Override
 	protected void execute()
 	{
+		System.out.println(tableHardware.readMiddleLimitSwitch());
+		
 		if(currentPosition == targetPosition)
 			tableHardware.driveTurnTableMotor(Math.signum(targetPosition.compareTo(Position.center)) * TURN_SPEED);
 		else

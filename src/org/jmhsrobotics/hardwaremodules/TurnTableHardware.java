@@ -3,17 +3,20 @@ package org.jmhsrobotics.hardwaremodules;
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.hardwareinterface.TurnTable;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
 
 public class TurnTableHardware implements Module, TurnTable
 {
-	SpeedController motor;
+	private SpeedController motor;
+	private DigitalInput limitSwitch;
 	
-	public TurnTableHardware(int port)
+	public TurnTableHardware(int motorPort, int limitSwitchPort)
 	{
-		motor = new Spark(port);
+		motor = new Spark(motorPort);
+		limitSwitch = new DigitalInput(limitSwitchPort);
 	}
 	
 	@Override
@@ -25,7 +28,7 @@ public class TurnTableHardware implements Module, TurnTable
 	@Override
 	public boolean readMiddleLimitSwitch()
 	{
-		return false;
+		return limitSwitch.get();
 	}
 
 	@Override
