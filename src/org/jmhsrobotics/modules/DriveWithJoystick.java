@@ -1,9 +1,9 @@
 package org.jmhsrobotics.modules;
 
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
-import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.RobotMath;
+import org.jmhsrobotics.hardwareinterface.DriveController;
 import org.jmhsrobotics.hardwareinterface.TurnTableController;
 
 import edu.wpi.first.wpilibj.Joystick;

@@ -3,6 +3,7 @@ package org.jmhsrobotics.modules.drivecontrol;
 import java.util.Optional;
 
 import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
@@ -14,7 +15,7 @@ import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Localization extends CommandModule
+public class Localization extends CommandModule implements PerpetualCommand
 {	
 	private @Submodule Gyro gyro;
 	private @Submodule WheelEncoders wheelEncoders;
@@ -35,15 +36,17 @@ public class Localization extends CommandModule
 	}
 	
 	@Override
-	protected void initialize()
+	public void reset()
 	{
 		gyro.reset();
 		wheelEncoders.reset();
 		dragWheelEncoders.ifPresent(DragWheelEncoders::reset);
 		
+		System.out.println("Zeroing Localization");
+		
 		lastMeasureNanoTime = System.nanoTime();
 		
-		totalDist = x = y = speed;
+		totalDist = x = y = speed = 0;
 		angle = rotationRate = Angle.ZERO;
 	}
 

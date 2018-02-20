@@ -7,20 +7,24 @@
 
 package org.jmhsrobotics.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jmhsrobotics.core.modules.OperatorInterface;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
-import org.jmhsrobotics.core.util.Angle;
+import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
-import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
 import org.jmhsrobotics.hardwaremodules.TurnTableHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
+import org.jmhsrobotics.modules.CalibrateDriveTrain;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.TurnTableControlCommand;
-import org.jmhsrobotics.modules.autonomous.PathFollower;
+import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
+import org.jmhsrobotics.modules.autonomous.CLLAutonomous;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
@@ -40,7 +44,8 @@ public class Robot extends HybridRobot
 {
 	private ModuleManager modules;
 	private SubsystemManager subsystems;
-	private Command autonomous;
+	private AutoSwitcher autonomous;
+	private List<PerpetualCommand> baseLineControl;
 
 	@Override
 	public void robotInit()
@@ -50,7 +55,8 @@ public class Robot extends HybridRobot
 		long time = System.nanoTime();
 
 		modules = new ModuleManager();
-
+		baseLineControl = new ArrayList<>();
+		
 		subsystems = new SubsystemManager();
 		modules.addModule(subsystems);
 		subsystems.addEmptySubsystem("DriveTrain");
@@ -66,14 +72,16 @@ public class Robot extends HybridRobot
 //		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
 		
 		modules.addModule(new TurnTableHardware(3, 4));
-		
-//		modules.addModule(new CalibrateDriveTrain());
 
-		modules.addModule(new Localization(new LinearAccelRiemannInterpolator(100)));
+		modules.addModule(new CalibrateDriveTrain());
+
+		Localization localization = new Localization(new LinearAccelRiemannInterpolator(100));
+		modules.addModule(localization);
+		baseLineControl.add(localization);
 		
 		CorrectiveDrive driveController = new CorrectiveDrive();
 		modules.addModule(driveController);
-		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveController);
+		baseLineControl.add(driveController);
 //		modules.addModule(new RawDriveController());
 		
 //		CommandModule dbControl = new DashboardControl();
@@ -82,7 +90,7 @@ public class Robot extends HybridRobot
 		
 		TurnTableControlCommand turnTableController = new TurnTableControlCommand();
 		modules.addModule(turnTableController);
-		subsystems.getSubsystem("TurnTable").setDefaultCommand(turnTableController);
+		baseLineControl.add(turnTableController);
 		
 		modules.addModule(new DriveWithJoystick());
 
@@ -105,12 +113,13 @@ public class Robot extends HybridRobot
 //		autonomous = new AutoSwitcher();
 //		modules.addModule(autonomous);
 
-		PathFollower auto = new PathFollower(36, 6, Angle.ZERO, Angle.fromDegrees(10),
-				new Point(121, 72),
-				new Point(121, 175),
-				new Point(-100, 175),
-				new Point(-100, 134),
-				new Point(0, 0));
+//		PathFollower auto = new PathFollower(36, 6, Angle.ZERO, Angle.fromDegrees(10),
+//				new Point(0, 10),
+//				new Point(0, 60));
+		
+		modules.addModule(new CLLAutonomous());
+		
+		AutoSwitcher auto = new AutoSwitcher();
 		modules.addModule(auto);
 		autonomous = auto;
 		
@@ -148,11 +157,14 @@ public class Robot extends HybridRobot
 	{
 		Scheduler.getInstance().removeAll();
 		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::enableJoystickRefresh);
+		baseLineControl.stream().forEach(PerpetualCommand::cancel);
 	}
 	
 	private void activate()
 	{
 		Scheduler.getInstance().removeAll();
 		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::disableJoystickRefresh);
+		baseLineControl.stream().forEach(PerpetualCommand::reset);
+		baseLineControl.stream().forEach(PerpetualCommand::start);
 	}
 }

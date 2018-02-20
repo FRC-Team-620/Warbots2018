@@ -1,8 +1,9 @@
-package org.jmhsrobotics.core.modulesystem;
+package org.jmhsrobotics.hardwareinterface;
 
+import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
-import org.jmhsrobotics.hardwareinterface.DriveMechanism;
 
 public abstract class DriveController extends CommandModule
 {
@@ -14,17 +15,34 @@ public abstract class DriveController extends CommandModule
 	}
 	
 	public abstract void drive(double speed, double turn);
-	public abstract void setTarget(Point point);
-	public abstract void setRelativeTarget(Point point);
+	
+	public abstract void setTarget(Point point, boolean reverse);
+	public abstract void setRelativeTarget(Point point, boolean reverse);
 	public abstract void setTarget(Angle angle);
 	public abstract void setRelativeTarget(Angle angle);
+	
+	public void setTarget(Point point)
+	{
+		setTarget(point, false);
+	}
+	
+	public void setRelativeTarget(Point point)
+	{
+		setRelativeTarget(point, false);
+	}
+	
 	public abstract void removeTarget();
 	public abstract double getDistanceToTargetPoint();
 	public abstract Angle getDistanceToTargetAngle();
 	
+	public void setTarget(double x, double y, boolean reverse)
+	{
+		setTarget(new Point(x, y), reverse);
+	}
+	
 	public void setTarget(double x, double y)
 	{
-		setTarget(new Point(x, y));
+		setTarget(x, y, false);
 	}
 	
 	@Override

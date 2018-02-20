@@ -40,13 +40,17 @@ public class AutoSwitcher implements Module
 		startingPosition.addDefault("Center", StartingPosition.center);
 		startingPosition.addObject("Left", StartingPosition.left);
 		startingPosition.addObject("Right", StartingPosition.right);
-		SmartDashboard.putData(startingPosition);
+		SmartDashboard.putData("Starting Position", startingPosition);
 	}
 
 	public void start()
 	{
 		String gameSpecificMessage = DriverStation.getInstance().getGameSpecificMessage();
-		currentAuto = Optional.ofNullable(autoCommandMap.get(gameSpecificMessage));
+		String position = startingPosition.getSelected().toString().toUpperCase();
+		String id = position.substring(0, 1) + gameSpecificMessage.substring(0, 2);
+		System.out.println(startingPosition.getSelected());
+		System.out.println("Starting auto command by id " + id);
+		currentAuto = Optional.ofNullable(autoCommandMap.get(id));
 		currentAuto.get().start();
 	}
 

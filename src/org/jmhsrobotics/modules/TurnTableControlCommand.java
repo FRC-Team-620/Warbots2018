@@ -7,12 +7,13 @@ import java.util.Optional;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.TurnTable;
 import org.jmhsrobotics.hardwareinterface.TurnTableController;
 
-public class TurnTableControlCommand extends CommandModule implements TurnTableController
+public class TurnTableControlCommand extends CommandModule implements PerpetualCommand, TurnTableController
 {
 	private final static double BASE_TURN_SPEED = 0.4;
 	private final static double MAX_SPEED_BOOST = 0.6;
@@ -69,6 +70,11 @@ public class TurnTableControlCommand extends CommandModule implements TurnTableC
 	public Position getCurrentTurnTablePosition()
 	{
 		return currentPosition;
+	}
+	
+	@Override
+	public void reset()
+	{
 	}
 	
 	@Override

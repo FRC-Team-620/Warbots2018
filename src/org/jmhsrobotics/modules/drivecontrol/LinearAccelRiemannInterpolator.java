@@ -15,11 +15,11 @@ public class LinearAccelRiemannInterpolator implements PositionInterpolator
 	public Point getRelativePosition(double wo, double wt, double thetao, double thetat, double vo, double vt, double s, double dt)
 	{
 		double av = (-6 * s + 3 * dt * (vt + vo)) / (dt * dt * dt);
-		double bv = (6 * s - 2 * dt * (vt + vo)) / (dt * dt);
+		double bv = (6 * s - 2 * dt * (vt + 2 * vo)) / (dt * dt);
 
 		double dtheta = thetat - thetao;
 		double at = (-2 * dtheta + dt * (wt + wo)) / (dt * dt * dt);
-		double bt = (3 * dtheta - dt * (wt + wo)) / (dt * dt);
+		double bt = (3 * dtheta - dt * (wt + 2 * wo)) / (dt * dt);
 
 		double delta = dt / accuracy;
 		double x = 0;
