@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.GrabberController;
 import org.jmhsrobotics.hardwareinterface.GrabberPneumatics;
@@ -12,7 +13,7 @@ import org.jmhsrobotics.hardwareinterface.GrabberWheels;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class GrabberControlCommand extends CommandModule implements GrabberController
+public class GrabberControlCommand extends CommandModule implements GrabberController, PerpetualCommand
 {
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule GrabberWheels wheels;
@@ -21,9 +22,9 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	private boolean pistonSideLeft, pistonSideRight, pistonTopLeft = true, pistonTopRight = true;
 	private double leftWheelSpeed, rightWheelSpeed;
 	
-	public GrabberControlCommand()
+	@Override
+	public void reset()
 	{
-		subsystems.ifPresent(sm -> requires(sm.getSubsystem("Grabber")));
 	}
 	
 	@Override

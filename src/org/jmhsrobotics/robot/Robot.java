@@ -7,20 +7,30 @@
 
 package org.jmhsrobotics.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jmhsrobotics.core.modules.OperatorInterface;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
-import org.jmhsrobotics.core.util.Angle;
+import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
-import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
+import org.jmhsrobotics.hardwaremodules.GrabberPneumaticsHardware;
+import org.jmhsrobotics.hardwaremodules.GrabberWheelsHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
+import org.jmhsrobotics.hardwaremodules.PneumaticCompressor;
 import org.jmhsrobotics.hardwaremodules.TurnTableHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.modules.DriveWithJoystick;
+import org.jmhsrobotics.mockhardware.MockGrabberWheels;
+import org.jmhsrobotics.mockhardware.MockTower;
+import org.jmhsrobotics.modules.DriveWithXbox;
+import org.jmhsrobotics.modules.ElevatorControlCommand;
+import org.jmhsrobotics.modules.GrabberControlCommand;
+import org.jmhsrobotics.modules.NormalizeDriveTrain;
+import org.jmhsrobotics.modules.PersistantDataModule;
 import org.jmhsrobotics.modules.TurnTableControlCommand;
-import org.jmhsrobotics.modules.autonomous.PathFollower;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
@@ -40,7 +50,8 @@ public class Robot extends HybridRobot
 {
 	private ModuleManager modules;
 	private SubsystemManager subsystems;
-	private Command autonomous;
+//	private AutoSwitcher autonomous;
+	private List<PerpetualCommand> baseLineControl;
 
 	@Override
 	public void robotInit()
@@ -50,7 +61,8 @@ public class Robot extends HybridRobot
 		long time = System.nanoTime();
 
 		modules = new ModuleManager();
-
+		baseLineControl = new ArrayList<>();
+		
 		subsystems = new SubsystemManager();
 		modules.addModule(subsystems);
 		subsystems.addEmptySubsystem("DriveTrain");
@@ -65,54 +77,48 @@ public class Robot extends HybridRobot
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
 //		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
 		
+		PneumaticCompressor compressor = new PneumaticCompressor(6);
+		modules.addModule(compressor);
+		baseLineControl.add(compressor);
+		
+		modules.addModules(new PneumaticCompressor(6));
+		modules.addModule(new GrabberPneumaticsHardware(7, 2, 0, 4, 3, 1));
+		modules.addModule(new GrabberWheelsHardware(1, 2));
+		modules.addModule(new MockGrabberWheels());
+		modules.addModule(new MockTower());
+		
+		modules.addModule(new PersistantDataModule());
+		
 		modules.addModule(new TurnTableHardware(3, 4));
 		
-//		modules.addModule(new CalibrateDriveTrain());
-
-		modules.addModule(new Localization(new LinearAccelRiemannInterpolator(100)));
+		modules.addModule(new NormalizeDriveTrain());
+		
+		Localization localization = new Localization(new LinearAccelRiemannInterpolator(100));
+		modules.addModule(localization);
+		baseLineControl.add(localization);
 		
 		CorrectiveDrive driveController = new CorrectiveDrive();
 		modules.addModule(driveController);
-		subsystems.getSubsystem("DriveTrain").setDefaultCommand(driveController);
-//		modules.addModule(new RawDriveController());
+		baseLineControl.add(driveController);
 		
-//		CommandModule dbControl = new DashboardControl();
-//		modules.addModule(dbControl);
-//		subsystems.getSubsystem("DriveTrain").setDefaultCommand(dbControl);
+		ElevatorControlCommand elevatorController = new ElevatorControlCommand(5);
+		modules.addModule(elevatorController);
+		baseLineControl.add(elevatorController);
 		
+		GrabberControlCommand grabberController = new GrabberControlCommand();
+		modules.addModule(grabberController);
+		baseLineControl.add(grabberController);
+
 		TurnTableControlCommand turnTableController = new TurnTableControlCommand();
 		modules.addModule(turnTableController);
-		subsystems.getSubsystem("TurnTable").setDefaultCommand(turnTableController);
+		baseLineControl.add(turnTableController);
 		
-		modules.addModule(new DriveWithJoystick());
-
-//		modules.addModule(new MockGrabberPneumatics());
-//		modules.addModule(new MockGrabberWheels());
-//		
-//		modules.addModule(new MockTurnTable());
-//		
-//		GrabberControlCommand grabberController = new GrabberControlCommand();
-//		modules.addModule(new GrabberControlCommand());
-//		subsystems.getSubsystem("Grabber").setDefaultCommand(grabberController);
-//		
-//		TurnTableControlCommand turnTableController = new TurnTableControlCommand();
-//		modules.addModule(turnTableController);
-//		subsystems.getSubsystem("TurnTable").setDefaultCommand(turnTableController);
+//		modules.addModule(new DriveWithJoystick());
+		modules.addModule(new DriveWithXbox());
 		
-//		modules.addModule(new DriveClawMechWithTwoJoysticks());
-		
-//		modules.addModule(modules.getAllModuleTests());
-//		autonomous = new AutoSwitcher();
-//		modules.addModule(autonomous);
-
-		PathFollower auto = new PathFollower(36, 6, Angle.ZERO, Angle.fromDegrees(10),
-				new Point(121, 72),
-				new Point(121, 175),
-				new Point(-100, 175),
-				new Point(-100, 134),
-				new Point(0, 0));
-		modules.addModule(auto);
-		autonomous = auto;
+//		AutoSwitcher auto = new AutoSwitcher();
+//		modules.addModule(auto);
+//		autonomous = auto;
 		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");
 	}
@@ -121,7 +127,8 @@ public class Robot extends HybridRobot
 	public void autonomousInit()
 	{
 		activate();
-		autonomous.start();
+//		modules.getModule(CalibrateTurnTable.class).get().start();
+//		autonomous.start();
 	}
 
 	@Override
@@ -148,11 +155,14 @@ public class Robot extends HybridRobot
 	{
 		Scheduler.getInstance().removeAll();
 		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::enableJoystickRefresh);
+		baseLineControl.stream().forEach(PerpetualCommand::cancel);
 	}
 	
 	private void activate()
 	{
 		Scheduler.getInstance().removeAll();
 		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::disableJoystickRefresh);
+		baseLineControl.stream().forEach(PerpetualCommand::reset);
+		baseLineControl.stream().forEach(PerpetualCommand::start);
 	}
 }

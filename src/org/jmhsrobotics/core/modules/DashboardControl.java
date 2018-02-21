@@ -3,8 +3,8 @@ package org.jmhsrobotics.core.modules;
 import java.util.Optional;
 
 import org.jmhsrobotics.core.modulesystem.CommandModule;
-import org.jmhsrobotics.core.modulesystem.DriveController;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.hardwareinterface.DriveController;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

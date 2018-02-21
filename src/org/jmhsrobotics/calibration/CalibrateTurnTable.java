@@ -18,27 +18,29 @@ public class CalibrateTurnTable extends CommandModule
 	{
 		if (timeSinceInitialized() < 6)
 			turnTable.drive(.4);
-		else
-			turnTable.drive(-.4);
+		else turnTable.drive(-.4);
 	}
 
 	@Override
 	protected boolean isFinished()
 	{
-		return turnTable.readMiddleLimitSwitch() == false;
+		return !turnTable.readMiddleLimitSwitch();
 	}
-	
+
 	@Override
 	protected void end()
 	{
-		String[] data = new String[2];
-		data[0] = new Date().toString();
-		data[1] = Position.center.toString();
+		turnTable.drive(0);
 		
+		String[] data = new String[2];
+		data[0] = fileHandler.getDateFormat().format(new Date());
+		data[1] = Position.center.toString();
+
 		try
 		{
 			fileHandler.write(fileHandler.getDataFile("turntable"), data);
-		} catch (Exception e)
+		}
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}

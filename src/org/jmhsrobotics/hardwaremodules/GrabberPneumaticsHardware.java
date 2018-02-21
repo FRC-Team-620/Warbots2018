@@ -13,13 +13,13 @@ public class GrabberPneumaticsHardware implements Module, GrabberPneumatics
 {
 	Solenoid leftWrist, rightWrist, leftArm, rightArm, raise;
 	
-	public GrabberPneumaticsHardware(int leftArmPort, int leftWristPort, int rightArmPort, int rightWristPort, int raisePort)
+	public GrabberPneumaticsHardware(int canId, int leftArmPort, int leftWristPort, int rightArmPort, int rightWristPort, int raisePort)
 	{
-		leftArm = new Solenoid(leftArmPort);
-		leftWrist = new Solenoid(leftWristPort);
-		rightArm = new Solenoid(rightArmPort);
-		rightWrist = new Solenoid(rightWristPort);
-		raise = new Solenoid(raisePort);
+		leftArm = new Solenoid(canId, leftArmPort);
+		leftWrist = new Solenoid(canId, leftWristPort);
+		rightArm = new Solenoid(canId, rightArmPort);
+		rightWrist = new Solenoid(canId, rightWristPort);
+		raise = new Solenoid(canId, raisePort);
 	}
 	
 	@Override

@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class PersistantDataModule implements Module
 {
+	private final static DateFormat dateFormatter = DateFormat.getDateInstance();
+	
 	/**
 	 * Accesses a data file by name. If the file does not exist, create it.
 	 * 
@@ -21,7 +24,7 @@ public class PersistantDataModule implements Module
 	 */
 	public File getDataFile(String name) throws Exception
 	{
-		File filename = new File(name);
+		File filename = new File("/home/lvuser/" + name + ".txt");
 		if(filename.exists())
 			return filename;
 		else {
@@ -71,10 +74,18 @@ public class PersistantDataModule implements Module
 		try (BufferedWriter buffwriter = new BufferedWriter(filewriter))
 		{
 			for (String line : data)
-				buffwriter.write(line + "\n");
+			{
+				buffwriter.write(line);
+				buffwriter.newLine();
+			}
 		}
 	}
 
+	public DateFormat getDateFormat()
+	{
+		return dateFormatter;
+	}
+	
 	@Override
 	public Command getTest()
 	{

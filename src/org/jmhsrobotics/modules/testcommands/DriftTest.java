@@ -1,7 +1,7 @@
 package org.jmhsrobotics.modules.testcommands;
 
 import org.jmhsrobotics.core.modules.SubsystemManager;
-import org.jmhsrobotics.core.modulesystem.DriveController;
+import org.jmhsrobotics.hardwareinterface.DriveController;
 
 import edu.wpi.first.wpilibj.command.Command;
 

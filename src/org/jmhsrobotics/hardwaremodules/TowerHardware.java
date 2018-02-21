@@ -11,11 +11,11 @@ public class TowerHardware implements Tower
 	private Solenoid drivingSolenoid;
 	private Solenoid climbingSolenoid;
 	
-	public TowerHardware(int drivingSolenoidPort, int climbingSolenoidPort)
+	public TowerHardware(int canId, int drivingSolenoidPort, int climbingSolenoidPort)
 	{
-		drivingSolenoid = new Solenoid(drivingSolenoidPort);
+		drivingSolenoid = new Solenoid(canId, drivingSolenoidPort);
 		drivingSolenoid.set(false);
-		climbingSolenoid = new Solenoid(climbingSolenoidPort);
+		climbingSolenoid = new Solenoid(canId, climbingSolenoidPort);
 		climbingSolenoid.set(false);
 	}
 	
