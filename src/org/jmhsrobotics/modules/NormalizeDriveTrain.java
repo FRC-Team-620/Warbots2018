@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public class CalibrateDriveTrain extends PlainSendable implements Module, DriveMechanism
+public class NormalizeDriveTrain extends PlainSendable implements Module, DriveMechanism
 {
 	private @Submodule DriveMechanism driveTrain;
 	private @Submodule WheelEncoders encoders;

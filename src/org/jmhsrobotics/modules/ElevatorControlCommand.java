@@ -1,6 +1,7 @@
 package org.jmhsrobotics.modules;
 
 import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.ElevatorController;
 import org.jmhsrobotics.hardwareinterface.Tower;
@@ -9,26 +10,25 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-public class TalonElevatorControlCommand extends CommandModule implements ElevatorController
+public class ElevatorControlCommand extends CommandModule implements PerpetualCommand, ElevatorController
 {
 	private @Submodule Tower pneumatics;
 	
 	private Position lastSetPosition = Position.ground;
 	private WPI_TalonSRX motor;
 	
-	@Override
-	public void onLink()
+	public ElevatorControlCommand(int talonCanId)
 	{
-		motor = new WPI_TalonSRX(-1);
+		motor = new WPI_TalonSRX(talonCanId);
 		motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		motor.getSensorCollection().setQuadraturePosition(0, 0);
 	}
 	
 	@Override
-	protected void initialize()
+	public void reset()
 	{
-		motor.setSafetyEnabled(true);
-		motor.setExpiration(0.1);
+//		motor.getSensorCollection().setQuadraturePosition(0, 0);
+//		motor.setSafetyEnabled(true);
+//		motor.setExpiration(0.1);
 	}
 	
 	@Override
@@ -73,24 +73,36 @@ public class TalonElevatorControlCommand extends CommandModule implements Elevat
 	public void goToRaw(double linearHeight, boolean raisePneumatics)
 	{
 		motor.set(ControlMode.Position, linearHeight);
-		
-		if(pneumatics.isExtended() != raisePneumatics)
-			if(raisePneumatics)
+		setPneumatics(raisePneumatics);
+	}
+
+	@Override
+	public void driveManual(double linearSpeed, boolean raisePneumatics)
+	{
+		System.out.println("Manually driving elevator at " + linearSpeed);
+		motor.set(linearSpeed);
+		setPneumatics(raisePneumatics);
+	}
+	
+	private void setPneumatics(boolean state)
+	{
+		if(pneumatics.isExtended() != state)
+			if(state)
 				pneumatics.raise();
 			else
 				pneumatics.lower();
 	}
 
 	@Override
-	public void driveManual(double linearSpeed, boolean raisePneumatics)
-	{
-		motor.set(ControlMode.Current, linearSpeed);
-	}
-
-	@Override
 	public void climbFullPower()
 	{
 		pneumatics.climb();
+	}
+	
+	@Override
+	protected void execute()
+	{
+		System.out.println("Encoder: " + motor.getSensorCollection().getQuadraturePosition());
 	}
 	
 	@Override

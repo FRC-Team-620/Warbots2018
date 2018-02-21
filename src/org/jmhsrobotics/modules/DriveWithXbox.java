@@ -1,38 +1,41 @@
 package org.jmhsrobotics.modules;
 
-import java.util.Optional;
-
-import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
-import org.jmhsrobotics.core.util.RobotMath;
-import org.jmhsrobotics.hardwareinterface.DriveController;
+import org.jmhsrobotics.hardwareinterface.GrabberPneumatics;
+import org.jmhsrobotics.hardwareinterface.GrabberWheels;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class DriveWithXbox extends ControlSchemeModule
 {
-	private @Submodule Optional<SubsystemManager> subsystems;
-	private @Submodule DriveController drive;
-
-	@Override
-	public void onLink()
-	{
-		subsystems.ifPresent(s -> requires(s.getSubsystem("DriveTrain")));
-	}
-
+	private @Submodule GrabberPneumatics grabber;
+	private @Submodule GrabberWheels wheels;
+	private @Submodule ElevatorControlCommand elevator;
+	
 	@Override
 	public void execute()
 	{
-		XboxController xbox = getOI().getXboxControllers().get(0);
-
-		double x = xbox.getX(Hand.kLeft);
-		double y = -xbox.getY(Hand.kLeft);
+		Joystick js = getOI().getMainDriverJoystick();
+		grabber.setLeftArmExtended(js.getRawButton(7));
+		grabber.setLeftWristExtended(js.getRawButton(6));
+		grabber.setRightArmExtended(js.getRawButton(10));
+		grabber.setRightWristExtended(js.getRawButton(11));
+		grabber.setRaised(js.getRawButton(8));
 		
-		double xadjusted = RobotMath.xKinkedMap(x, -1, 1, 0, -.2, .2, -1, 1);
-		double yadjusted = RobotMath.xKinkedMap(y, -1, 1, 0, -.2, .2, -1, 1);
-
-		drive.drive(yadjusted, xadjusted);
+		if(js.getRawButton(4))
+			wheels.setLeftWheels(js.getY());
+		else
+			wheels.setLeftWheels(0);
+		
+		if(js.getRawButton(5))
+			wheels.setRightWheels(js.getY());
+		else
+			wheels.setRightWheels(0);
+		
+		if(js.getRawButton(3))
+			elevator.driveManual(js.getY(), false);
+		else
+			elevator.driveManual(0, false);
 	}
 }

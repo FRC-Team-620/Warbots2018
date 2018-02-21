@@ -1,8 +1,6 @@
 package org.jmhsrobotics.hardwaremodules;
 
-import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
-import org.jmhsrobotics.hardwareinterface.Pneumatics;
 import org.jmhsrobotics.hardwareinterface.Tower;
 
 import edu.wpi.first.wpilibj.Solenoid;
@@ -10,16 +8,14 @@ import edu.wpi.first.wpilibj.Solenoid;
 @HardwareModule
 public class TowerHardware implements Tower
 {
-	private @Submodule Pneumatics pneumatics;
-	
 	private Solenoid drivingSolenoid;
 	private Solenoid climbingSolenoid;
 	
-	public TowerHardware(int drivingSolenoidPort, int climbingSolenoidPort)
+	public TowerHardware(int canId, int drivingSolenoidPort, int climbingSolenoidPort)
 	{
-		drivingSolenoid = new Solenoid(pneumatics.getPort(), drivingSolenoidPort);
+		drivingSolenoid = new Solenoid(canId, drivingSolenoidPort);
 		drivingSolenoid.set(false);
-		climbingSolenoid = new Solenoid(pneumatics.getPort(), climbingSolenoidPort);
+		climbingSolenoid = new Solenoid(canId, climbingSolenoidPort);
 		climbingSolenoid.set(false);
 	}
 	
