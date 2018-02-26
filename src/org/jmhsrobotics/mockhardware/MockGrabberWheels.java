@@ -8,16 +8,22 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class MockGrabberWheels implements Module, GrabberWheels
 {
+	private double leftSpeed, rightSpeed;
+	
 	@Override
 	public void setLeftWheels(double speed)
 	{
-		System.out.println("Spinning left wheels at " + speed);
+		if(speed != leftSpeed)
+			System.out.println("Spinning left wheels at " + speed);
+		leftSpeed = speed;
 	}
 
 	@Override
 	public void setRightWheels(double speed)
 	{
-		System.out.println("Spinning right wheels at " + speed);
+		if(speed != rightSpeed)
+			System.out.println("Spinning right wheels at " + speed);
+		rightSpeed = speed;
 	}
 	
 	@Override

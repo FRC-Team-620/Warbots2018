@@ -18,7 +18,7 @@ import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwaremodules.TestbotDriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.mockhardware.RobotTurnTable;
+import org.jmhsrobotics.mockhardware.RobotAsTurnTable;
 import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
@@ -84,7 +84,7 @@ public class Robot extends HybridRobot
 		modules.addModule(new NormalizeDriveTrain());
 		
 //		modules.addModule(new TurnTableHardware(3, 4));
-		modules.addModule(new RobotTurnTable());
+		modules.addModule(new RobotAsTurnTable());
 		
 		
 		

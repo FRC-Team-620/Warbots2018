@@ -38,7 +38,6 @@ public class MockTower implements Module, Tower
 	@Override
 	public Command getTest()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

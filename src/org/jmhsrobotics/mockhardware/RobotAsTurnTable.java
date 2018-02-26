@@ -9,7 +9,7 @@ import org.jmhsrobotics.hardwareinterface.TurnTable;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class RobotTurnTable implements Module, TurnTable
+public class RobotAsTurnTable implements Module, TurnTable
 {
 	private @Submodule Gyro gyro;
 	private @Submodule DriveMechanism drive;
