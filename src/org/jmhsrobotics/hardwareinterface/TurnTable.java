@@ -4,5 +4,5 @@ public interface TurnTable
 {
 	public void drive(double speed);
 	public double getSpeed();
-	public boolean readMiddleLimitSwitch();
+	public boolean isInCenter();
 }

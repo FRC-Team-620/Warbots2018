@@ -34,6 +34,20 @@ public abstract class RobotMath
 		return Math.copySign(Math.pow(Math.abs(n), curve), n);
 	}
 	
+	public static double constrain(double n, double lowerBound, double upperBound)
+	{
+		if(lowerBound > upperBound)
+			return constrain(n, upperBound, lowerBound);
+		
+		if(n < lowerBound)
+			return lowerBound;
+		
+		if(n > upperBound)
+			return upperBound;
+		
+		return n;
+	}
+	
 	public static <T> void linkNextAndPrevWithSelfReferencingCaps(T[] array, BiConsumer<T, T> setNext, BiConsumer<T, T> setPrev)
 	{
 		T first = array[0];

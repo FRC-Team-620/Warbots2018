@@ -26,7 +26,15 @@ public interface TurnTableController
 		}
 	}
 	
+	public void calibrate();
+	
+	public boolean isCalibrated();
+	
 	public void goTo(Position position);
 	
-	public Position getCurrentTurnTablePosition();
+	public void goToPartial(Position position, double amount);
+	
+	public Position getCurrentPosition();
+	
+	public Position getTargetPosition();
 }

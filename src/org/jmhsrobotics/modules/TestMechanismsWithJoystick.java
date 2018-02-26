@@ -7,7 +7,7 @@ import org.jmhsrobotics.hardwareinterface.GrabberWheels;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-public class DriveWithXbox extends ControlSchemeModule
+public class TestMechanismsWithJoystick extends ControlSchemeModule
 {
 	private @Submodule GrabberPneumatics grabber;
 	private @Submodule GrabberWheels wheels;

@@ -27,8 +27,6 @@ public class Localization extends CommandModule implements PerpetualCommand
 	private long lastMeasureNanoTime;
 	private PositionInterpolator interpolator;
 	
-//	private double leftEncoder, rightEncoder, averageEncoder, diffEncoder, backEncoder, sideEncoder;
-	
 	public Localization(PositionInterpolator interpolator)
 	{
 		this.interpolator = interpolator;
@@ -56,14 +54,6 @@ public class Localization extends CommandModule implements PerpetualCommand
 		long currentNanoTime = System.nanoTime();
 		double dt = (currentNanoTime - lastMeasureNanoTime) / 1E9;
 		lastMeasureNanoTime = currentNanoTime;
-		
-//		leftEncoder = wheelEncoders.left().getDist();
-//		rightEncoder = wheelEncoders.right().getDist();
-//		averageEncoder = wheelEncoders.average().getDist();
-//		diffEncoder = wheelEncoders.diff().getDist();
-//		
-//		backEncoder = dragWheelEncoders.forward().getDist();
-//		sideEncoder = dragWheelEncoders.side().getDist();
 		
 		EncoderData forwardMovement = wheelEncoders.average();
 		
@@ -173,12 +163,5 @@ public class Localization extends CommandModule implements PerpetualCommand
 		builder.addDoubleProperty("speed", this::getSpeed, null);
 		builder.addDoubleProperty("rotationRate", this::getDegreesPerSecond, null);
 		builder.addDoubleProperty("total distance", this::getTotalDistanceDriven, null);
-		
-//		builder.addDoubleProperty("encoders/wheels/left encoder", () -> leftEncoder, null);
-//		builder.addDoubleProperty("encoders/wheels/right encoder", () -> rightEncoder, null);
-//		builder.addDoubleProperty("encoders/wheels/average encoder", () -> averageEncoder, null);
-//		builder.addDoubleProperty("encoders/wheels/diff encoder", () -> diffEncoder, null);
-//		builder.addDoubleProperty("encoders/drag/back encoder", () -> backEncoder, null);
-//		builder.addDoubleProperty("encoders/drag/side encoder", () -> sideEncoder, null);
 	}
 }

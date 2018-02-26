@@ -18,8 +18,8 @@ public class NormalizeDriveTrain extends PlainSendable implements Module, DriveM
 	// Setting the Jump Mins/Maxes to 0
 	double jumpMinSpeed = -.25;
 	double jumpMaxSpeed = .25;
-	double jumpMinTurn = -.25;
-	double jumpMaxTurn = .25;
+	double jumpMinTurn = -.3;
+	double jumpMaxTurn = .3;
 	double maxSpeed = 0;
 	//4237.077843122658  test 1
 	// 4097.239933834993 test 2

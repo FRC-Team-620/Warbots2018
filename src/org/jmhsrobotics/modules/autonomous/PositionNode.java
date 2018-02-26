@@ -1,8 +1,9 @@
 package org.jmhsrobotics.modules.autonomous;
 
 import org.jmhsrobotics.core.util.Point;
+import org.jmhsrobotics.hardwareinterface.DriveController;
 
-public class PositionNode extends PathNode
+public class PositionNode implements PathNode
 {
 	private Point location;
 	private double range;
@@ -13,13 +14,15 @@ public class PositionNode extends PathNode
 		this.range = range;
 	}
 	
-	Point getLocation()
+	@Override
+	public void setTarget(DriveController drive, boolean reverse)
 	{
-		return location;
+		drive.setTarget(location, reverse);
 	}
 	
-	double getRange()
+	@Override
+	public boolean isFinished(DriveController drive, boolean reverse)
 	{
-		return range;
+		return drive.getDistanceToTargetPoint() < range;
 	}
 }

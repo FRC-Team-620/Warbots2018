@@ -55,8 +55,8 @@ public class DriveClawMechWithTwoJoysticks extends ControlSchemeModule
 			elevator.goTo(elevator.getCurrentLifterPosition().getAdjacentBelow());
 		
 		if(right.getRawButtonPressed(3))
-			turnTable.goTo(turnTable.getCurrentTurnTablePosition().getLeftAdjacent());
+			turnTable.goTo(turnTable.getCurrentPosition().getLeftAdjacent());
 		else if(right.getRawButtonPressed(4))
-			turnTable.goTo(turnTable.getCurrentTurnTablePosition().getRightAdjacent());
+			turnTable.goTo(turnTable.getCurrentPosition().getRightAdjacent());
 	}
 }

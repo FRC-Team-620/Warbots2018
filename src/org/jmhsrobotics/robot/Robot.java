@@ -16,18 +16,10 @@ import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
-import org.jmhsrobotics.hardwaremodules.DriveTrainHardware;
-import org.jmhsrobotics.hardwaremodules.GrabberPneumaticsHardware;
-import org.jmhsrobotics.hardwaremodules.GrabberWheelsHardware;
-import org.jmhsrobotics.hardwaremodules.NavXHardware;
-import org.jmhsrobotics.hardwaremodules.PneumaticCompressor;
-import org.jmhsrobotics.hardwaremodules.TurnTableHardware;
+import org.jmhsrobotics.hardwaremodules.TestbotDriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.mockhardware.MockGrabberWheels;
-import org.jmhsrobotics.mockhardware.MockTower;
-import org.jmhsrobotics.modules.DriveWithXbox;
-import org.jmhsrobotics.modules.ElevatorControlCommand;
-import org.jmhsrobotics.modules.GrabberControlCommand;
+import org.jmhsrobotics.mockhardware.RobotTurnTable;
+import org.jmhsrobotics.modules.DriveWithJoystick;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
 import org.jmhsrobotics.modules.TurnTableControlCommand;
@@ -35,7 +27,6 @@ import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -71,27 +62,31 @@ public class Robot extends HybridRobot
 
 		modules.addModule(new OperatorInterface());
 		
-//		modules.addModule(new TestbotDriveTrainHardware(0, 2, 1, 3));
-		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
-		modules.addModule(new NavXHardware(SPI.Port.kMXP));
+		modules.addModule(new TestbotDriveTrainHardware(0, 2, 1, 3));
+//		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
+//		modules.addModule(new NavXHardware(SPI.Port.kMXP));
+		
 //		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
 		
-		PneumaticCompressor compressor = new PneumaticCompressor(6);
-		modules.addModule(compressor);
-		baseLineControl.add(compressor);
+//		PneumaticCompressor compressor = new PneumaticCompressor(6);
+//		modules.addModule(compressor);
+//		baseLineControl.add(compressor);
 		
-		modules.addModules(new PneumaticCompressor(6));
-		modules.addModule(new GrabberPneumaticsHardware(7, 2, 0, 4, 3, 1));
-		modules.addModule(new GrabberWheelsHardware(1, 2));
-		modules.addModule(new MockGrabberWheels());
-		modules.addModule(new MockTower());
+//		modules.addModules(new PneumaticCompressor(6));
+//		modules.addModule(new GrabberPneumaticsHardware(7, 2, 0, 4, 3, 1));
+//		modules.addModule(new GrabberWheelsHardware(1, 2));
+//		modules.addModule(new MockGrabberWheels());
+//		modules.addModule(new MockTower());
 		
 		modules.addModule(new PersistantDataModule());
 		
-		modules.addModule(new TurnTableHardware(3, 4));
-		
 		modules.addModule(new NormalizeDriveTrain());
+		
+//		modules.addModule(new TurnTableHardware(3, 4));
+		modules.addModule(new RobotTurnTable());
+		
+		
 		
 		Localization localization = new Localization(new LinearAccelRiemannInterpolator(100));
 		modules.addModule(localization);
@@ -101,20 +96,22 @@ public class Robot extends HybridRobot
 		modules.addModule(driveController);
 		baseLineControl.add(driveController);
 		
-		ElevatorControlCommand elevatorController = new ElevatorControlCommand(5);
-		modules.addModule(elevatorController);
-		baseLineControl.add(elevatorController);
-		
-		GrabberControlCommand grabberController = new GrabberControlCommand();
-		modules.addModule(grabberController);
-		baseLineControl.add(grabberController);
+//		ElevatorControlCommand elevatorController = new ElevatorControlCommand(5);
+//		modules.addModule(elevatorController);
+//		baseLineControl.add(elevatorController);
+//		
+//		GrabberControlCommand grabberController = new GrabberControlCommand();
+//		modules.addModule(grabberController);
+//		baseLineControl.add(grabberController);
 
 		TurnTableControlCommand turnTableController = new TurnTableControlCommand();
+//		OldTurnTableControlCommand turnTableController = new OldTurnTableControlCommand();
 		modules.addModule(turnTableController);
 		baseLineControl.add(turnTableController);
 		
 //		modules.addModule(new DriveWithJoystick());
-		modules.addModule(new DriveWithXbox());
+//		modules.addModule(new TestMechanismsWithJoystick());
+		modules.addModule(new DriveWithJoystick());
 		
 //		AutoSwitcher auto = new AutoSwitcher();
 //		modules.addModule(auto);

@@ -26,6 +26,11 @@ public class Path extends CommandModule
 	{
 		this(drive, Arrays.asList(points), reverse);
 	}
+	
+	public void addNode(PathNode node)
+	{
+		nodes.add(node);
+	}
 
 	@Override
 	protected void initialize()
@@ -38,22 +43,11 @@ public class Path extends CommandModule
 	protected void execute()
 	{
 		PathNode target = nodes.get(currentTarget);
-		
-		if(target instanceof PositionNode)
+		target.setTarget(drive, reverse);
+		if(target.isFinished(drive, reverse))
 		{
-			PositionNode pos = (PositionNode) target;
-			drive.setTarget(pos.getLocation(), reverse);
-			
-			if(drive.getDistanceToTargetPoint() < pos.getRange())
-				++currentTarget;
-		}
-		else if(target instanceof AngleNode)
-		{
-			AngleNode ang = (AngleNode) target;
-			drive.setTarget(ang.getAngle());
-			
-			if(drive.getDistanceToTargetAngle().compareTo(ang.getRange()) <= 0)
-				++currentTarget;
+			target.end();
+			++currentTarget;
 		}
 	}
 	

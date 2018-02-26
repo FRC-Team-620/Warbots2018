@@ -34,9 +34,9 @@ public class TurnTableHardware implements Module, TurnTable
 	}
 	
 	@Override
-	public boolean readMiddleLimitSwitch()
+	public boolean isInCenter()
 	{
-		return limitSwitch.get();
+		return !limitSwitch.get();
 	}
 
 	@Override

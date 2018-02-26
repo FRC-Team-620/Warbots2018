@@ -2,7 +2,9 @@ package org.jmhsrobotics.hardwaremodules;
 
 import org.jmhsrobotics.core.modulesystem.SensorModule;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
+import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.EncoderGroup;
+import org.jmhsrobotics.hardwareinterface.Gyro;
 import org.jmhsrobotics.hardwareinterface.WheelEncoders;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -10,7 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 @HardwareModule
-public class WheelEncodersHardware extends SensorModule implements WheelEncoders
+public class WheelEncodersHardware extends SensorModule implements WheelEncoders, Gyro
 {
 	private Encoder leftEncoder, rightEncoder;
 	private EncoderData left, right, average, diff;
@@ -76,5 +78,17 @@ public class WheelEncodersHardware extends SensorModule implements WheelEncoders
 		builder.addDoubleProperty("Left Dist", () -> this.left().getDist(), null);
 		builder.addDoubleProperty("Right Dist", () -> this.right().getDist(), null);
 		builder.addDoubleProperty("Average Rate", () -> this.average().getRate(), null);
+	}
+
+	@Override
+	public Angle getAngle()
+	{
+		return Angle.fromRadians(diff().getDist() / 24);
+	}
+
+	@Override
+	public Angle getRotationPerSecond()
+	{
+		return Angle.fromRadians(diff().getRate() / 24);
 	}
 }

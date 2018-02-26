@@ -1,8 +1,9 @@
 package org.jmhsrobotics.modules.autonomous;
 
 import org.jmhsrobotics.core.util.Angle;
+import org.jmhsrobotics.hardwareinterface.DriveController;
 
-public class AngleNode extends PathNode
+public class AngleNode implements PathNode
 {
 	private Angle angle, range;
 	
@@ -11,14 +12,16 @@ public class AngleNode extends PathNode
 		this.angle = location;
 		this.range = range;
 	}
-	
-	Angle getAngle()
+
+	@Override
+	public void setTarget(DriveController drive, boolean reverse)
 	{
-		return angle;
+		drive.setTarget(angle);
 	}
-	
-	Angle getRange()
+
+	@Override
+	public boolean isFinished(DriveController drive, boolean reverse)
 	{
-		return range;
+		return drive.getDistanceToTargetAngle().compareTo(range) <= 0;
 	}
 }
