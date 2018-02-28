@@ -4,7 +4,7 @@ import org.jmhsrobotics.core.modules.OperatorInterface;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public abstract class ControlSchemeModule extends CommandModule
+public abstract class ControlScheme extends CommandModule
 {
 	private @Submodule OperatorInterface oi;
 
@@ -12,6 +12,9 @@ public abstract class ControlSchemeModule extends CommandModule
 	{
 		return oi;
 	}
+	
+	@Override
+	protected abstract void execute();
 	
 	@Override
 	protected boolean isFinished()
@@ -27,7 +30,7 @@ public abstract class ControlSchemeModule extends CommandModule
 			@Override
 			protected void initialize()
 			{
-				ControlSchemeModule.this.start();
+				ControlScheme.this.start();
 			}
 			
 			@Override
@@ -39,7 +42,7 @@ public abstract class ControlSchemeModule extends CommandModule
 			@Override
 			protected void end()
 			{
-				ControlSchemeModule.this.cancel();
+				ControlScheme.this.cancel();
 			}
 		};
 	}

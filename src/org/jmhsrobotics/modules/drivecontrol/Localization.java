@@ -69,6 +69,8 @@ public class Localization extends CommandModule implements PerpetualCommand
 		Angle oldRotationRate = rotationRate;
 		rotationRate = gyro.getRotationPerSecond();
 		
+		System.out.println("Angle: " + angle.measureDegreesUnsigned() + " Rotations Per Second: " + rotationRate);
+		
 		double w0 = oldRotationRate.measureRadians();
 		double wt = rotationRate.measureRadians();
 		double theta0 = oldAngle.measureRadians();

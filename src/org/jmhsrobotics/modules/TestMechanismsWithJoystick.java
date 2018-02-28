@@ -1,13 +1,13 @@
 package org.jmhsrobotics.modules;
 
-import org.jmhsrobotics.core.modulesystem.ControlSchemeModule;
+import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.GrabberPneumatics;
 import org.jmhsrobotics.hardwareinterface.GrabberWheels;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-public class TestMechanismsWithJoystick extends ControlSchemeModule
+public class TestMechanismsWithJoystick extends ControlScheme
 {
 	private @Submodule GrabberPneumatics grabber;
 	private @Submodule GrabberWheels wheels;
@@ -17,10 +17,10 @@ public class TestMechanismsWithJoystick extends ControlSchemeModule
 	public void execute()
 	{
 		Joystick js = getOI().getMainDriverJoystick();
-		grabber.setLeftArmExtended(js.getRawButton(7));
-		grabber.setLeftWristExtended(js.getRawButton(6));
-		grabber.setRightArmExtended(js.getRawButton(10));
-		grabber.setRightWristExtended(js.getRawButton(11));
+		grabber.setLeftArmContracted(js.getRawButton(7));
+		grabber.setLeftWristContracted(js.getRawButton(6));
+		grabber.setRightArmContracted(js.getRawButton(10));
+		grabber.setRightWristContracted(js.getRawButton(11));
 		grabber.setRaised(js.getRawButton(8));
 		
 		if(js.getRawButton(4))

@@ -19,7 +19,7 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	private @Submodule GrabberWheels wheels;
 	private @Submodule GrabberPneumatics pneumatics;
 	
-	private boolean pistonSideLeft, pistonSideRight, pistonTopLeft = true, pistonTopRight = true;
+	private boolean la, lw, ra, rw, raise;
 	private double leftWheelSpeed, rightWheelSpeed;
 	
 	@Override
@@ -30,10 +30,11 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	@Override
 	protected void execute()
 	{
-		pneumatics.setLeftWristExtended(pistonSideLeft);
-		pneumatics.setRightWristExtended(pistonSideRight);
-		pneumatics.setLeftArmExtended(pistonTopLeft);
-		pneumatics.setRightArmExtended(pistonTopRight);
+		pneumatics.setLeftWristContracted(lw);
+		pneumatics.setRightWristContracted(rw);
+		pneumatics.setLeftArmContracted(la);
+		pneumatics.setRightArmContracted(ra);
+		pneumatics.setRaised(raise);
 		
 		wheels.setLeftWheels(leftWheelSpeed);
 		wheels.setRightWheels(rightWheelSpeed);
@@ -48,51 +49,61 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	@Override
 	public void setLeftArm(Position position)
 	{
-		pistonSideLeft = isLateralPistonExtended(position);
-		pistonTopLeft = isVerticalPistonExtended(position);
+		la = isArmContracted(position);
+		lw = isWristContracted(position);
 	}
 	
 	@Override
 	public void setRightArm(Position position)
 	{
-		pistonSideRight = isLateralPistonExtended(position);
-		pistonTopRight = isVerticalPistonExtended(position);
+		ra = isArmContracted(position);
+		rw = isWristContracted(position);
 	}
 	
-	private static boolean isVerticalPistonExtended(Position position)
-	{
-		return position != Position.raised;
-	}
-	
-	private static boolean isLateralPistonExtended(Position position)
+	private static boolean isWristContracted(Position position)
 	{
 		return position == Position.contracted;
+	}
+	
+	private static boolean isArmContracted(Position position)
+	{
+		return position != Position.extended;
 	}
 	
 	@Override
 	public Position getLeftArmPosition()
 	{
-		return getPosition(pistonSideLeft, pistonTopLeft);
+		return getPosition(la, lw);
 	}
 
 	@Override
 	public Position getRightArmPosition()
 	{
-		return getPosition(pistonSideRight, pistonTopRight);
+		return getPosition(ra, rw);
 	}
 	
-	private static Position getPosition(boolean lateralPistonExtended, boolean verticalPistonExtended)
+	public void setRaised(boolean raised)
 	{
-		if(lateralPistonExtended)
-			if(verticalPistonExtended)
-				return Position.contracted;
-			else
-				return null;
-		else
-			if(verticalPistonExtended)
+		raise = raised;
+	}
+	
+	public boolean isRaised()
+	{
+		return raise;
+	}
+	
+	private static Position getPosition(boolean arm, boolean wrist)
+	{
+		if(arm)
+			if(wrist)
 				return Position.extended;
 			else
-				return Position.raised;
+				return Position.middle;
+		else
+			if(wrist)
+				return Position.middle;
+			else
+				return Position.contracted;
 	}
 	
 	@Override

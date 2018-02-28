@@ -4,7 +4,7 @@ public interface GrabberController
 {
 	public static enum Position
 	{
-		contracted, extended, raised;
+		contracted, middle, extended;
 	}
 	
 	public void setLeftArm(Position position);

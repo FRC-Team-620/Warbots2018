@@ -83,12 +83,12 @@ public class WheelEncodersHardware extends SensorModule implements WheelEncoders
 	@Override
 	public Angle getAngle()
 	{
-		return Angle.fromRadians(diff().getDist() / 24);
+		return Angle.fromRadians(diff().getDist() / 12); //12 inches is the distance from the center of the robot to one side
 	}
 
 	@Override
 	public Angle getRotationPerSecond()
 	{
-		return Angle.fromRadians(diff().getRate() / 24);
+		return Angle.fromRadians(diff().getRate() / 12);
 	}
 }

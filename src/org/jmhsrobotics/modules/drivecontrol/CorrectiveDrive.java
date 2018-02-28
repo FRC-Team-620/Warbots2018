@@ -37,7 +37,7 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("DriveTrain")));
 		
 		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getDegreesPerSecond);
-		angleController = new PIDCalculator(0.03, 0, 9, angleSensor, o -> turn = o);
+		angleController = new PIDCalculator(0.035, 0, 10, angleSensor, o -> turn = o);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
 		angleController.setOutputRange(-1, 1);
@@ -90,6 +90,9 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	{
 		if(angle == null)
 			throw new NullPointerException();
+		
+		if(targetAngle.equals(Optional.of(angle)))
+			return;
 		
 		System.out.println("Setting target to angle: " + angle);
 		targetPoint = Optional.empty();

@@ -1,25 +1,14 @@
 package org.jmhsrobotics.mockhardware;
 
-import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.modulesystem.CommandModule;
+import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.hardwareinterface.ElevatorController;
 
 import edu.wpi.first.wpilibj.command.Command;
 
-public class MockElevator implements Module, ElevatorController
+public class MockElevator extends CommandModule implements PerpetualCommand, ElevatorController
 {
 	private Position pos;
-	
-	@Override
-	public void start()
-	{
-		System.out.println("Starting elevator control command");
-	}
-
-	@Override
-	public void cancel()
-	{
-		System.out.println("Stopping elevator control command");
-	}
 
 	@Override
 	public void goTo(Position position)
@@ -52,6 +41,30 @@ public class MockElevator implements Module, ElevatorController
 		System.out.println("Climbing");
 	}
 
+	@Override
+	public void reset()
+	{
+		System.out.println("Resetting mock elevator control command");
+	}
+	
+	@Override
+	protected void initialize()
+	{
+		System.out.println("Starting mock elevator control command");
+	}
+	
+	@Override
+	protected void end()
+	{
+		System.out.println("Closing mock elevator control command");
+	}
+	
+	@Override
+	protected boolean isFinished()
+	{
+		return false;
+	}
+	
 	@Override
 	public Command getTest()
 	{

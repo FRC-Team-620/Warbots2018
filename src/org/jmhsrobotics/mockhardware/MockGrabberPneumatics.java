@@ -8,34 +8,46 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class MockGrabberPneumatics implements Module, GrabberPneumatics
 {
+	private boolean lw, rw, la, ra, raise;
+	
 	@Override
-	public void setLeftWristExtended(boolean val)
+	public void setLeftWristContracted(boolean val)
 	{
-		System.out.println("Setting left wrist solenoid to " + (val ? "extended" : "retracted"));
+		if(val != lw)
+			System.out.println("Setting left wrist solenoid to " + (val ? "extended" : "retracted"));
+		lw = val;
 	}
 
 	@Override
-	public void setRightWristExtended(boolean val)
+	public void setRightWristContracted(boolean val)
 	{
-		System.out.println("Setting right wrist solenoid to " + (val ? "extended" : "retracted"));
+		if(val != rw)
+			System.out.println("Setting right wrist solenoid to " + (val ? "extended" : "retracted"));
+		rw = val;
 	}
 
 	@Override
-	public void setLeftArmExtended(boolean val)
+	public void setLeftArmContracted(boolean val)
 	{
-		System.out.println("Setting left arm solenoid to " + (val ? "extended" : "retracted"));
+		if(val != la)
+			System.out.println("Setting left arm solenoid to " + (val ? "extended" : "retracted"));
+		la = val;
 	}
 
 	@Override
-	public void setRightArmExtended(boolean val)
+	public void setRightArmContracted(boolean val)
 	{
-		System.out.println("Setting right arm solenoid to " + (val ? "extended" : "retracted"));
+		if(val != ra)
+			System.out.println("Setting right arm solenoid to " + (val ? "extended" : "retracted"));
+		ra = val;
 	}
 
 	@Override
 	public void setRaised(boolean val)
 	{
-		System.out.println((val ? "Rais" : "lower") + "ing grabber");
+		if(val != raise)
+			System.out.println((val ? "Rais" : "lower") + "ing grabber");
+		raise = val;
 	}
 	
 	@Override
