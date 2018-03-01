@@ -24,11 +24,14 @@ import org.jmhsrobotics.mockhardware.MockElevator;
 import org.jmhsrobotics.mockhardware.MockGrabberPneumatics;
 import org.jmhsrobotics.mockhardware.MockGrabberWheels;
 import org.jmhsrobotics.mockhardware.MockTurnTable;
+import org.jmhsrobotics.modules.DriveMechWithXbox;
 import org.jmhsrobotics.modules.GrabberControlCommand;
 import org.jmhsrobotics.modules.MoveWithXbox;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
 import org.jmhsrobotics.modules.TurnTableControlCommand;
+import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
+import org.jmhsrobotics.modules.autonomous.CLLAutonomous;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
@@ -48,7 +51,7 @@ public class Robot extends HybridRobot
 {
 	private ModuleManager modules;
 	private SubsystemManager subsystems;
-//	private AutoSwitcher autonomous;
+	private AutoSwitcher autonomous;
 //	private List<PerpetualCommand> baseLineControl;
 
 	@Override
@@ -58,7 +61,6 @@ public class Robot extends HybridRobot
 		long time = System.nanoTime();
 
 		modules = new ModuleManager();
-//		baseLineControl = new ArrayList<>();
 		
 		subsystems = new SubsystemManager();
 		modules.addModule(subsystems);
@@ -73,8 +75,6 @@ public class Robot extends HybridRobot
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
 		modules.addModule(new NavXHardware(SPI.Port.kMXP));
 
-//		modules.addModule(new DragEncodersHardware(20, 21, false, 22, 23, false));
-		
 		modules.addModule(new PersistantDataModule());
 		
 		modules.addModule(new NormalizeDriveTrain());
@@ -82,42 +82,32 @@ public class Robot extends HybridRobot
 		modules.addModule(new Localization(new LinearAccelRiemannInterpolator(100)));
 		modules.addModule(new CorrectiveDrive());
 		
-//		PneumaticCompressor compressor = new PneumaticCompressor(6);
-//		modules.addModule(compressor);
-//		baseLineControl.add(compressor);
+//		modules.addModule(new PneumaticCompressor(6));
 		
-//		modules.addModules(new PneumaticCompressor(6));
 //		modules.addModule(new GrabberPneumaticsHardware(7, 2, 0, 4, 3, 1));
 //		modules.addModule(new GrabberWheelsHardware(1, 2));
-//		modules.addModule(new MockGrabberWheels());
-//		modules.addModule(new MockTower());
 		
 //		modules.addModule(new TurnTableHardware(3, 4));
-//		modules.addModule(new RobotAsTurnTable());
+		
+//		modules.addModule(new TowerHardware());
+//		modules.addModule(new ElevatorControlCommand());
 		
 		modules.addModule(new MockGrabberPneumatics());
 		modules.addModule(new MockGrabberWheels());
 		modules.addModule(new MockTurnTable());
-		
-//		ElevatorControlCommand elevatorController = new ElevatorControlCommand(5);
-//		PerpetualCommand elevatorController = new MockElevator();
+
 		modules.addModule(new MockElevator());
-//		baseLineControl.add(elevatorController);
 		
 		modules.addModule(new GrabberControlCommand());
-//		baseLineControl.add(grabberController);
 
-//		OldTurnTableControlCommand turnTableController = new OldTurnTableControlCommand();
+//		modules.addModule(new OldTurnTableControlCommand());
 		modules.addModule(new TurnTableControlCommand());
-//		baseLineControl.add(turnTableController);
 		
-//		modules.addModule(new DriveWithJoystick());
-//		modules.addModule(new TestMechanismsWithJoystick());
 		modules.addModule(new MoveWithXbox(0));
+		modules.addModule(new DriveMechWithXbox(0));
 		
-//		AutoSwitcher auto = new AutoSwitcher();
-//		modules.addModule(auto);
-//		autonomous = auto;
+		modules.addModule(new CLLAutonomous());
+		modules.addModule(autonomous = new AutoSwitcher());
 		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");
 	}
@@ -126,7 +116,7 @@ public class Robot extends HybridRobot
 	public void autonomousInit()
 	{
 		activate();
-//		autonomous.start();
+		autonomous.start();
 	}
 
 	@Override

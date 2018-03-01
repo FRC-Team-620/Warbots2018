@@ -8,41 +8,38 @@ import org.jmhsrobotics.hardwareinterface.Tower;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
-public class ElevatorControlCommand extends CommandModule implements PerpetualCommand, ElevatorController
+public class ExperimentalElevatorControlCommand extends CommandModule implements PerpetualCommand, ElevatorController
 {
-	private @Submodule Tower pneumatics;
+private @Submodule Tower pneumatics;
 	
 	private Position lastSetPosition = Position.ground;
-	private WPI_TalonSRX motor;
+	private TalonSRX motor;
 	
-	public ElevatorControlCommand(int talonCanId)
+	public ExperimentalElevatorControlCommand(int talonCanId)
 	{
-		motor = new WPI_TalonSRX(talonCanId);
+		motor = new TalonSRX(talonCanId);
 		motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
+		
+		motor.config_kP(0, 0.03, 0);
+		motor.config_kI(0, 0, 0);
+		motor.config_kD(0, 0, 0);
 	}
 	
 	@Override
 	public void reset()
 	{
-//		motor.getSensorCollection().setQuadraturePosition(0, 0);
-//		motor.setSafetyEnabled(true);
-//		motor.setExpiration(0.1);
+		motor.getSensorCollection().setQuadraturePosition(0, 0);
 	}
 	
 	@Override
 	public void goTo(Position position)
 	{
-		goToRaw(getRawHeight(position), getPistonsExtended(position));
+		goToRaw(getLinearHeight(position), getPistonsExtended(position));
 	}
 	
-	private static double getRawHeight(Position position)
-	{
-		return worldHeightToRawUnits(getWorldHeight(position));
-	}
-	
-	private static double getWorldHeight(Position position)
+	private static double getLinearHeight(Position position)
 	{
 		switch(position)
 		{
@@ -61,11 +58,6 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 			default:
 				return 0;
 		}
-	}
-	
-	private static double worldHeightToRawUnits(double height)
-	{
-		return (height - 6) / 4.7;
 	}
 	
 	private static boolean getPistonsExtended(Position position)
@@ -90,7 +82,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	public void driveManual(double linearSpeed, boolean raisePneumatics)
 	{
 		System.out.println("Manually driving elevator at " + linearSpeed);
-		motor.set(linearSpeed);
+		motor.set(ControlMode.PercentOutput, linearSpeed);
 		setPneumatics(raisePneumatics);
 	}
 	

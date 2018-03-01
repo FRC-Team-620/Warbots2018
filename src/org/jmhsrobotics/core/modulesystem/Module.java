@@ -6,6 +6,11 @@ public interface Module
 {
 	public Command getTest();
 	
+	public default void onLink(Sublinker linker)
+	{
+		onLink();
+	}
+	
 	public default void onLink()
 	{}
 }

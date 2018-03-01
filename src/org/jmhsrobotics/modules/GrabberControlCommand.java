@@ -82,11 +82,13 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 		return getPosition(ra, rw);
 	}
 	
+	@Override
 	public void setRaised(boolean raised)
 	{
 		raise = raised;
 	}
 	
+	@Override
 	public boolean isRaised()
 	{
 		return raise;

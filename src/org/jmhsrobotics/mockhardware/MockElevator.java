@@ -8,8 +8,11 @@ import edu.wpi.first.wpilibj.command.Command;
 
 public class MockElevator extends CommandModule implements PerpetualCommand, ElevatorController
 {
-	private Position pos;
-
+	private Position pos = Position.ground;
+	private double speed;
+	private boolean pneumatics;
+	
+	
 	@Override
 	public void goTo(Position position)
 	{
@@ -32,7 +35,12 @@ public class MockElevator extends CommandModule implements PerpetualCommand, Ele
 	@Override
 	public void driveManual(double linearSpeed, boolean raisePneumatics)
 	{
+		if(speed == linearSpeed && pneumatics == raisePneumatics)
+			return;
+		
 		System.out.println("Driving elevator at speed " + linearSpeed + " with pneumatics " + (raisePneumatics ? "raised." : "lowered."));
+		speed = linearSpeed;
+		pneumatics = raisePneumatics;
 	}
 
 	@Override

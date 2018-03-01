@@ -15,6 +15,10 @@ public interface GrabberController
 	
 	public Position getRightArmPosition();
 	
+	public void setRaised(boolean raised);
+	
+	public boolean isRaised();
+	
 	public void spinLeftWheels(double speed);
 	
 	public void spinRightWheels(double speed);

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class ModuleManager
+public class ModuleManager implements Sublinker
 {
 	private List<Module> moduleList;
 
@@ -39,8 +39,9 @@ public class ModuleManager
 		ModuleManager m = new ModuleManager();
 		m.addModules(modules);
 	}
-
-	public void addModule(Module module)
+	
+	@Override
+	public void link(Module module)
 	{
 		for (Class<?> c = module.getClass(); c != null; c = c.getSuperclass())
 			Arrays.stream(c.getDeclaredFields()).filter(f -> f.isAnnotationPresent(Submodule.class)).parallel().forEach(field ->
@@ -69,7 +70,12 @@ public class ModuleManager
 				}
 			});
 
-		module.onLink();
+		module.onLink(this);
+	}
+
+	public void addModule(Module module)
+	{
+		link(module);
 		moduleList.add(0, module);
 	}
 
