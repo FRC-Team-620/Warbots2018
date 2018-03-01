@@ -15,11 +15,16 @@ public class TestLinearActuator extends ControlScheme
 	private ElevatorControlCommand.Position setpoint;
 	private boolean pneumatics;
 	
+	private XboxController xbox;
+	
+	public TestLinearActuator(XboxController xbox)
+	{
+		this.xbox = xbox;
+	}
+	
 	@Override
 	protected void execute()
 	{
-		XboxController xbox = getOI().getXboxControllers().get(0);
-		
 		double axis = -xbox.getY(Hand.kRight);
 		axis = RobotMath.xKinkedMap(axis, -1, 1, 0, -.2, .2, -1, 1);
 		

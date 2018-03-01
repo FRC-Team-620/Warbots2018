@@ -18,19 +18,17 @@ public class DriveMechWithXbox extends ControlScheme
 	private @Submodule ElevatorController elevator;
 	private @Submodule TurnTableController table;
 	
-	private int xboxNum;
+	private XboxController xbox;
 	private boolean raisedElevatorPneumatics;
 	
-	public DriveMechWithXbox(int xboxNumber)
+	public DriveMechWithXbox(XboxController xbox)
 	{
-		xboxNum = xboxNumber;
+		this.xbox = xbox;
 	}
 	
 	@Override
 	protected void execute()
 	{
-		XboxController xbox = getOI().getXboxControllers().get(xboxNum);
-		
 		if(xbox.getXButtonPressed())
 			table.goTo(table.getCurrentPosition().getLeftAdjacent());
 		

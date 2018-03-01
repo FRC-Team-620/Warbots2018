@@ -13,10 +13,16 @@ public class TestMechanismsWithJoystick extends ControlScheme
 	private @Submodule GrabberWheels wheels;
 	private @Submodule ElevatorControlCommand elevator;
 	
+	private Joystick js;
+	
+	public TestMechanismsWithJoystick(Joystick js)
+	{
+		this.js = js;
+	}
+	
 	@Override
 	public void execute()
 	{
-		Joystick js = getOI().getMainDriverJoystick();
 		grabber.setLeftArmContracted(js.getRawButton(7));
 		grabber.setLeftWristContracted(js.getRawButton(6));
 		grabber.setRightArmContracted(js.getRawButton(10));

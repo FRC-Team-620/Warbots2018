@@ -16,18 +16,16 @@ public class MoveWithXbox extends ControlScheme
 	
 	private @Submodule DriveController drive;
 	
-	private int xboxNum;
+	private XboxController xbox;
 	
-	public MoveWithXbox(int xboxNumber)
+	public MoveWithXbox(XboxController xbox)
 	{
-		xboxNum = xboxNumber;
+		this.xbox = xbox;
 	}
 	
 	@Override
 	protected void execute()
 	{
-		XboxController xbox = getOI().getXboxControllers().get(xboxNum);
-		
 		int pov = xbox.getPOV();
 		if(pov != -1)
 			drive.setRelativeTarget(Angle.fromTurns((double) pov / 8));

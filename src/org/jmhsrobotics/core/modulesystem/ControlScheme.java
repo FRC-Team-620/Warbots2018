@@ -1,18 +1,9 @@
 package org.jmhsrobotics.core.modulesystem;
 
-import org.jmhsrobotics.core.modules.OperatorInterface;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 public abstract class ControlScheme extends CommandModule
 {
-	private @Submodule OperatorInterface oi;
-
-	protected OperatorInterface getOI()
-	{
-		return oi;
-	}
-	
 	@Override
 	protected abstract void execute();
 	

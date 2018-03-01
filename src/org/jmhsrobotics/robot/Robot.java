@@ -11,7 +11,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.jmhsrobotics.core.modules.OperatorInterface;
 import org.jmhsrobotics.core.modules.SubsystemManager;
 import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
@@ -37,6 +36,7 @@ import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
@@ -68,8 +68,6 @@ public class Robot extends HybridRobot
 		subsystems.addEmptySubsystem("TurnTable");
 		subsystems.addEmptySubsystem("Grabber");
 
-		modules.addModule(new OperatorInterface());
-		
 		modules.addModule(new TestbotDriveTrainHardware(0, 2, 1, 3));
 //		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
@@ -103,8 +101,10 @@ public class Robot extends HybridRobot
 //		modules.addModule(new OldTurnTableControlCommand());
 		modules.addModule(new TurnTableControlCommand());
 		
-		modules.addModule(new MoveWithXbox(0));
-		modules.addModule(new TestLinearActuator());
+		
+		XboxController xbox = new XboxController(0);
+		modules.addModule(new MoveWithXbox(xbox));
+		modules.addModule(new TestLinearActuator(xbox));
 //		modules.addModule(new DriveMechWithXbox(0));
 		
 		modules.addModule(new CLLAutonomous());
@@ -143,13 +143,11 @@ public class Robot extends HybridRobot
 	public void disabledInit()
 	{
 		Scheduler.getInstance().removeAll();
-		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::enableJoystickRefresh);
 	}
 	
 	private void activate()
 	{
 		Scheduler.getInstance().removeAll();
-		modules.getModule(OperatorInterface.class).ifPresent(OperatorInterface::disableJoystickRefresh);
 		
 		List<PerpetualCommand> baseLineControl = modules.getModules(PerpetualCommand.class).collect(Collectors.toList());
 		Collections.reverse(baseLineControl);

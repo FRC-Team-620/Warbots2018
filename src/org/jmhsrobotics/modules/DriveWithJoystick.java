@@ -12,11 +12,16 @@ public class DriveWithJoystick extends ControlScheme
 	private @Submodule DriveController drive;
 //	private @Submodule TurnTableController turnTableDrive;
 	
+	private Joystick js;
+	
+	public DriveWithJoystick(Joystick js)
+	{
+		this.js = js;
+	}
+	
 	@Override
 	public void execute()
 	{
-		Joystick js = getOI().getMainDriverJoystick();
-		
 		double y = -js.getY();
 		double x = js.getX();
 		double xadjusted = RobotMath.xKinkedMap(x, -1, 1, 0, -.2, .2, -1, 1);
