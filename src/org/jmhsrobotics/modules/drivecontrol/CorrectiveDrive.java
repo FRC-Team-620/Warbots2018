@@ -69,6 +69,24 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	}
 	
 	@Override
+	@SuppressWarnings("hiding")
+	public void drive(double speed, Angle turnAmount)
+	{
+		if(targetPoint.isPresent())
+		{
+			System.out.println("Overriding positional target with angular one");
+			removeTarget();
+		}
+		
+		if(targetAngle.isPresent())
+			targetAngle = Optional.of(targetAngle.get().plus(turnAmount));
+		else
+			targetAngle = Optional.of(localization.getAngle().plus(turnAmount));
+		
+		this.speed = speed;
+	}
+	
+	@Override
 	public void setTarget(Point point, boolean reverse)
 	{
 		if(point == null)

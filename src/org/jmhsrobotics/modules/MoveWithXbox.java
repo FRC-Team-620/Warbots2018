@@ -11,8 +11,8 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class MoveWithXbox extends ControlScheme
 {
-	private final static double REDUCED_SPEED_COEFFICIENT = 0.7;
-	private final static double REDUCED_TURN_COEFFICIENT = 0.8;
+	private final static double REDUCED_SPEED_COEFFICIENT = 0.5;
+	private final static double CONTROLLED_TURN_PERIOD = 4;
 	
 	private @Submodule DriveController drive;
 	
@@ -37,13 +37,10 @@ public class MoveWithXbox extends ControlScheme
 		
 		x = RobotMath.xKinkedMap(x, -1, 1, 0, -.2, .2, -1, 1);
 		y = RobotMath.xKinkedMap(y, -1, 1, 0, -.2, .2, -1, 1);
-		
+
 		if(xbox.getBumper(Hand.kLeft))
-		{
-			x *= REDUCED_SPEED_COEFFICIENT;
-			y *= REDUCED_TURN_COEFFICIENT;
-		}
-		
-		drive.drive(y, x);
+			drive.drive(y * REDUCED_SPEED_COEFFICIENT, Angle.fromTurns(x / (50 * CONTROLLED_TURN_PERIOD)));
+		else 
+			drive.drive(y, x);
 	}
 }

@@ -24,11 +24,11 @@ import org.jmhsrobotics.mockhardware.MockElevator;
 import org.jmhsrobotics.mockhardware.MockGrabberPneumatics;
 import org.jmhsrobotics.mockhardware.MockGrabberWheels;
 import org.jmhsrobotics.mockhardware.MockTurnTable;
-import org.jmhsrobotics.modules.DriveMechWithXbox;
 import org.jmhsrobotics.modules.GrabberControlCommand;
 import org.jmhsrobotics.modules.MoveWithXbox;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
+import org.jmhsrobotics.modules.TestLinearActuator;
 import org.jmhsrobotics.modules.TurnTableControlCommand;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
 import org.jmhsrobotics.modules.autonomous.CLLAutonomous;
@@ -104,7 +104,8 @@ public class Robot extends HybridRobot
 		modules.addModule(new TurnTableControlCommand());
 		
 		modules.addModule(new MoveWithXbox(0));
-		modules.addModule(new DriveMechWithXbox(0));
+		modules.addModule(new TestLinearActuator());
+//		modules.addModule(new DriveMechWithXbox(0));
 		
 		modules.addModule(new CLLAutonomous());
 		modules.addModule(autonomous = new AutoSwitcher());

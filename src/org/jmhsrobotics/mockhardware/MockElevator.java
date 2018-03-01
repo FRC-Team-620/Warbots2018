@@ -16,6 +16,9 @@ public class MockElevator extends CommandModule implements PerpetualCommand, Ele
 	@Override
 	public void goTo(Position position)
 	{
+		if(pos == position)
+			return;
+		
 		System.out.println("Moving elevator to " + position);
 		pos = position;
 	}

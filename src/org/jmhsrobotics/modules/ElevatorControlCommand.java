@@ -49,15 +49,15 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 			case ground:
 				return 0;
 			case exchangePortal:
-				return 130;
+				return 8;
 			case arcadeSwitch:
-				return 120;
+				return 16;
 			case scaleLow:
-				return 1000;
+				return 24;
 			case scaleMedium:
-				return 1100;
+				return 32;
 			case scaleHigh:
-				return 1200;
+				return 40;
 			default:
 				return 0;
 		}
@@ -65,7 +65,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	
 	private static double worldHeightToRawUnits(double height)
 	{
-		return (height - 6) / 4.7;
+		return height / 4.7;
 	}
 	
 	private static boolean getPistonsExtended(Position position)
