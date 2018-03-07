@@ -3,116 +3,136 @@ package org.jmhsrobotics.modules;
 import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.ElevatorController;
 import org.jmhsrobotics.hardwareinterface.Tower;
-
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import org.jmhsrobotics.hardwareinterface.Traveller;
 
 public class ElevatorControlCommand extends CommandModule implements PerpetualCommand, ElevatorController
 {
+	private static double BOTTOM_BUFFER_ZONE = 1500;
+	private static double BUFFER_EXP = 3;
+	private static double MIN_SAFE_SPEED = .2;
+	private static double SOFTWARE_STOP_HEIGHT = 300;
+	
+	private @Submodule Traveller traveller;
 	private @Submodule Tower pneumatics;
 	
-	private Position lastSetPosition = Position.ground;
-	private WPI_TalonSRX motor;
+	private double travellerSpeed;
+	private boolean pneumaticsExtended;
+	private boolean climbing;
 	
-	public ElevatorControlCommand(int talonCanId)
-	{
-		motor = new WPI_TalonSRX(talonCanId);
-		motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-	}
+	private boolean calibrated;
 	
 	@Override
 	public void reset()
 	{
-//		motor.getSensorCollection().setQuadraturePosition(0, 0);
-//		motor.setSafetyEnabled(true);
-//		motor.setExpiration(0.1);
+		traveller.reset();
+		calibrated = false;
 	}
 	
 	@Override
 	public void goTo(Position position)
 	{
-		goToRaw(getRawHeight(position), getPistonsExtended(position));
+		//TODO
 	}
 	
-	private static double getRawHeight(Position position)
-	{
-		return worldHeightToRawUnits(getWorldHeight(position));
-	}
-	
-	private static double getWorldHeight(Position position)
-	{
-		switch(position)
-		{
-			case ground:
-				return 0;
-			case exchangePortal:
-				return 8;
-			case arcadeSwitch:
-				return 16;
-			case scaleLow:
-				return 24;
-			case scaleMedium:
-				return 32;
-			case scaleHigh:
-				return 40;
-			default:
-				return 0;
-		}
-	}
-	
-	private static double worldHeightToRawUnits(double height)
-	{
-		return height / 4.7;
-	}
-	
-	private static boolean getPistonsExtended(Position position)
-	{
-		return position.compareTo(Position.scaleMedium) > 0;
-	}
-
 	@Override
 	public Position getCurrentLifterPosition()
 	{
-		return lastSetPosition;
+		//TODO
+		return null;
 	}
 
 	@Override
 	public void goToRaw(double linearHeight, boolean raisePneumatics)
 	{
-		motor.set(ControlMode.Position, linearHeight);
-		setPneumatics(raisePneumatics);
+		//TODO
 	}
 
 	@Override
-	public void driveManual(double linearSpeed, boolean raisePneumatics)
+	public void manualDrive(double speed)
 	{
-		System.out.println("Manually driving elevator at " + linearSpeed);
-		motor.set(linearSpeed);
-		setPneumatics(raisePneumatics);
+		travellerSpeed = speed;
 	}
 	
-	private void setPneumatics(boolean state)
+	@Override
+	public void setPneumatics(boolean state)
 	{
-		if(pneumatics.isExtended() != state)
-			if(state)
-				pneumatics.raise();
-			else
-				pneumatics.lower();
+		pneumaticsExtended = state;
 	}
 
+	@Override
+	public boolean isPneumaticsExtended()
+	{
+		return pneumaticsExtended;
+	}
+	
 	@Override
 	public void climbFullPower()
 	{
-		pneumatics.climb();
+		climbing = true;
+	}
+	
+	@Override
+	protected void initialize()
+	{
+		climbing = false;
+		pneumaticsExtended = false;
 	}
 	
 	@Override
 	protected void execute()
-	{
-		System.out.println("Encoder: " + motor.getSensorCollection().getQuadraturePosition());
+	{	
+		System.out.println(traveller.getHeight());
+		System.out.println("Limit: " + traveller.isBottomLimitSwitchPressed());
+		
+		if(traveller.isBottomLimitSwitchPressed())
+		{
+			traveller.reset();
+			calibrated = true;
+			System.out.println(calibrated);
+		}
+		
+		if (calibrated)
+		{
+			if(climbing)
+			{
+				if(pneumatics.isExtended())
+					pneumatics.lower();
+				
+				pneumatics.climb();
+			}
+			else if(pneumaticsExtended)
+			{
+				if(!pneumatics.isExtended())
+					pneumatics.raise();
+			}
+			else
+			{
+				if(pneumatics.isExtended())
+					pneumatics.lower();
+			}
+			
+			double height = traveller.getHeight();
+			double speed = travellerSpeed;
+			
+			double lowerSpeedConstraint = RobotMath.linearMap(Math.pow(height, BUFFER_EXP), 0, Math.pow(BOTTOM_BUFFER_ZONE, BUFFER_EXP), 0, -1);
+			if(lowerSpeedConstraint > -MIN_SAFE_SPEED)
+				lowerSpeedConstraint = -MIN_SAFE_SPEED;
+			if(height < SOFTWARE_STOP_HEIGHT)
+				lowerSpeedConstraint = 0;
+			
+			if(speed < lowerSpeedConstraint)
+				speed = lowerSpeedConstraint;
+			
+			System.out.println("Driving at " + speed);
+			traveller.drive(speed);
+		}
+		else
+		{
+			traveller.drive(-MIN_SAFE_SPEED);
+		}
 	}
 	
 	@Override

@@ -13,11 +13,11 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 @HardwareModule
-public class TestbotDriveTrainHardware extends PlainSendable implements DriveMechanism, Module
+public class PWMDriveTrainHardware extends PlainSendable implements DriveMechanism, Module
 {
 	private DifferentialDrive drive;
 	
-	public TestbotDriveTrainHardware(int leftPort1, int leftPort2, int rightPort1, int rightPort2)
+	public PWMDriveTrainHardware(int leftPort1, int leftPort2, int rightPort1, int rightPort2)
 	{
 		SpeedController left = new SpeedControllerGroup(new Spark(leftPort1), new Spark(leftPort2));
 		left.setInverted(true);

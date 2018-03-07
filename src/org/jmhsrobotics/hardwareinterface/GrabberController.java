@@ -19,7 +19,11 @@ public interface GrabberController
 	
 	public boolean isRaised();
 	
-	public void spinLeftWheels(double speed);
+	public boolean hasPrism();
 	
-	public void spinRightWheels(double speed);
+	public void spinWheels(double speed, double jank);
+	
+	public void intake();
+	
+	public void cancelAutomaticMovement();
 }

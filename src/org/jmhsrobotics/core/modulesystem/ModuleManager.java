@@ -11,6 +11,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.jmhsrobotics.modules.autonomous.AutonomousCommand;
+
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class ModuleManager implements Sublinker
@@ -108,44 +110,6 @@ public class ModuleManager implements Sublinker
 	public <T> Optional<T> getModule(Class<T> type)
 	{
 		return getModules(type).findFirst();
-	}
-
-	public AutonomousCommand getModuleTests(Predicate<? super Module> filter, String name)
-	{
-		Stream<Module> toTest = moduleList.stream().filter(filter);
-		AutonomousCommand group = new AutonomousCommand()
-		{
-			@Override
-			public String getID()
-			{
-				return "test-" + name;
-			}
-		};
-		toTest.forEach(module ->
-		{
-			group.addSequential(new InstantCommand()
-			{
-				@Override
-				protected void initialize()
-				{
-					System.out.println("\n\n*** Starting test for Module " + module.getClass().getName() + " ***");
-				}
-			});
-
-			group.addSequential(module.getTest());
-		});
-
-		return group;
-	}
-
-	public AutonomousCommand getAllModuleTests()
-	{
-		return getModuleTests(m -> true, "all");
-	}
-
-	public AutonomousCommand getModuleTestsByAnnotation(Class<? extends Annotation> annotation)
-	{
-		return getModuleTests(m -> m.getClass().isAnnotationPresent(annotation), annotation.getName());
 	}
 
 	@Override

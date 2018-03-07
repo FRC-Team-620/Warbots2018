@@ -17,8 +17,8 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 {
 	private final static String DATA_FILE_NAME = "turntable";
 
-	private final static double BASE_SPEED = 0.4;
-	private final static double MAX_SPEED_BOOST = 0.6;
+	private final static double BASE_SPEED = 0.3;
+	private final static double MAX_SPEED_BOOST = 0;
 	private final static double BASE_SPEED_BUFFER = 0.4;
 	private final static double POSITION_ESTIMATION_COEFFICIENT = 0.06;
 	private final static double BASELINE_POTENTIAL_ERROR = 0.01;
@@ -46,7 +46,7 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 	{
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("TurnTable")));
 	}
-	
+
 	@Override
 	public void calibrate()
 	{
@@ -82,7 +82,8 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 		goToPartial(position, 1);
 	}
 
-	public void driveManually(double speed)
+	@Override
+	public void manualDrive(double speed)
 	{
 		manualSpeed = OptionalDouble.of(RobotMath.constrain(speed, -BASE_SPEED, BASE_SPEED));
 	}
@@ -117,7 +118,7 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 				Position lastPositionSavedInFile = Position.valueOf(data[1]);
 				discretePosition = lastPositionSavedInFile;
 			}
-			catch (IllegalArgumentException e)
+			catch (IllegalArgumentException | ArrayIndexOutOfBoundsException e)
 			{
 				System.out.println("Failed to parse position: " + e.getMessage());
 			}
@@ -130,8 +131,7 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 
 		System.out.println("Guessed turntable location: " + discretePosition);
 
-		if (discretePosition == Position.center) 
-			discretePosition = Position.left;
+		if (discretePosition == Position.center) discretePosition = Position.left;
 
 		estimatedContinuousPosition = getContinuousPosition(discretePosition);
 	}
@@ -188,8 +188,7 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 		double lastTableSpeed = table.getSpeed();
 		estimatedContinuousPosition += RobotMath.curve(lastTableSpeed, 2) * POSITION_ESTIMATION_COEFFICIENT;
 
-		if (lastTableSpeed != 0)
-			potentialError += 0.1 * Math.pow(Math.abs(lastTableSpeed) - BASE_SPEED, 2) + BASELINE_POTENTIAL_ERROR;
+		if (lastTableSpeed != 0) potentialError += 0.1 * Math.pow(Math.abs(lastTableSpeed) - BASE_SPEED, 2) + BASELINE_POTENTIAL_ERROR;
 
 		//Update position and error estimates based on sensor data
 		//By sensor data I mean that one single limit switch that I can read @Tom
@@ -198,8 +197,8 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 			discretePosition = Position.center;
 			estimatedContinuousPosition = 0;
 			potentialError = 0;
-			
-			if(calibrating)
+
+			if (calibrating)
 			{
 				System.out.println("Calibrated");
 				target = 0;
@@ -212,7 +211,7 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 		{
 			double continuousPositionSignum = Math.signum(estimatedContinuousPosition);
 			double discretePositionSignum = getContinuousPosition(discretePosition);
-			
+
 			//If its running estimate says it's on one side, but it hasn't crossed the middle limit switch from the other side
 			if (discretePositionSignum != continuousPositionSignum)
 			{
@@ -221,49 +220,45 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 				potentialError += BAD_POSITION_ESTIMATE_CONFIDANCE_PENALTY;
 			}
 			//If it's calibrated and it thinks it's all the way to one side (including overshoot)
-			else if (isCalibrated() && Math.abs(estimatedContinuousPosition) >= 1 + TIMED_MOVEMENT_OVERSHOOT)
-				potentialError = INITIAL_FAR_SIDE_ERROR; //Reset the error, but not all the way to zero because it still isn't measurable
+			else if (isCalibrated() && Math.abs(estimatedContinuousPosition) >= 1 + TIMED_MOVEMENT_OVERSHOOT) potentialError = INITIAL_FAR_SIDE_ERROR; //Reset the error, but not all the way to zero because it still isn't measurable
 		}
-		
+
 		//Operation make it move
 		if (manualSpeed.isPresent())
 			table.drive(manualSpeed.getAsDouble());
-		else if(calibrating)
+		else if (calibrating)
 		{
-//			System.out.println("Calibrating");
-//			System.out.println("Estimated Position: " + estimatedContinuousPosition);
-//			System.out.println("Target: " + target);
-			
+			//			System.out.println("Calibrating");
+			//			System.out.println("Estimated Position: " + estimatedContinuousPosition);
+			//			System.out.println("Target: " + target);
+
 			if (Math.signum(target) * estimatedContinuousPosition < Math.abs(target))
 				table.drive(Math.copySign(BASE_SPEED, target));
-			else
-				target *= -CALIBRATION_OVERSHOOT_MULTIPLIER;
+			else target *= -CALIBRATION_OVERSHOOT_MULTIPLIER;
 		}
 		else
 		{
 			double overshootTarget = target * (1 + TIMED_MOVEMENT_OVERSHOOT);
 			double targetDisplacement = overshootTarget - estimatedContinuousPosition;
-			
-			if(Math.signum(targetDisplacement) == -Math.signum(overshootTarget))
-				targetDisplacement = 0;
-			
+
+			if (Math.signum(targetDisplacement) == -Math.signum(overshootTarget)) targetDisplacement = 0;
+
 			double constrainedTargetDisplacement = RobotMath.constrain(targetDisplacement, -1, 1);
 			double speedBoost;
-			if(isCalibrated())
+			if (isCalibrated())
 				speedBoost = RobotMath.xKinkedMap(constrainedTargetDisplacement, -1, 1, 0, -BASE_SPEED_BUFFER, BASE_SPEED_BUFFER, -MAX_SPEED_BOOST, MAX_SPEED_BOOST);
-			else
-				speedBoost = 0;
+			else speedBoost = 0;
 			double speed = Math.signum(targetDisplacement) * BASE_SPEED + speedBoost;
-			
-//			System.out.println("Discrete Position: " + discretePosition);
-//			System.out.println("Estimated Position: " + estimatedContinuousPosition);
-//			System.out.println("Target: " + overshootTarget);
-//			System.out.println("Displacement: " + constrainedTargetDisplacement);
-//			System.out.println("Uncertainty: " + potentialError);
-//			System.out.println("Speed Boost: " + speedBoost);
-//			System.out.println("Speed: " + speed);
-//			System.out.println();
-			
+
+			//			System.out.println("Discrete Position: " + discretePosition);
+			//			System.out.println("Estimated Position: " + estimatedContinuousPosition);
+			//			System.out.println("Target: " + overshootTarget);
+			//			System.out.println("Displacement: " + constrainedTargetDisplacement);
+			//			System.out.println("Uncertainty: " + potentialError);
+			//			System.out.println("Speed Boost: " + speedBoost);
+			//			System.out.println("Speed: " + speed);
+			//			System.out.println();
+
 			table.drive(speed);
 		}
 	}
@@ -292,5 +287,16 @@ public class TurnTableControlCommand extends CommandModule implements PerpetualC
 				System.out.println("Failed to save turntable position because of " + e);
 			}
 		});
+	}
+
+	@Override
+	public boolean onTarget()
+	{
+		if (target == 0)
+			return estimatedContinuousPosition == 0;
+		else if (target > 0)
+			return estimatedContinuousPosition > 1;
+		else
+			return estimatedContinuousPosition < -1;
 	}
 }

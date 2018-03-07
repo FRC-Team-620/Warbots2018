@@ -10,6 +10,11 @@ public class Point
 		this.y = y;
 	}
 	
+	public Point(double r, Angle theta)
+	{
+		this(-r * theta.sin(), r * theta.cos());
+	}
+	
 	public double getX()
 	{
 		return x;

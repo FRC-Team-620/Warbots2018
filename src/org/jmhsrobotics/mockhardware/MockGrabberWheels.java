@@ -38,4 +38,10 @@ public class MockGrabberWheels implements Module, GrabberWheels
 			}
 		};
 	}
+
+	@Override
+	public boolean hasPrism()
+	{
+		return false;
+	}
 }

@@ -1,10 +1,7 @@
 package org.jmhsrobotics.modules.autonomous;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-import org.jmhsrobotics.core.modulesystem.AutonomousCommand;
 import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 
@@ -16,29 +13,30 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoSwitcher implements Module
 {
+	private @Submodule CenterSameSideAutonomous strategyCpp;
+	private @Submodule CenterDifferentSideAutonomous strategyCpn;
+	private @Submodule SideAltSwitchPreferentialScaleAutonomous strategySnp;
+	private @Submodule SidePreferentialSwitchScaleAutonomous strategySpp;
+	private @Submodule SidePreferentialSwitchAltScaleAutonomous strategySpn;
+	private @Submodule SideAltSwitchScaleAutonomous strategySnn;
+	private @Submodule CrossAutoLine strategyProblem;
+	
 	public static enum StartingPosition
 	{
 		left, right, center
 	}
 	
 	private SendableChooser<StartingPosition> startingPosition;
-	private @Submodule AutonomousCommand[] autoCommands;
-	private Map<String, AutonomousCommand> autoCommandMap;
 	private Optional<AutonomousCommand> currentAuto;
 
 	@Override
 	public void onLink()
 	{
-		autoCommandMap = new HashMap<>();
-		for (AutonomousCommand c : autoCommands)
-			autoCommandMap.put(c.getID(), c);
-		autoCommands = null;
-
 		currentAuto = Optional.empty();
 		
 		startingPosition = new SendableChooser<StartingPosition>();
-		startingPosition.addDefault("Center", StartingPosition.center);
-		startingPosition.addObject("Left", StartingPosition.left);
+		startingPosition.addObject("Center", StartingPosition.center);
+		startingPosition.addDefault("Left", StartingPosition.left);
 		startingPosition.addObject("Right", StartingPosition.right);
 		SmartDashboard.putData("Starting Position", startingPosition);
 	}
@@ -46,12 +44,59 @@ public class AutoSwitcher implements Module
 	public void start()
 	{
 		String gameSpecificMessage = DriverStation.getInstance().getGameSpecificMessage();
-		String position = startingPosition.getSelected().toString().toUpperCase();
-		String id = position.substring(0, 1) + gameSpecificMessage.substring(0, 2);
+		boolean switchOnLeft = gameSpecificMessage.charAt(0) == 'L';
+		boolean scaleOnLeft = gameSpecificMessage.charAt(1) == 'L';
+		
+		StartingPosition position = startingPosition.getSelected();
+		
+		
 		System.out.println(startingPosition.getSelected());
-		System.out.println("Starting auto command by id " + id);
-		currentAuto = Optional.ofNullable(autoCommandMap.get(id));
-		currentAuto.get().start();
+		
+		AutonomousCommand auto;
+		switch(position)
+		{
+			case center:
+				if(switchOnLeft)
+					if(scaleOnLeft)
+						auto = strategyCpp;
+					else
+						auto = strategyCpn;
+				else
+					if(scaleOnLeft)
+						auto = strategyCpn.flipField();
+					else
+						auto = strategyCpp.flipField();
+				break;
+			case left:
+				if(switchOnLeft)
+					if(scaleOnLeft)
+						auto = strategySpp;
+					else
+						auto = strategySpn;
+				else
+					if(scaleOnLeft)
+						auto = strategySnp;
+					else
+						auto = strategySnn;
+				break;
+			case right:
+				if(switchOnLeft)
+					if(scaleOnLeft)
+						auto = strategySnn.flipField();
+					else
+						auto = strategySnp.flipField();
+				else
+					if(scaleOnLeft)
+						auto = strategySpn.flipField();
+					else
+						auto = strategySpp.flipField();
+				break;
+			default:
+				auto = strategyProblem;
+				break;
+		}
+		currentAuto = Optional.of(auto);
+		auto.start();
 	}
 
 	public void cancel()
@@ -67,7 +112,6 @@ public class AutoSwitcher implements Module
 			@Override
 			protected void initialize()
 			{
-				System.out.println("Loaded autonomous routines:" + autoCommandMap);
 			}
 		};
 	}

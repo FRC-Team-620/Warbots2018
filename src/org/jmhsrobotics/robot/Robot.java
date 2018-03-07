@@ -16,25 +16,35 @@ import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
+import org.jmhsrobotics.hardwareinterface.GrabberController;
+import org.jmhsrobotics.hardwaremodules.GrabberPneumaticsHardware;
+import org.jmhsrobotics.hardwaremodules.GrabberWheelsHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
-import org.jmhsrobotics.hardwaremodules.TestbotDriveTrainHardware;
+import org.jmhsrobotics.hardwaremodules.PWMDriveTrainHardware;
+import org.jmhsrobotics.hardwaremodules.PneumaticCompressor;
+import org.jmhsrobotics.hardwaremodules.TowerHardware;
+import org.jmhsrobotics.hardwaremodules.TravellerHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.mockhardware.MockElevator;
-import org.jmhsrobotics.mockhardware.MockGrabberPneumatics;
-import org.jmhsrobotics.mockhardware.MockGrabberWheels;
 import org.jmhsrobotics.mockhardware.MockTurnTable;
+import org.jmhsrobotics.modules.ElevatorControlCommand;
 import org.jmhsrobotics.modules.GrabberControlCommand;
-import org.jmhsrobotics.modules.MoveWithXbox;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
-import org.jmhsrobotics.modules.TestLinearActuator;
+import org.jmhsrobotics.modules.SeanControlScheme;
 import org.jmhsrobotics.modules.TurnTableControlCommand;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
-import org.jmhsrobotics.modules.autonomous.CLLAutonomous;
+import org.jmhsrobotics.modules.autonomous.CenterDifferentSideAutonomous;
+import org.jmhsrobotics.modules.autonomous.CenterSameSideAutonomous;
+import org.jmhsrobotics.modules.autonomous.CrossAutoLine;
+import org.jmhsrobotics.modules.autonomous.SideAltSwitchPreferentialScaleAutonomous;
+import org.jmhsrobotics.modules.autonomous.SideAltSwitchScaleAutonomous;
+import org.jmhsrobotics.modules.autonomous.SidePreferentialSwitchAltScaleAutonomous;
+import org.jmhsrobotics.modules.autonomous.SidePreferentialSwitchScaleAutonomous;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -57,7 +67,7 @@ public class Robot extends HybridRobot
 	@Override
 	public void robotInit()
 	{
-//		CameraServer.getInstance().startAutomaticCapture();
+		CameraServer.getInstance().startAutomaticCapture();
 		long time = System.nanoTime();
 
 		modules = new ModuleManager();
@@ -68,7 +78,7 @@ public class Robot extends HybridRobot
 		subsystems.addEmptySubsystem("TurnTable");
 		subsystems.addEmptySubsystem("Grabber");
 
-		modules.addModule(new TestbotDriveTrainHardware(0, 2, 1, 3));
+		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1));
 //		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
 		modules.addModule(new NavXHardware(SPI.Port.kMXP));
@@ -80,34 +90,37 @@ public class Robot extends HybridRobot
 		modules.addModule(new Localization(new LinearAccelRiemannInterpolator(100)));
 		modules.addModule(new CorrectiveDrive());
 		
-//		modules.addModule(new PneumaticCompressor(6));
+		modules.addModule(new PneumaticCompressor(6));
 		
-//		modules.addModule(new GrabberPneumaticsHardware(7, 2, 0, 4, 3, 1));
-//		modules.addModule(new GrabberWheelsHardware(1, 2));
+		modules.addModule(new GrabberPneumaticsHardware(7, 0, 4, 3, 2, 1));
+		modules.addModule(new GrabberWheelsHardware(6, 2, 5));
 		
 //		modules.addModule(new TurnTableHardware(3, 4));
+//		modules.addModule(new MockTower());
 		
-//		modules.addModule(new TowerHardware());
-//		modules.addModule(new ElevatorControlCommand());
-		
-		modules.addModule(new MockGrabberPneumatics());
-		modules.addModule(new MockGrabberWheels());
+		modules.addModule(new TowerHardware(6, 1, 0));
+		modules.addModule(new TravellerHardware(5));
+//		
+//		modules.addModule(new MockGrabberPneumatics());
+//		modules.addModule(new MockGrabberWheels());
 		modules.addModule(new MockTurnTable());
 
-		modules.addModule(new MockElevator());
+//		modules.addModule(new MockElevator());
 		
 		modules.addModule(new GrabberControlCommand());
-
-//		modules.addModule(new OldTurnTableControlCommand());
 		modules.addModule(new TurnTableControlCommand());
+		modules.addModule(new ElevatorControlCommand());
 		
+		modules.addModule(new SeanControlScheme(new XboxController(0)));
+//		modules.addModule(new MoveWithXbox(new XboxController(1)));
 		
-		XboxController xbox = new XboxController(0);
-		modules.addModule(new MoveWithXbox(xbox));
-		modules.addModule(new TestLinearActuator(xbox));
-//		modules.addModule(new DriveMechWithXbox(0));
-		
-		modules.addModule(new CLLAutonomous());
+		modules.addModule(new CenterSameSideAutonomous());
+		modules.addModule(new CenterDifferentSideAutonomous());
+		modules.addModule(new SideAltSwitchPreferentialScaleAutonomous());
+		modules.addModule(new SideAltSwitchScaleAutonomous());
+		modules.addModule(new SidePreferentialSwitchAltScaleAutonomous());
+		modules.addModule(new SidePreferentialSwitchScaleAutonomous());
+		modules.addModule(new CrossAutoLine());
 		modules.addModule(autonomous = new AutoSwitcher());
 		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");
@@ -116,6 +129,7 @@ public class Robot extends HybridRobot
 	@Override
 	public void autonomousInit()
 	{
+		modules.getModule(GrabberController.class).get().setRaised(false);
 		activate();
 		autonomous.start();
 	}

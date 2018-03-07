@@ -6,7 +6,7 @@ public interface ElevatorController
 {
 	public static enum Position
 	{
-		ground, exchangePortal, arcadeSwitch, scaleLow, scaleMedium, scaleHigh;
+		ground(0), exchangePortal(4.5), arcadeSwitch(23), scaleLow(52), scaleMedium(64), scaleHigh(76);
 		
 		static
 		{
@@ -14,17 +14,17 @@ public interface ElevatorController
 		}
 		
 		private Position prev, next;
-//		private double height;
-//		
-//		Position(double height)
-//		{
-//			this.height = height;
-//		}
-//		
-//		public double getHeight()
-//		{
-//			return height;
-//		}
+		private double height;
+		
+		Position(double height)
+		{
+			this.height = height;
+		}
+		
+		public double getHeight()
+		{
+			return height;
+		}
 		
 		public Position getAdjacentAbove()
 		{
@@ -42,6 +42,8 @@ public interface ElevatorController
 	public void goTo(Position position);
 	public Position getCurrentLifterPosition();
 	public void goToRaw(double linearHeight, boolean raisePneumatics);
-	public void driveManual(double linearSpeed, boolean raisePneumatics);
+	public void manualDrive(double speed);
+	public void setPneumatics(boolean extended);
+	public boolean isPneumaticsExtended();
 	public void climbFullPower();
 }

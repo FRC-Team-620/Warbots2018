@@ -4,6 +4,7 @@ import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.GrabberWheels;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -12,11 +13,13 @@ import edu.wpi.first.wpilibj.command.Command;
 public class GrabberWheelsHardware implements Module, GrabberWheels
 {
 	private SpeedController leftWheels, rightWheels;
+	private DigitalInput cubeLimitSwitch;
 	
-	public GrabberWheelsHardware(int leftWheelsPort, int rightWheelsPort)
+	public GrabberWheelsHardware(int leftWheelsPort, int rightWheelsPort, int cubeLimitSwitchPort)
 	{
 		leftWheels = new Spark(leftWheelsPort);
 		rightWheels = new Spark(rightWheelsPort);
+		cubeLimitSwitch = new DigitalInput(cubeLimitSwitchPort);
 	}
 	
 	@Override
@@ -30,7 +33,13 @@ public class GrabberWheelsHardware implements Module, GrabberWheels
 	{
 		rightWheels.set(speed);
 	}
-
+	
+	@Override
+	public boolean hasPrism()
+	{
+		return cubeLimitSwitch.get();
+	}
+	
 	@Override
 	public Command getTest()
 	{

@@ -4,4 +4,5 @@ public interface GrabberWheels
 {
 	public void setLeftWheels(double speed);
 	public void setRightWheels(double speed);
+	public boolean hasPrism();
 }

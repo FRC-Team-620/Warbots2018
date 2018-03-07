@@ -4,27 +4,32 @@ import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.hardwareinterface.DriveController;
 
-public class TurnTo extends PathNode
+public class TimedDrive extends PathNode
 {
 	private @Submodule DriveController drive;
 	
-	private Angle target, range;
+	private double time;
 	
-	public TurnTo(Angle target, Angle range)
+	public TimedDrive(double time)
 	{
-		this.target = target;
-		this.range = range;
+		this.time = time;
 	}
 	
 	@Override
-	protected void initialize()
+	protected void execute()
 	{
-		drive.setTarget(transform(target));
+		drive.drive(.7, Angle.ZERO);
 	}
-	
+
 	@Override
 	protected boolean isFinished()
 	{
-		return drive.getDistanceToTargetAngle().compareTo(range) <= 0;
+		return timeSinceInitialized() > time;
+	}
+	
+	@Override
+	protected void end()
+	{
+		drive.drive(0, 0);
 	}
 }

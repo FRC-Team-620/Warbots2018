@@ -49,7 +49,7 @@ public class GrabberPneumaticsHardware implements Module, GrabberPneumatics
 	@Override
 	public void setRaised(boolean val)
 	{
-		raise.set(val);
+		raise.set(!val);
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class MissingSubmoduleException extends NoSuchElementException
 	
 	public MissingSubmoduleException(Class<?> type, ModuleManager manager, Module module)
 	{
-		super(type.toString());
+		super(type + " for " + module);
 		
 		expectedType = type;
 		this.manager = manager;

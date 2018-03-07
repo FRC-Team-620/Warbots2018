@@ -1,33 +1,33 @@
 package org.jmhsrobotics.modules.autonomous;
 
-import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwareinterface.DriveController;
 
-public class DriveTo extends CommandModule
+public class DriveTo extends PathNode
 {
 	private @Submodule DriveController drive;
 	
-	private double x, y, range;
+	private Point target;
+	private double range;
 	private boolean reverse;
 	
-	public DriveTo(double x, double y, double range, boolean reverse)
+	public DriveTo(Point target, double range, boolean reverse)
 	{
-		this.x = x;
-		this.y = y;
+		this.target = target;
 		this.range = range;
 		this.reverse = reverse;
 	}
 	
-	public DriveTo(double x, double y, double range)
+	public DriveTo(Point target, double range)
 	{
-		this(x, y, range, false);
+		this(target, range, false);
 	}
 	
 	@Override
 	protected void initialize()
 	{
-		drive.setTarget(x, y, reverse);
+		drive.setTarget(transform(target), reverse);
 	}
 
 	@Override

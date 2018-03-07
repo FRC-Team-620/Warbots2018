@@ -1,12 +1,14 @@
 package org.jmhsrobotics.hardwaremodules;
 
+import org.jmhsrobotics.core.modulesystem.Module;
 import org.jmhsrobotics.core.modulesystem.annotations.HardwareModule;
 import org.jmhsrobotics.hardwareinterface.Tower;
 
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.command.Command;
 
 @HardwareModule
-public class TowerHardware implements Tower
+public class TowerHardware implements Module, Tower
 {
 	private Solenoid drivingSolenoid;
 	private Solenoid climbingSolenoid;
@@ -22,12 +24,15 @@ public class TowerHardware implements Tower
 	@Override
 	public void raise()
 	{
+		System.out.println("raising");
+		climbingSolenoid.set(false);
 		drivingSolenoid.set(true);
 	}
 
 	@Override
 	public void lower()
 	{
+		System.out.println("lowering");
 		drivingSolenoid.set(false);
 	}
 
@@ -35,6 +40,7 @@ public class TowerHardware implements Tower
 	public void climb()
 	{
 		lower();
+		System.out.println("climbing");
 		climbingSolenoid.set(true);
 	}
 
@@ -42,5 +48,11 @@ public class TowerHardware implements Tower
 	public boolean isExtended()
 	{
 		return drivingSolenoid.get();
+	}
+
+	@Override
+	public Command getTest()
+	{
+		return null;
 	}
 }

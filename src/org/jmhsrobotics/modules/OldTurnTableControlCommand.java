@@ -92,6 +92,17 @@ public class OldTurnTableControlCommand extends CommandModule implements Perpetu
 
 		calibrationRange = Math.copySign(INITIAL_CALIBRATION_OVERSHOOT, -positionEstimate);
 	}
+	
+	@Override
+	public void manualDrive(double speed)
+	{
+		if(speed == 0)
+			calibrate();
+		else if(speed > 0)
+			goTo(getCurrentPosition().getRightAdjacent());
+		else
+			goTo(getCurrentPosition().getLeftAdjacent());
+	}
 
 	private final static double getPosition(Position position)
 	{
@@ -210,5 +221,12 @@ public class OldTurnTableControlCommand extends CommandModule implements Perpetu
 	public Position getTargetPosition()
 	{
 		return targetPosition;
+	}
+
+	@Override
+	public boolean onTarget()
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -6,7 +6,7 @@ public interface TurnTableController
 {
 	public static enum Position
 	{
-		right, center, left;
+		left, center, right;
 		
 		static
 		{
@@ -34,7 +34,11 @@ public interface TurnTableController
 	
 	public void goToPartial(Position position, double amount);
 	
+	public void manualDrive(double speed);
+	
 	public Position getCurrentPosition();
+	
+	public boolean onTarget();
 	
 	public Position getTargetPosition();
 }
