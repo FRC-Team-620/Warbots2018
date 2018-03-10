@@ -13,7 +13,7 @@ public class TestTransformses extends AutonomousCommand
 	@Override
 	public void onLink(Sublinker linker)
 	{
-		PathLinker path = new PathLinker(linker);
+		AutoStrategy path = new AutoStrategy(linker);
 		path.addSequential(new Point(0, 60), 30);
 		path.addSequential(Angle.RIGHT, Angle.fromDegrees(10));
 	}

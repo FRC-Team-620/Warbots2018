@@ -16,7 +16,7 @@ public class AutoSwitcher implements Module
 	private @Submodule CenterSwitchAutonomous strategyCenter;
 	private @Submodule SideAltSwitchAutonomous strategySameSide;
 	private @Submodule SidePreferentialSwitchAutonomous strategyAltSide;
-	private @Submodule CrossAutoLine strategyError;
+	private @Submodule CrossAutoLineAutonomous strategyError;
 	
 	public static enum StartingPosition
 	{
