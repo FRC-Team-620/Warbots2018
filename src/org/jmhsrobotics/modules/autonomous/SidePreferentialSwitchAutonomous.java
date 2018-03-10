@@ -4,16 +4,17 @@ import org.jmhsrobotics.core.modulesystem.Sublinker;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
 
-public class CenterDifferentSideAutonomous extends AutonomousCommand
+public class SidePreferentialSwitchAutonomous extends AutonomousCommand
 {
 	@Override
 	public void onLink(Sublinker sublinker)
 	{
 		PathLinker path = new PathLinker(sublinker);
 		
-		Point firstTarget = new Point(116.306, Angle.fromDegrees(30.3)).plus(new Point(0, -12));
-		path.addSequential(firstTarget, 20);
-		path.addSequential(Angle.ZERO, Angle.fromDegrees(10));
+		path.addSequential(new Point(77.003, Angle.fromDegrees(-1.5)), 40);
+		Point firstTarget = new Point(149.320, Angle.fromDegrees(-0.6));
+		path.addSequential(firstTarget, 6);
+		path.addSequential(Angle.RIGHT, Angle.fromDegrees(10));
 		path.addSequential(new TimedDrive(2));
 		path.addSequential(new TimedCubeEject());
 	}

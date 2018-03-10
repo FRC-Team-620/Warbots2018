@@ -13,13 +13,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class AutoSwitcher implements Module
 {
-	private @Submodule CenterSameSideAutonomous strategyCpp;
-	private @Submodule CenterDifferentSideAutonomous strategyCpn;
-	private @Submodule SideAltSwitchPreferentialScaleAutonomous strategySnp;
-	private @Submodule SidePreferentialSwitchScaleAutonomous strategySpp;
-	private @Submodule SidePreferentialSwitchAltScaleAutonomous strategySpn;
-	private @Submodule SideAltSwitchScaleAutonomous strategySnn;
-	private @Submodule CrossAutoLine strategyProblem;
+	private @Submodule CenterSwitchAutonomous strategyCenter;
+	private @Submodule SideAltSwitchAutonomous strategySameSide;
+	private @Submodule SidePreferentialSwitchAutonomous strategyAltSide;
+	private @Submodule CrossAutoLine strategyError;
 	
 	public static enum StartingPosition
 	{
@@ -44,8 +41,7 @@ public class AutoSwitcher implements Module
 	public void start()
 	{
 		String gameSpecificMessage = DriverStation.getInstance().getGameSpecificMessage();
-		boolean switchOnLeft = gameSpecificMessage.charAt(0) == 'L';
-		boolean scaleOnLeft = gameSpecificMessage.charAt(1) == 'L';
+		boolean onLeft = gameSpecificMessage.charAt(0) == 'L';
 		
 		StartingPosition position = startingPosition.getSelected();
 		
@@ -56,43 +52,25 @@ public class AutoSwitcher implements Module
 		switch(position)
 		{
 			case center:
-				if(switchOnLeft)
-					if(scaleOnLeft)
-						auto = strategyCpp;
-					else
-						auto = strategyCpn;
+				if(onLeft)
+					auto = strategyCenter;
 				else
-					if(scaleOnLeft)
-						auto = strategyCpn.flipField();
-					else
-						auto = strategyCpp.flipField();
+					auto = strategyCenter.flipField();
 				break;
 			case left:
-				if(switchOnLeft)
-					if(scaleOnLeft)
-						auto = strategySpp;
-					else
-						auto = strategySpn;
+				if(onLeft)
+					auto = strategySameSide;
 				else
-					if(scaleOnLeft)
-						auto = strategySnp;
-					else
-						auto = strategySnn;
+					auto = strategyAltSide;
 				break;
 			case right:
-				if(switchOnLeft)
-					if(scaleOnLeft)
-						auto = strategySnn.flipField();
-					else
-						auto = strategySnp.flipField();
+				if(onLeft)
+					auto = strategySameSide.flipField();
 				else
-					if(scaleOnLeft)
-						auto = strategySpn.flipField();
-					else
-						auto = strategySpp.flipField();
+					auto = strategyAltSide.flipField();
 				break;
 			default:
-				auto = strategyProblem;
+				auto = strategyError;
 				break;
 		}
 		currentAuto = Optional.of(auto);
