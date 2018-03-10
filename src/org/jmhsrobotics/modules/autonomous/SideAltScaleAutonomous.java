@@ -4,7 +4,7 @@ import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
 import org.jmhsrobotics.hardwareinterface.ElevatorController;
 
-public class SidePreferentialScaleAutonomous extends AutonomousCommand
+public class SideAltScaleAutonomous extends AutonomousCommand
 {
 	@Override
 	protected void loadPath(AutoStrategy strategy)
@@ -15,7 +15,10 @@ public class SidePreferentialScaleAutonomous extends AutonomousCommand
 		Point afterSwitch = beforeSwitch.plus(new Point(101.68, Angle.ZERO));
 		strategy.addSequential(afterSwitch, 24);
 		
-		Point atScale = afterSwitch.plus(new Point(60.85, Angle.fromDegrees(-160.8)));
+		Point beforeScale = afterSwitch.plus(new Point(192.92, Angle.fromDegrees(-97.1)));
+		strategy.addSequential(beforeScale, 32);
+		
+		Point atScale = beforeScale.plus(new Point(34.66, Angle.fromDegrees(90)));
 		AutoStrategy moveAndRaise = strategy.createFork();
 		moveAndRaise.addParallel(new DriveTo(atScale, 6));
 		moveAndRaise.addParallel(new RaiseTraveller(ElevatorController.Position.scaleMedium));
