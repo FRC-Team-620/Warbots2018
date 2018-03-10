@@ -22,12 +22,12 @@ import org.jmhsrobotics.hardwaremodules.PWMDriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
-import org.jmhsrobotics.modules.SimpleMoveWithXbox;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 import org.jmhsrobotics.modules.teleop.AutoTurnWithPOV;
+import org.jmhsrobotics.modules.teleop.SimpleMoveWithXbox;
 
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.XboxController;

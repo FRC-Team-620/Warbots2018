@@ -1,8 +1,9 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.modules.teleop;
 
 import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.DriveController;
+import org.jmhsrobotics.modules.OutputSmoother;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;

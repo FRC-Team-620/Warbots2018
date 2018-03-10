@@ -1,4 +1,4 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.modules.teleop;
 
 import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.Submodule;
