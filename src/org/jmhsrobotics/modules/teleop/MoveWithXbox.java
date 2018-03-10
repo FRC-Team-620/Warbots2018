@@ -1,9 +1,8 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.modules.teleop;
 
 import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
-import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.DriveController;
 import org.jmhsrobotics.hardwareinterface.ElevatorController;
 
@@ -23,25 +22,20 @@ public class MoveWithXbox extends ControlScheme
 	private @Submodule ElevatorController elevator;
 	
 	private XboxController xbox;
+	private Hand side;
 	
-	public MoveWithXbox(XboxController xbox)
+	public MoveWithXbox(XboxController xbox, Hand side)
 	{
 		this.xbox = xbox;
+		this.side = side;
 	}
 	
 	@Override
 	protected void execute()
 	{
-		int pov = xbox.getPOV();
-		if(pov != -1)
-			drive.setRelativeTarget(Angle.fromTurns((double) pov / 8));
+		double x = deadZone(xbox.getX(side), .2, .1);
+		double y = -deadZone(xbox.getY(side), .2, .1);
 		
-		double x = xbox.getX(Hand.kLeft);
-		double y = -xbox.getY(Hand.kLeft);
-		
-		x = RobotMath.xKinkedMap(x, -1, 1, 0, -.2, .2, -1, 1);
-		y = RobotMath.xKinkedMap(y, -1, 1, 0, -.2, .2, -1, 1);
-
 		double speedCoeff = 1, period = Double.NaN;
 		if(elevator.isPneumaticsExtended())
 		{
@@ -66,9 +60,6 @@ public class MoveWithXbox extends ControlScheme
 			drive.drive(y * speedCoeff, x);
 		else
 			drive.drive(y * speedCoeff, Angle.fromTurns(x / (50 * period)));
-		
-//		if(xbox.getAButtonPressed())
-//			elevator.setPneumatics(!elevator.isPneumaticsExtended());
 		
 		if(xbox.getStartButtonPressed())
 			elevator.climbFullPower();

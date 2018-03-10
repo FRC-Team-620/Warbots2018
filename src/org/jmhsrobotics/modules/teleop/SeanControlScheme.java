@@ -1,11 +1,9 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.modules.teleop;
 
 import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.Submodule;
-import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.ElevatorController;
 import org.jmhsrobotics.hardwareinterface.GrabberController;
-import org.jmhsrobotics.hardwareinterface.TurnTableController;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
@@ -16,8 +14,6 @@ public class SeanControlScheme extends ControlScheme
 
 	private @Submodule GrabberController grabber;
 	private @Submodule ElevatorController elevator;
-	private @Submodule TurnTableController table;
-//	private @Submodule TurnTable table;
 
 	private XboxController xbox;
 	private int hasCubeTimer;
@@ -38,15 +34,13 @@ public class SeanControlScheme extends ControlScheme
 	{
 		final GrabberController.Position contracted = GrabberController.Position.contracted;
 		
-		double rightStickX = RobotMath.xKinkedMap(xbox.getX(Hand.kRight), -1, 1, 0, -.2, .2, -1, 1);
-		double rightStickY = RobotMath.xKinkedMap(xbox.getY(Hand.kRight), -1, 1, 0, -.2, .2, -1, 1);
+		double rightStickX = deadZone(xbox.getX(Hand.kRight), .2, .1);
+		double rightStickY = deadZone(xbox.getY(Hand.kRight), .2, .1);
 
-		double wheelSpin = -xbox.getY(Hand.kLeft);
-		double wheelJank = xbox.getX(Hand.kLeft);
+		double wheelSpin = -deadZone(xbox.getY(Hand.kLeft), .2, .1);
+		double wheelJank = deadZone(xbox.getX(Hand.kLeft), .2, .1);
 		
-		grabber.spinWheels(wheelSpin, wheelJank);
-		
-		table.manualDrive(rightStickX);
+		grabber.setWheels(wheelSpin, wheelJank);
 		
 		elevator.manualDrive(-rightStickY);
 
@@ -72,7 +66,7 @@ public class SeanControlScheme extends ControlScheme
 		}
 		
 		if (hasCubeTimer >= 0 && open)
-			grabber.spinWheels(-1, 0);
+			grabber.setWheels(-1, 0);
 		if (armsAreClosing(newLeftArmPosition, newRightArmPosition))
 			grabber.intake();
 

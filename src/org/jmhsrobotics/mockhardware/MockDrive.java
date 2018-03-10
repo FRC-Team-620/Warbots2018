@@ -18,7 +18,7 @@ public class MockDrive extends PlainSendable implements Module, DriveMechanism
 	@Override
 	public void drive(double speed, double turn)
 	{
-		System.out.println("Driving " + speed + " " + turn);
+//		System.out.println("Driving " + speed + " " + turn);
 	}
 
 	@Override

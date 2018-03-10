@@ -48,6 +48,15 @@ public abstract class RobotMath
 		return n;
 	}
 	
+	public static boolean oneNonZero(double... numbers)
+	{
+		for (double n : numbers)
+			if (n == 0)
+				return true;
+		
+		return false;
+	}
+	
 	public static <T> void linkNextAndPrevWithSelfReferencingCaps(T[] array, BiConsumer<T, T> setNext, BiConsumer<T, T> setPrev)
 	{
 		T first = array[0];

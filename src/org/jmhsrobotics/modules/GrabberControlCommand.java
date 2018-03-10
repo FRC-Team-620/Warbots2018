@@ -17,15 +17,13 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class GrabberControlCommand extends CommandModule implements GrabberController, PerpetualCommand
 {
 	private final static int INJECTION_TIMEOUT = (int)(1.5 * 50);
-	private final static int TIME_TO_DROP_GRABBER = (int)(0.5 * 50);
-	private final static int TIME_TO_EJECT_CUBE = (int)(1 * 50);
 
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule GrabberWheels wheels;
 	private @Submodule GrabberPneumatics pneumatics;
 
 	private boolean la, lw, ra, rw, raise;
-	private double leftWheelSpeed, rightWheelSpeed;
+	private double wheelSpeed, wheelJank;
 
 	private int injectionTimer;
 
@@ -41,13 +39,23 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 		if (injectionTimer > -1)
 		{
 			++injectionTimer;
-			setWheels(-1, 0);
 			
-			if (injectionTimer > INJECTION_TIMEOUT)
+			if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
 				cancelIntake();
-			
-			if (wheels.hasPrism())
+			else if (injectionTimer > INJECTION_TIMEOUT)
 				cancelIntake();
+			else if (wheels.hasPrism())
+				cancelIntake();
+			else
+			{
+				wheels.setLeftWheels(-1);
+				wheels.setRightWheels(-1);
+			}
+		}
+		else
+		{
+			wheels.setLeftWheels(getSideComponent(wheelSpeed, wheelJank));
+			wheels.setRightWheels(getSideComponent(wheelSpeed, -wheelJank));
 		}
 
 		pneumatics.setRaised(raise);
@@ -55,11 +63,13 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 		pneumatics.setRightWristContracted(rw);
 		pneumatics.setLeftArmContracted(la);
 		pneumatics.setRightArmContracted(ra);
-		
-		wheels.setLeftWheels(leftWheelSpeed);
-		wheels.setRightWheels(rightWheelSpeed);
 	}
 
+	private double getSideComponent(double speed, double jank)
+	{
+		return RobotMath.curve(RobotMath.curve(speed, 2) + RobotMath.curve(jank, 2), .5);
+	}
+	
 	@Override
 	protected boolean isFinished()
 	{
@@ -133,29 +143,16 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	}
 	
 	@Override
-	public void spinWheels(double speed, double jank)
+	public void setWheels(double speed, double jank)
 	{
 		if(injectionTimer > -1)
 			if(speed == 0 && jank == 0)
 				return;
 		
-		setWheels(speed, jank);
-	}
-
-	private void setWheels(double speed, double jank)
-	{
-		if(jank == 0)
-			leftWheelSpeed = rightWheelSpeed = speed;
-		else
-		{
-			leftWheelSpeed = getSideComponent(speed, jank);
-			rightWheelSpeed = getSideComponent(speed, -jank);
-		}
-	}
-	
-	private double getSideComponent(double speed, double turn)
-	{
-		return RobotMath.curve(RobotMath.curve(speed, 2) + RobotMath.curve(turn, 2), .5);
+		cancelAutomaticMovement();
+		
+		wheelSpeed = speed;
+		wheelJank = jank;
 	}
 	
 	@Override
@@ -166,7 +163,8 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 		
 		System.out.println("Intaking");
 		
-		setWheels(-1, 0);
+		setLeftArm(Position.contracted);
+		setRightArm(Position.contracted);
 		injectionTimer = 0;
 	}
 
@@ -177,7 +175,7 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 		
 		System.out.println("cancelling intake");
 		injectionTimer = -1;
-		leftWheelSpeed = rightWheelSpeed = 0;
+		wheelSpeed = wheelJank = 0;
 	}
 
 	@Override

@@ -10,7 +10,7 @@ public class TimedCubeEject extends PathNode
 	@Override
 	protected void execute()
 	{
-		grabber.spinWheels(1, 0);
+		grabber.setWheels(1, 0);
 	}
 	
 	@Override
@@ -22,6 +22,6 @@ public class TimedCubeEject extends PathNode
 	@Override
 	protected void end()
 	{
-		grabber.spinWheels(0, 0);
+		grabber.setWheels(0, 0);
 	}
 }

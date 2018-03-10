@@ -1,6 +1,5 @@
 package org.jmhsrobotics.core.modulesystem;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
@@ -8,12 +7,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
-
-import org.jmhsrobotics.modules.autonomous.AutonomousCommand;
-
-import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class ModuleManager implements Sublinker
 {

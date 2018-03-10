@@ -17,6 +17,7 @@ public class PneumaticCompressor implements Module, PerpetualCommand
 	{
 		this.port = port;
 		compressor = new Compressor(port);
+		compressor.setClosedLoopControl(true);
 	}
 	
 	public int getPort()

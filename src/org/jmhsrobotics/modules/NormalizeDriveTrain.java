@@ -16,8 +16,8 @@ public class NormalizeDriveTrain extends PlainSendable implements Module, DriveM
 	private @Submodule DriveMechanism driveTrain;
 	private @Submodule WheelEncoders encoders;
 	// Setting the Jump Mins/Maxes to 0
-	double jumpMinSpeed = -.25;
-	double jumpMaxSpeed = .25;
+	double jumpMinSpeed = -.3;
+	double jumpMaxSpeed = .3;
 	double jumpMinTurn = -.3;
 	double jumpMaxTurn = .3;
 	double maxSpeed = 0;

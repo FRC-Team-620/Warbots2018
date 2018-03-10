@@ -21,7 +21,7 @@ public interface GrabberController
 	
 	public boolean hasPrism();
 	
-	public void spinWheels(double speed, double jank);
+	public void setWheels(double speed, double jank);
 	
 	public void intake();
 	
