@@ -25,5 +25,7 @@ public interface GrabberController
 	
 	public void intake();
 	
+	public void extake();
+	
 	public void cancelAutomaticMovement();
 }

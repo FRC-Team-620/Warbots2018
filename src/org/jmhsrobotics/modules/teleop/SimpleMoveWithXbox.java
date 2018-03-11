@@ -3,58 +3,53 @@ package org.jmhsrobotics.modules.teleop;
 import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.hardwareinterface.DriveController;
-import org.jmhsrobotics.modules.OutputSmoother;
+import org.jmhsrobotics.modules.drivecontrol.DoubleDerivativeOutputSmoother;
+import org.jmhsrobotics.modules.drivecontrol.OutputSmoother;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class SimpleMoveWithXbox extends ControlScheme
 {
 	private @Submodule DriveController drive;
 	
-	private XboxController xbox;
+	private final static OutputSmoother CONTROLLED_SPEED_SMOOTHER = new DoubleDerivativeOutputSmoother(.3, .05, .05);
+	private final static OutputSmoother CONTROLLED_TURN_SMOOTHER = new DoubleDerivativeOutputSmoother(.3, .08, .1);
 	
-	private OutputSmoother speedSmoother;
-	private OutputSmoother turnSmoother;
+	private XboxController xbox;
 	
 	private boolean limitStuff;
 	
 	public SimpleMoveWithXbox(XboxController xbox)
 	{
 		this.xbox = xbox;
-		speedSmoother = new OutputSmoother();
-		turnSmoother = new OutputSmoother();
 	}
 	
 	@Override
 	protected void initialize()
 	{
-		speedSmoother.reset();
+		limitStuff = true;
 	}
 	
 	@Override
 	protected void execute()
 	{
 		if (xbox.getAButtonPressed())
-			limitStuff ^= true;
-		
-		if (limitStuff)
-		{
-			speedSmoother.setLimits(1, 0.05, 0.05);
-			turnSmoother.setLimits(1, 0.08, Double.POSITIVE_INFINITY);
-		}
-		else
-		{
-			speedSmoother.setLimits(1, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-			turnSmoother.setLimits(1, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
-		}
-		
+			if(limitStuff)
+			{
+				limitStuff = false;
+				drive.setSpeedOutputSmoother(null);
+				drive.setTurnOutputSmoother(null);
+			}
+			else
+			{
+				limitStuff = true;
+				drive.setSpeedOutputSmoother(CONTROLLED_SPEED_SMOOTHER);
+				drive.setTurnOutputSmoother(CONTROLLED_TURN_SMOOTHER);
+			}
+
 		double x = deadZone(xbox.getX(Hand.kLeft), .3, .1);
-		turnSmoother.setTarget(x);
-		
 		double y = -deadZone(xbox.getY(Hand.kLeft), .2, .1);
-		speedSmoother.setTarget(y);
-		
-		drive.drive(speedSmoother.update(), turnSmoother.update());
+		drive.drive(y, x);
 	}
 }

@@ -23,15 +23,10 @@ public class GrabberWheelsHardware implements Module, GrabberWheels
 	}
 	
 	@Override
-	public void setLeftWheels(double speed)
+	public void set(double speed, double jank)
 	{
-		leftWheels.set(speed);
-	}
-
-	@Override
-	public void setRightWheels(double speed)
-	{
-		rightWheels.set(speed);
+		leftWheels.set(GrabberWheels.getSideComponent(speed, jank));
+		rightWheels.set(GrabberWheels.getSideComponent(speed, -jank));
 	}
 	
 	@Override

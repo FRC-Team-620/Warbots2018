@@ -1,11 +1,11 @@
-package org.jmhsrobotics.modules;
+package org.jmhsrobotics.modules.drivecontrol;
 
 import org.jmhsrobotics.core.util.PlainSendable;
 import org.jmhsrobotics.core.util.RobotMath;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
-public class OutputSmoother extends PlainSendable
+public class DoubleDerivativeOutputSmoother extends PlainSendable implements OutputSmoother
 {
 	private double outputCurve;
 	
@@ -17,7 +17,7 @@ public class OutputSmoother extends PlainSendable
 	private double current;
 	private double currentDerivative;
 	
-	public OutputSmoother(double curve, double maxValue, double maxFirstDerivative, double maxSecondDerivative)
+	public DoubleDerivativeOutputSmoother(double curve, double maxValue, double maxFirstDerivative, double maxSecondDerivative)
 	{
 		outputCurve = curve;
 		this.maxSecondDerivative = maxSecondDerivative;
@@ -25,9 +25,14 @@ public class OutputSmoother extends PlainSendable
 		this.maxValue = maxValue;
 	}
 	
-	public OutputSmoother()
+	public DoubleDerivativeOutputSmoother(double maxValue, double maxFirstDerivative, double maxSecondDerivative)
 	{
-		this(.5, 1, 1000000, 1000000);
+		this(.5, maxValue, maxFirstDerivative, maxSecondDerivative);
+	}
+	
+	public DoubleDerivativeOutputSmoother()
+	{
+		this(1, 1000000, 1000000);
 	}
 	
 	public void setLimits(double value, double firstDerivative, double secondDerivative)
@@ -42,12 +47,20 @@ public class OutputSmoother extends PlainSendable
 		this.outputCurve = outputCurve;
 	}
 	
+	@Override
 	public void setTarget(double target)
 	{
 		target = RobotMath.constrain(target, -maxValue, maxValue);
 		this.target = RobotMath.curve(target, 1 / outputCurve);
 	}
+	
+	@Override
+	public double getTarget()
+	{
+		return target;
+	}
 
+	@Override
 	public void reset()
 	{
 		target = 0;
@@ -55,7 +68,8 @@ public class OutputSmoother extends PlainSendable
 		currentDerivative = 0;
 	}
 
-	public double update()
+	@Override
+	public void update()
 	{
 		double targetDelta = target - current;
 		double minimumAccessibleDelta = Math.pow(currentDerivative, 2) / (2 * maxSecondDerivative);
@@ -76,10 +90,9 @@ public class OutputSmoother extends PlainSendable
 			current += currentDerivative;
 			currentDerivative = RobotMath.constrain(currentDerivative + secondDerivative, -maxFirstDerivative, maxFirstDerivative);
 		}
-		
-		return get();
 	}
 	
+	@Override
 	public double get()
 	{
 		return RobotMath.curve(current, outputCurve);
@@ -101,5 +114,20 @@ public class OutputSmoother extends PlainSendable
 	{
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void copyRelevantData(OutputSmoother oldOutputSmoother)
+	{
+		current = oldOutputSmoother.get();
+		target = oldOutputSmoother.getTarget();
+		
+		if (oldOutputSmoother instanceof DoubleDerivativeOutputSmoother)
+		{
+			DoubleDerivativeOutputSmoother old = (DoubleDerivativeOutputSmoother) oldOutputSmoother;
+			currentDerivative = old.currentDerivative;
+		}
+		else
+			currentDerivative = 0;
 	}
 }

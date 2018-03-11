@@ -4,6 +4,7 @@ import org.jmhsrobotics.core.modulesystem.CommandModule;
 import org.jmhsrobotics.core.modulesystem.Submodule;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
+import org.jmhsrobotics.modules.drivecontrol.OutputSmoother;
 
 public abstract class DriveController extends CommandModule
 {
@@ -34,6 +35,10 @@ public abstract class DriveController extends CommandModule
 	public abstract void removeTarget();
 	public abstract double getDistanceToTargetPoint();
 	public abstract Angle getDistanceToTargetAngle();
+	public abstract void setSpeedOutputSmoother(OutputSmoother smoother);
+	public abstract void setTurnOutputSmoother(OutputSmoother smoother);
+	public abstract OutputSmoother getSpeedOutputSmoother();
+	public abstract OutputSmoother getTurnOutputSmoother();
 	
 	public void setTarget(double x, double y, boolean reverse)
 	{

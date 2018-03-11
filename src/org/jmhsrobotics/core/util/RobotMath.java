@@ -51,7 +51,7 @@ public abstract class RobotMath
 	public static boolean oneNonZero(double... numbers)
 	{
 		for (double n : numbers)
-			if (n == 0)
+			if (n != 0)
 				return true;
 		
 		return false;

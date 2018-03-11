@@ -2,6 +2,7 @@ package org.jmhsrobotics.modules.teleop;
 
 import org.jmhsrobotics.core.modulesystem.ControlScheme;
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.GrabberController;
 import org.jmhsrobotics.hardwareinterface.GrabberController.Position;
 
@@ -11,8 +12,10 @@ import edu.wpi.first.wpilibj.XboxController;
 public class ControlGrabberWithXbox extends ControlScheme
 {
 	private final static int AUTO_GRAB_TIME = 10;
-	private final static int AUTO_GRAB_HOLD_TIME = 5;
+	private final static int AUTO_GRAB_HOLD_TIME = 200;
 	private final static int AUTO_GRAB_DECAY_RATE = 2;
+	private final static int DROP_TIME = 50;
+	private final static int INITIAL_EJECTION_TIME = 5;
 	private final static double[] TRIGGER_ARM_THRESHOLDS = { 0.2, 0.8 };
 
 	private @Submodule GrabberController grabber;
@@ -43,54 +46,63 @@ public class ControlGrabberWithXbox extends ControlScheme
 		Position left = getGrabberArmPosition(Hand.kLeft);
 		Position right = getGrabberArmPosition(Hand.kRight);
 
-		grabber.setLeftArm(left);
-		grabber.setRightArm(right);
-		grabber.setWheels(wheelSpeed, wheelJank);
-		
-//		System.out.println(hasPrismTimer);
-//		
-//		if (open())
-//			if (grabber.hasPrism())
-//			{
-//				if (hasPrismTimer < AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME)
-//					++hasPrismTimer;
-//			}
-//			else
-//				hasPrismTimer = Math.max(hasPrismTimer - AUTO_GRAB_DECAY_RATE, 0);
-//		else if (grabber.hasPrism())
-//			hasPrismTimer = AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME;
-//		else
-//			hasPrismTimer = 0;
-//
-//		if (hasPrismTimer > AUTO_GRAB_TIME && hasPrismTimer < AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME)
-//		{
-//			grabber.setLeftArm(Position.contracted);
-//			grabber.setRightArm(Position.contracted);
-//
-//			if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
-//			{
-//				hasPrismTimer = AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME;
-//				grabber.setWheels(wheelSpeed, wheelJank);
-//			}
-//		}
-//		else if (armsAreClosing(left, right))
-//			grabber.intake();
-//		else
-//		{
-//			grabber.setLeftArm(left);
-//			grabber.setRightArm(right);
-//
-//			if (open())
-//				if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
-//					grabber.setWheels(wheelSpeed, wheelJank);
-//				else
-//					grabber.setWheels(-1, 0);
-//			else if (hasPrismTimer >= AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME)
-//				hasPrismTimer = 0;
-//		}
-//
-//		if (xbox.getBackButton())
-//			grabber.cancelAutomaticMovement();
+		if (left != Position.contracted || right != Position.contracted)
+			if (grabber.hasPrism())
+			{
+				if (hasPrismTimer < AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME)
+					++hasPrismTimer;
+				else
+					hasPrismTimer = AUTO_GRAB_TIME - DROP_TIME;
+			}
+			else
+				hasPrismTimer = Math.max(hasPrismTimer - AUTO_GRAB_DECAY_RATE, 0);
+		else if (grabber.hasPrism() && hasPrismTimer >= 0)
+			hasPrismTimer = AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME;
+		else if (hasPrismTimer > 0)
+		{
+			grabber.intake();
+			hasPrismTimer = 0;
+		}
+
+		if (hasPrismTimer > AUTO_GRAB_TIME && hasPrismTimer < AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME)
+		{
+			System.out.println("Contracting");
+			grabber.setLeftArm(Position.contracted);
+			grabber.setRightArm(Position.contracted);
+
+			if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
+			{
+				hasPrismTimer = AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME;
+				grabber.setWheels(wheelSpeed, wheelJank);
+			}
+			else
+				grabber.setWheels(0, 0);
+		}
+		else if (armsAreClosing(left, right))
+			grabber.intake();
+		else if (xbox.getBumperPressed(side))
+		{
+			grabber.extake();
+			hasPrismTimer = -INITIAL_EJECTION_TIME;
+		}
+		else
+		{
+			grabber.setLeftArm(left);
+			grabber.setRightArm(right);
+
+			if (open())
+				if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
+					grabber.setWheels(wheelSpeed, wheelJank);
+				else if (hasPrismTimer == 0)
+					grabber.setWheels(-1, 0);
+				else
+					grabber.setWheels(0, 0);
+			else
+				grabber.setWheels(wheelSpeed, wheelJank);
+		}
+
+		if (xbox.getBackButton())
+			grabber.cancelAutomaticMovement();
 	}
 
 	private Position getGrabberArmPosition(Hand hand)

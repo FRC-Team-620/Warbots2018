@@ -1,6 +1,7 @@
 package org.jmhsrobotics.mockhardware;
 
 import org.jmhsrobotics.core.modulesystem.Module;
+import org.jmhsrobotics.core.util.RobotMath;
 import org.jmhsrobotics.hardwareinterface.GrabberWheels;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -8,22 +9,13 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class MockGrabberWheels implements Module, GrabberWheels
 {
-	private double leftSpeed, rightSpeed;
+	private double speed, jank;
 	
 	@Override
-	public void setLeftWheels(double speed)
+	public void set(double speed, double jank)
 	{
-		if(speed != leftSpeed)
-			System.out.println("Spinning left wheels at " + speed);
-		leftSpeed = speed;
-	}
-
-	@Override
-	public void setRightWheels(double speed)
-	{
-		if(speed != rightSpeed)
-			System.out.println("Spinning right wheels at " + speed);
-		rightSpeed = speed;
+		if(RobotMath.oneNonZero(this.speed - speed, this.jank - jank))
+			System.out.println("Setting grabber wheel speed to " + speed + " and jank to " + jank);
 	}
 	
 	@Override

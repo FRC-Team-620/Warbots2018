@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CorrectiveDrive extends DriveController implements PerpetualCommand
 {
+	private final static OutputSmoother DEFAULT_SPEED_SMOOTHER = new ConstraintOutputSmoother(1);
+	private final static OutputSmoother DEFAULT_TURN_SMOOTHER = new ConstraintOutputSmoother(1);
+	
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule Localization localization;
 	
@@ -29,21 +32,24 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	
 	private boolean targetReverse;
 	
-	private double speed, turn;
+	private OutputSmoother speed, turn;
 	
 	@Override
 	public void onLink()
 	{
 		subsystems.ifPresent(sm -> requires(sm.getSubsystem("DriveTrain")));
 		
+		speed = DEFAULT_SPEED_SMOOTHER;
+		turn = DEFAULT_TURN_SMOOTHER;
+		
 		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getDegreesPerSecond);
-		angleController = new PIDCalculator(0.035, 0, 10, angleSensor, o -> turn = o);
+		angleController = new PIDCalculator(0.035, 0, 10, angleSensor, turn::setTarget);
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
 		angleController.setOutputRange(-1, 1);
 		
 		distanceSensor = PIDSensor.fromDispAndRate(() -> -getDistanceToTargetPoint(), this::getSpeedTowardTarget);
-		distanceController = new PIDCalculator(0.03, 0, 0, distanceSensor, o -> speed = o);
+		distanceController = new PIDCalculator(0.03, 0, 0, distanceSensor, o -> speed.setTarget(targetReverse ? -o : o));
 		distanceController.setOutputRange(-1, 1);
 		distanceController.setSetpoint(0);
 		
@@ -52,6 +58,38 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		
 		angleController.setName("Angle Controller PID");
 		SmartDashboard.putData(angleController);
+	}
+	
+	@Override
+	public void setSpeedOutputSmoother(OutputSmoother smoother)
+	{
+		if(smoother == null)
+			smoother = DEFAULT_SPEED_SMOOTHER;
+		
+		smoother.copyRelevantData(speed);
+		speed = smoother;
+	}
+	
+	@Override
+	public void setTurnOutputSmoother(OutputSmoother smoother)
+	{
+		if(smoother == null)
+			smoother = DEFAULT_TURN_SMOOTHER;
+		
+		smoother.copyRelevantData(turn);
+		turn = smoother;
+	}
+	
+	@Override
+	public OutputSmoother getSpeedOutputSmoother()
+	{
+		return speed;
+	}
+	
+	@Override
+	public OutputSmoother getTurnOutputSmoother()
+	{
+		return turn;
 	}
 	
 	@Override
@@ -64,8 +102,8 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 			removeTarget();
 		}
 		
-		this.speed = speed;
-		this.turn = turn;
+		this.speed.setTarget(speed);
+		this.turn.setTarget(turn);
 	}
 	
 	@Override
@@ -83,7 +121,7 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		else
 			targetAngle = Optional.of(localization.getAngle().plus(turnAmount));
 		
-		this.speed = speed;
+		this.speed.setTarget(speed);
 	}
 	
 	@Override
@@ -114,8 +152,8 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		
 		System.out.println("Setting target to angle: " + angle);
 		targetPoint = Optional.empty();
-		speed = 0;
 		targetAngle = Optional.of(angle);
+		speed.setTarget(0);
 	}
 	
 	@Override
@@ -129,7 +167,8 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	{
 		targetAngle = Optional.empty();
 		targetPoint = Optional.empty();
-		turn = speed = 0;
+		speed.setTarget(0);
+		turn.setTarget(0);
 	}
 	
 	@Override
@@ -166,13 +205,10 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		if(targetPoint.isPresent())
 		{
 			distanceController.update();
-			targetAngle = Optional.of(localization.getAngleTo(targetPoint.get()));
 			
+			targetAngle = Optional.of(localization.getAngleTo(targetPoint.get()));			
 			if(targetReverse)
-			{
-				speed = - speed;
 				targetAngle = targetAngle.map(angle -> angle.plus(Angle.REVERSE));
-			}
 		}
 		
 		if(targetAngle.isPresent())
@@ -181,6 +217,9 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 			angleController.update();
 		}
 		
-		driveRaw(speed, turn);
+		speed.update();
+		turn.update();
+		
+		driveRaw(speed.get(), turn.get());
 	}
 }
