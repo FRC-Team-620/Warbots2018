@@ -27,6 +27,6 @@ public class ControlTravellerWithXbox extends ControlScheme
 		elevator.manualDrive(y);
 		
 		if(xbox.getBButtonPressed())
-			elevator.goToRaw(6000, false);
+			elevator.goToRaw(1000, false);
 	}
 }

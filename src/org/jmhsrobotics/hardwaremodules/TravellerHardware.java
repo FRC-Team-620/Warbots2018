@@ -19,15 +19,17 @@ public class TravellerHardware extends PlainSendable implements Module, Travelle
 	{
 		motor = new WPI_TalonSRX(deviceID);
 		motor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder, 0, 0);
-		motor.config_kP(0, -.03, 0);
-		motor.config_kI(0, 0, 0);
+		motor.config_kP(0, .5, 0);
+		motor.config_kI(0, 0.002, 0);
 		motor.config_kD(0, 0, 0);
+		motor.config_IntegralZone(0, 500, 0);
+		motor.configAllowableClosedloopError(0, 50, 0);
+		motor.selectProfileSlot(0, 0);
 	}
 	
 	@Override
 	public void drive(double speed)
 	{
-//		System.out.println("Driving Traveller at " + speed);
 		motor.set(speed);
 	}
 	
@@ -46,13 +48,13 @@ public class TravellerHardware extends PlainSendable implements Module, Travelle
 	@Override
 	public void printStuff()
 	{
-//		System.out.println("Error: " + motor.getClosedLoopError(0));
+		System.out.println("Error: " + motor.getClosedLoopError(0));
 	}
 	
 	@Override
 	public double getHeight()
 	{
-		return -motor.getSensorCollection().getQuadraturePosition();
+		return motor.getSensorCollection().getQuadraturePosition();
 	}
 	
 	@Override

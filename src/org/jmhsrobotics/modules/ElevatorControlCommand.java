@@ -10,10 +10,16 @@ import org.jmhsrobotics.hardwareinterface.Traveller;
 
 public class ElevatorControlCommand extends CommandModule implements PerpetualCommand, ElevatorController
 {
-	private static double BOTTOM_BUFFER_ZONE = 1500;
+	private static double TOWER_HEIGHT = 12960;
+	
 	private static double BUFFER_EXP = 3;
 	private static double MIN_SAFE_SPEED = .2;
-	private static double SOFTWARE_STOP_HEIGHT = 300;
+	
+	private static double BOTTOM_BUFFER_ZONE = 1500;
+	private static double LOWER_STOP_HEIGHT = 300;
+	
+	private static double TOP_BUFFER_ZONE = 1500;
+	private static double UPPER_STOP_HEIGHT = 300;
 	
 	private @Submodule Traveller traveller;
 	private @Submodule Tower pneumatics;
@@ -93,7 +99,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	{	
 		traveller.printStuff();
 		
-		System.out.println(traveller.getHeight());
+		System.out.println("Height: " + traveller.getHeight());
 		System.out.println("Bot: " + traveller.isBottomLimitSwitchPressed() + " Top: " + traveller.isTopLimitSwitchPressed());
 		
 		if(traveller.isBottomLimitSwitchPressed())
@@ -127,13 +133,25 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 			double height = traveller.getHeight();
 			double speed = travellerSpeed;
 			
-			double lowerSpeedConstraint = RobotMath.linearMap(Math.pow(height, BUFFER_EXP), 0, Math.pow(BOTTOM_BUFFER_ZONE, BUFFER_EXP), 0, -1);
+			double adjustedHeight = Math.pow(height, BUFFER_EXP);
+			
+			double lowerRangeStart = 0;
+			double lowerRangeEnd = Math.pow(BOTTOM_BUFFER_ZONE, BUFFER_EXP);
+			double lowerSpeedConstraint = RobotMath.linearMap(adjustedHeight, lowerRangeStart, lowerRangeEnd, 0, -1);
 			if(lowerSpeedConstraint > -MIN_SAFE_SPEED)
 				lowerSpeedConstraint = -MIN_SAFE_SPEED;
-			if(height < SOFTWARE_STOP_HEIGHT)
+			if(height < LOWER_STOP_HEIGHT)
 				lowerSpeedConstraint = 0;
 			
-			double upperSpeedConstraint = Double.POSITIVE_INFINITY;
+//			double upperRangeStart = Math.pow(TOWER_HEIGHT, BUFFER_EXP);
+//			double upperRangeEnd = Math.pow(TOWER_HEIGHT - TOP_BUFFER_ZONE, BUFFER_EXP);
+//			double upperSpeedConstraint = RobotMath.linearMap(adjustedHeight, upperRangeStart, upperRangeEnd, 0, 1);
+//			if(upperSpeedConstraint < MIN_SAFE_SPEED)
+//				upperSpeedConstraint = MIN_SAFE_SPEED;
+//			if(height > UPPER_STOP_HEIGHT)
+//				upperSpeedConstraint = 0;
+			
+			double upperSpeedConstraint = 1;
 			
 			speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
 

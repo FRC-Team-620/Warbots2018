@@ -63,6 +63,9 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	@Override
 	public void setSpeedOutputSmoother(OutputSmoother smoother)
 	{
+		if(speed == smoother)
+			return;
+		
 		if(smoother == null)
 			smoother = DEFAULT_SPEED_SMOOTHER;
 		
@@ -73,6 +76,9 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	@Override
 	public void setTurnOutputSmoother(OutputSmoother smoother)
 	{
+		if(turn == smoother)
+			return;
+		
 		if(smoother == null)
 			smoother = DEFAULT_TURN_SMOOTHER;
 		

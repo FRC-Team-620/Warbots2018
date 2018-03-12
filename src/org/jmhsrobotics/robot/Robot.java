@@ -21,6 +21,7 @@ import org.jmhsrobotics.hardwaremodules.NavXHardware;
 import org.jmhsrobotics.hardwaremodules.PWMDriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.TravellerHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
+import org.jmhsrobotics.mockhardware.MockDrive;
 import org.jmhsrobotics.mockhardware.MockTower;
 import org.jmhsrobotics.modules.ElevatorControlCommand;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
@@ -67,8 +68,10 @@ public class Robot extends HybridRobot
 		subsystems.addEmptySubsystem("TurnTable");
 		subsystems.addEmptySubsystem("Grabber");
 
+		modules.addModule(new MockDrive());
+		
 //		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1)); //TODO Real bot
-		modules.addModule(new PWMDriveTrainHardware(1, 3, 2, 0)); //Test bot
+//		modules.addModule(new PWMDriveTrainHardware(1, 3, 2, 0)); //Test bot
 //		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
 //		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false)); //TODO Real bot
 		modules.addModule(new WheelEncodersHardware(0, 1, true, 2, 3, false)); //Test bot
