@@ -34,15 +34,15 @@ public class TravellerHardware extends PlainSendable implements Module, Travelle
 	}
 	
 	@Override
-	public void driveTo(double target)
+	public void driveTo(int target)
 	{
 		motor.set(ControlMode.Position, target);
 	}
 	
 	@Override
-	public void reset()
+	public void reset(int currentHeight)
 	{
-		motor.getSensorCollection().setQuadraturePosition(0, 0);
+		motor.getSensorCollection().setQuadraturePosition(currentHeight, 0);
 	}
 	
 	@Override
@@ -52,7 +52,7 @@ public class TravellerHardware extends PlainSendable implements Module, Travelle
 	}
 	
 	@Override
-	public double getHeight()
+	public int getHeight()
 	{
 		return motor.getSensorCollection().getQuadraturePosition();
 	}
