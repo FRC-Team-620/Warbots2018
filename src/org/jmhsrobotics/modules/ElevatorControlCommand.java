@@ -24,6 +24,8 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	
 	private boolean calibrated;
 	
+	private boolean hasTarget;
+	
 	@Override
 	public void reset()
 	{
@@ -47,12 +49,16 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	public void goToRaw(double linearHeight, boolean raisePneumatics)
 	{
-		//TODO
+		setPneumatics(raisePneumatics);
+		traveller.driveTo(linearHeight);
+		hasTarget = true;
 	}
 
 	@Override
 	public void manualDrive(double speed)
 	{
+		if(speed != 0)
+			hasTarget = false;
 		travellerSpeed = speed;
 	}
 	
@@ -77,6 +83,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	protected void initialize()
 	{
+		calibrated = false;
 		climbing = false;
 		pneumaticsExtended = false;
 	}
@@ -84,14 +91,17 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	protected void execute()
 	{	
+		traveller.printStuff();
+		
 		System.out.println(traveller.getHeight());
-		System.out.println("Limit: " + traveller.isBottomLimitSwitchPressed());
+		System.out.println("Bot: " + traveller.isBottomLimitSwitchPressed() + " Top: " + traveller.isTopLimitSwitchPressed());
 		
 		if(traveller.isBottomLimitSwitchPressed())
 		{
+			if(!calibrated)
+				System.out.println("Traveller calibrated");
 			traveller.reset();
 			calibrated = true;
-			System.out.println(calibrated);
 		}
 		
 		if (calibrated)
@@ -123,16 +133,20 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 			if(height < SOFTWARE_STOP_HEIGHT)
 				lowerSpeedConstraint = 0;
 			
-			if(speed < lowerSpeedConstraint)
-				speed = lowerSpeedConstraint;
+			double upperSpeedConstraint = Double.POSITIVE_INFINITY;
 			
-			System.out.println("Driving at " + speed);
-			traveller.drive(speed);
+			speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
+
+			if(hasTarget)
+				System.out.println("Has Target");
+			else
+			{
+				System.out.println("Driving at " + speed);
+				traveller.drive(speed);
+			}
 		}
 		else
-		{
 			traveller.drive(-MIN_SAFE_SPEED);
-		}
 	}
 	
 	@Override

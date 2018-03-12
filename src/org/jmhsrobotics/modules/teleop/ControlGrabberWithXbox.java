@@ -22,13 +22,15 @@ public class ControlGrabberWithXbox extends ControlScheme
 
 	private XboxController xbox;
 	private Hand side;
+	private boolean useStick;
 
 	private int hasPrismTimer;
 
-	public ControlGrabberWithXbox(XboxController xbox, Hand side)
+	public ControlGrabberWithXbox(XboxController xbox, Hand side, boolean useStick)
 	{
 		this.xbox = xbox;
 		this.side = side;
+		this.useStick = useStick;
 	}
 
 	@Override
@@ -40,8 +42,16 @@ public class ControlGrabberWithXbox extends ControlScheme
 	@Override
 	protected void execute()
 	{
-		double wheelSpeed = -deadZone(xbox.getY(side), .2, .1);
-		double wheelJank = deadZone(xbox.getX(side), .2, .1);
+		double wheelSpeed, wheelJank;
+		if(useStick)
+		{
+			wheelSpeed = -deadZone(xbox.getY(side), .2, .1);
+			wheelJank = deadZone(xbox.getX(side), .2, .1);
+		}
+		else
+		{
+			wheelSpeed = wheelJank = 0;
+		}
 
 		Position left = getGrabberArmPosition(Hand.kLeft);
 		Position right = getGrabberArmPosition(Hand.kRight);

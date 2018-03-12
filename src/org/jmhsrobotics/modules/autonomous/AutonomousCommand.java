@@ -4,28 +4,14 @@ import java.awt.geom.AffineTransform;
 
 import org.jmhsrobotics.core.modulesystem.CommandGroupModule;
 import org.jmhsrobotics.core.modulesystem.Sublinker;
-import org.jmhsrobotics.core.modulesystem.Submodule;
-import org.jmhsrobotics.modules.TurnTableControlCommand;
-
-import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public abstract class AutonomousCommand extends CommandGroupModule
 {
 	private AffineTransform transform;
-	private @Submodule TurnTableControlCommand table;
 	
 	public AutonomousCommand()
 	{
 		transform = new AffineTransform();
-		
-		addSequential(new InstantCommand()
-		{
-			@Override
-			protected void initialize()
-			{
-				table.calibrate();
-			}
-		});
 	}
 	
 	public AutonomousCommand flipField()

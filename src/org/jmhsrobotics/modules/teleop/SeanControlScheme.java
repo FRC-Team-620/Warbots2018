@@ -34,6 +34,7 @@ public class SeanControlScheme extends ControlScheme
 	{
 		final GrabberController.Position contracted = GrabberController.Position.contracted;
 		
+		@SuppressWarnings("unused")
 		double rightStickX = deadZone(xbox.getX(Hand.kRight), .2, .1);
 		double rightStickY = deadZone(xbox.getY(Hand.kRight), .2, .1);
 

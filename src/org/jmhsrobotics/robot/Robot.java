@@ -18,12 +18,11 @@ import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwareinterface.GrabberController;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
-import org.jmhsrobotics.hardwaremodules.NoRaiseGrabberPneumaticsHardware;
 import org.jmhsrobotics.hardwaremodules.PWMDriveTrainHardware;
-import org.jmhsrobotics.hardwaremodules.PneumaticCompressor;
-import org.jmhsrobotics.hardwaremodules.SingleSparkGrabberWheelsHardware;
+import org.jmhsrobotics.hardwaremodules.TravellerHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.modules.GrabberControlCommand;
+import org.jmhsrobotics.mockhardware.MockTower;
+import org.jmhsrobotics.modules.ElevatorControlCommand;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
 import org.jmhsrobotics.modules.autonomous.AutoSwitcher;
@@ -31,7 +30,7 @@ import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 import org.jmhsrobotics.modules.teleop.AutoTurnWithPOV;
-import org.jmhsrobotics.modules.teleop.ControlGrabberWithXbox;
+import org.jmhsrobotics.modules.teleop.ControlTravellerWithXbox;
 import org.jmhsrobotics.modules.teleop.SimpleMoveWithXbox;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -68,10 +67,12 @@ public class Robot extends HybridRobot
 		subsystems.addEmptySubsystem("TurnTable");
 		subsystems.addEmptySubsystem("Grabber");
 
-//		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1)); //Real bot
-		modules.addModule(new PWMDriveTrainHardware(1, 3, 2, 0)); //Testbot
+//		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1)); //TODO Real bot
+		modules.addModule(new PWMDriveTrainHardware(1, 3, 2, 0)); //Test bot
 //		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
-		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false));
+//		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false)); //TODO Real bot
+		modules.addModule(new WheelEncodersHardware(0, 1, true, 2, 3, false)); //Test bot
+		
 		modules.addModule(new NavXHardware(SPI.Port.kMXP));
 
 		modules.addModule(new PersistantDataModule());
@@ -81,29 +82,26 @@ public class Robot extends HybridRobot
 		modules.addModule(new Localization(new LinearAccelRiemannInterpolator(100)));
 		modules.addModule(new CorrectiveDrive());
 		
-		modules.addModule(new PneumaticCompressor(6));
+//		modules.addModule(new PneumaticCompressor(6));
 		
+//		modules.addModule(new NoRaiseGrabberPneumaticsHardware(6,2,3,0,1));
+//		modules.addModule(new SingleSparkGrabberWheelsHardware(4, 4));
 //		modules.addModule(new MockGrabberPneumatics());
-		modules.addModule(new NoRaiseGrabberPneumaticsHardware(6,2,3,0,1));
-		modules.addModule(new SingleSparkGrabberWheelsHardware(4, 4));
+//		modules.addModule(new MockGrabberWheels());
 		
-//		modules.addModule(new GrabberPneumaticsHardware(7, 0, 4, 3, 2, 1));
-//		modules.addModule(new GrabberWheelsHardware(6, 2, 5));
+//		modules.addModule(new GrabberPneumaticsHardware(7, 0, 4, 3, 2, 1)); //TODO Real bot
+//		modules.addModule(new GrabberWheelsHardware(6, 2, 5)); //TODO Real bot
 		
-//		modules.addModule(new TurnTableHardware(3, 4));
-//		modules.addModule(new MockTower());
 		
 //		modules.addModule(new TowerHardware(6, 1, 0));
-//		modules.addModule(new TravellerHardware(5));
-		
-//		modules.addModule(new MockTower());
-//		modules.addModule(new MockTraveller());
+		modules.addModule(new TravellerHardware(1));
+		modules.addModule(new MockTower());
 //
 //		modules.addModule(new MockTurnTable());
 //
-		modules.addModule(new GrabberControlCommand());
+//		modules.addModule(new GrabberControlCommand());
 //		modules.addModule(new TurnTableControlCommand());
-//		modules.addModule(new ElevatorControlCommand());
+		modules.addModule(new ElevatorControlCommand());
 		
 //		modules.addModule(new SeanControlScheme(new XboxController(0)));
 		
@@ -113,15 +111,15 @@ public class Robot extends HybridRobot
 		modules.addModule(new AutoTurnWithPOV(driverController));
 //		
 		XboxController coDriverController = driverController;
-		modules.addModule(new ControlGrabberWithXbox(coDriverController, Hand.kRight));
+//		modules.addModule(new ControlGrabberWithXbox(coDriverController, Hand.kRight, false));
+		modules.addModule(new ControlTravellerWithXbox(coDriverController, Hand.kRight));
+		
+//		modules.addModule(new TestAutonomous());
 //		
-//		modules.addModule(new CenterSameSideAutonomous());
-//		modules.addModule(new CenterDifferentSideAutonomous());
-//		modules.addModule(new SideAltSwitchPreferentialScaleAutonomous());
-//		modules.addModule(new SideAltSwitchScaleAutonomous());
-//		modules.addModule(new SidePreferentialSwitchAltScaleAutonomous());
-//		modules.addModule(new SidePreferentialSwitchScaleAutonomous());
-//		modules.addModule(new CrossAutoLine());
+//		modules.addModule(new CenterSwitchAutonomous());
+//		modules.addModule(new SideAltSwitchAutonomous());
+//		modules.addModule(new SidePreferentialSwitchAutonomous());
+//		modules.addModule(new CrossAutoLineAutonomous());
 //		modules.addModule(autonomous = new AutoSwitcher());
 		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");

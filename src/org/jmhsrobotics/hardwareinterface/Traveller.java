@@ -6,4 +6,7 @@ public interface Traveller
 	public void reset();
 	public double getHeight();
 	public boolean isBottomLimitSwitchPressed();
+	public boolean isTopLimitSwitchPressed();
+	void driveTo(double target);
+	void printStuff();
 }
