@@ -18,16 +18,17 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 
 	private final static int CALLIBRATION_TIMEOUT = 1500;
 	
-	private final static int TOWER_HEIGHT = 12077;
+	private final static int TOWER_HEIGHT = 12000;
 	
-	private final static double BUFFER_EXP = .5;
-	private final static double MAX_SAFE_SPEED = .2;
+	private final static double BUFFER_EXP = .8;
 	
-	private final static int BOTTOM_BUFFER_ZONE = 2000;
-	private final static int BOTTOM_STOP_HEIGHT = 600;
+	private final static double MAX_SAFE_SPEED_DOWN = .2;
+	private final static int BOTTOM_BUFFER_ZONE = 4000;
+	private final static int BOTTOM_STOP_HEIGHT = 200;
 	
+	private final static double MAX_SAFE_SPEED_UP = .4;
 	private final static int TOP_BUFFER_ZONE = 2000;
-	private final static int TOP_STOP_HEIGHT = 600;
+	private final static int TOP_STOP_HEIGHT = 0;
 	
 	private final static double ANTI_SKIP_RAMP_RATE = 0.2;
 	
@@ -129,11 +130,9 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 		});
 		
 		setPidForGoingDown();
-		
-		calibrated = true;
-		error = true;
 	}
 	
+	@SuppressWarnings("unused")
 	@Override
 	protected void execute()
 	{	
@@ -203,24 +202,24 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 				
 				double lowerRangeStart = Math.pow(BOTTOM_STOP_HEIGHT, BUFFER_EXP);
 				double lowerRangeEnd = Math.pow(BOTTOM_BUFFER_ZONE + BOTTOM_STOP_HEIGHT, BUFFER_EXP);
-				double lowerSpeedConstraint = RobotMath.linearMap(adjustedHeight, lowerRangeStart, lowerRangeEnd, 0, -1);
-				if(lowerSpeedConstraint > -MAX_SAFE_SPEED)
-					lowerSpeedConstraint = -MAX_SAFE_SPEED;
+				double lowerSpeedConstraint = RobotMath.linearMap(adjustedHeight, lowerRangeStart, lowerRangeEnd, -MAX_SAFE_SPEED_DOWN, -1);
+				if(lowerSpeedConstraint > -MAX_SAFE_SPEED_DOWN)
+					lowerSpeedConstraint = -MAX_SAFE_SPEED_DOWN;
 				if(height < BOTTOM_STOP_HEIGHT)
 					lowerSpeedConstraint = 0;
 				
 				double upperRangeStart = Math.pow(TOWER_HEIGHT - TOP_STOP_HEIGHT, BUFFER_EXP);
 				double upperRangeEnd = Math.pow(TOWER_HEIGHT - TOP_STOP_HEIGHT - TOP_BUFFER_ZONE, BUFFER_EXP);
-				double upperSpeedConstraint = RobotMath.linearMap(adjustedHeight, upperRangeStart, upperRangeEnd, 0, 1);
-				if(upperSpeedConstraint < MAX_SAFE_SPEED)
-					upperSpeedConstraint = MAX_SAFE_SPEED;
-				if(height > TOWER_HEIGHT - TOP_STOP_HEIGHT)
+				double upperSpeedConstraint = RobotMath.linearMap(adjustedHeight, upperRangeStart, upperRangeEnd, MAX_SAFE_SPEED_UP, 1);
+				if(upperSpeedConstraint < MAX_SAFE_SPEED_UP)
+					upperSpeedConstraint = MAX_SAFE_SPEED_UP;
+				if(TOP_STOP_HEIGHT > 0 && height > TOWER_HEIGHT - TOP_STOP_HEIGHT)
 					upperSpeedConstraint = 0;
 				
 				if(error)
 				{
-					upperSpeedConstraint = MAX_SAFE_SPEED;
-					lowerSpeedConstraint = -MAX_SAFE_SPEED;
+					upperSpeedConstraint = MAX_SAFE_SPEED_UP;
+					lowerSpeedConstraint = -MAX_SAFE_SPEED_DOWN;
 				}
 				
 				speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
@@ -230,7 +229,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 		}
 		else
 		{
-			traveller.drive(-MAX_SAFE_SPEED);
+			traveller.drive(-MAX_SAFE_SPEED_DOWN);
 			++calibrationTime;
 			
 			if(calibrationTime > CALLIBRATION_TIMEOUT)
@@ -249,7 +248,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	
 	private void setPidForGoingDown()
 	{
-		traveller.setPID(.2, 0.001, 0.03, 500, 50, .1, .8);
+		traveller.setPID(.4, 0.002, 0.03, 500, 50, .1, .8);
 		pidSetForGoingUp = false;
 	}
 	

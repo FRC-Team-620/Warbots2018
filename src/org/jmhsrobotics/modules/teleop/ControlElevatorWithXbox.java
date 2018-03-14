@@ -30,6 +30,6 @@ public class ControlElevatorWithXbox extends ControlScheme
 			elevator.setPneumatics(!elevator.isPneumaticsExtended());
 		
 		if(xbox.getBButtonPressed())
-			elevator.goToRaw(7000, false);
+			elevator.goToRaw(2000, false);
 	}
 }

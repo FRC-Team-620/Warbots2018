@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class GrabberControlCommand extends CommandModule implements GrabberController, PerpetualCommand
 {
-	private final static int INJECTION_TIMEOUT = (int)(1.5 * 50);
+	private final static int INJECTION_TIMEOUT = (int)(2.5 * 50);
 	private final static int EJECTION_TIME = (int)(1 * 50);
 
 	private @Submodule Optional<SubsystemManager> subsystems;
