@@ -22,6 +22,9 @@ public abstract class DriveController extends CommandModule
 	public abstract void setTarget(Angle angle);
 	public abstract void setRelativeTarget(Angle angle);
 	
+	public abstract Point getTargetPoint();
+	public abstract Angle getTargetAngle();
+	
 	public void setTarget(Point point)
 	{
 		setTarget(point, false);

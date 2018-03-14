@@ -21,7 +21,6 @@ public class SideAltScaleAutonomous extends AutonomousCommand
 		Point atScale = beforeScale.plus(new Point(34.66, Angle.fromDegrees(90)));
 		AutoStrategy moveAndRaise = strategy.createFork();
 		moveAndRaise.addParallel(new DriveTo(atScale, 6));
-		moveAndRaise.addParallel(new RaiseTraveller(ElevatorController.Position.scaleMedium));
 		
 		strategy.addSequential(new LowerGrabber());
 		strategy.addSequential(new TimedCubeEject());

@@ -15,29 +15,38 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class ElevatorControlCommand extends CommandModule implements PerpetualCommand, ElevatorController
 {
 	private final static String DATA_FILE = "elevator";
+
+	private final static int CALLIBRATION_TIMEOUT = 1500;
 	
-	private static int TOWER_HEIGHT = 12077;
+	private final static int TOWER_HEIGHT = 12077;
 	
-	private static double BUFFER_EXP = 3;
-	private static double MAX_SAFE_SPEED = .2;
+	private final static double BUFFER_EXP = .5;
+	private final static double MAX_SAFE_SPEED = .2;
 	
-	private static int BOTTOM_BUFFER_ZONE = 2000;
-	private static int LOWER_STOP_HEIGHT = 600;
+	private final static int BOTTOM_BUFFER_ZONE = 2000;
+	private final static int BOTTOM_STOP_HEIGHT = 600;
 	
-	private static int TOP_BUFFER_ZONE = 2000;
+	private final static int TOP_BUFFER_ZONE = 2000;
+	private final static int TOP_STOP_HEIGHT = 600;
+	
+	private final static double ANTI_SKIP_RAMP_RATE = 0.2;
 	
 	private @Submodule Optional<PersistantDataModule> fileSystem;
 	private @Submodule Traveller traveller;
 	private @Submodule Tower pneumatics;
 	
+	private double targetTravellerSpeed;
 	private double travellerSpeed;
 	private boolean pneumaticsExtended;
 	private boolean climbing;
 	
 	private boolean error;
 	private boolean calibrated;
+	private int calibrationTime;
 	
 	private boolean hasTarget;
+	
+	private boolean pidSetForGoingUp;
 	
 	@Override
 	public void reset()
@@ -73,7 +82,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	{
 		if(speed != 0)
 			hasTarget = false;
-		travellerSpeed = speed;
+		targetTravellerSpeed = speed;
 	}
 	
 	@Override
@@ -98,6 +107,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	protected void initialize()
 	{
 		calibrated = false;
+		calibrationTime = 0;
 		climbing = false;
 		pneumaticsExtended = false;
 		
@@ -117,6 +127,11 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 				e.printStackTrace();
 			}
 		});
+		
+		setPidForGoingDown();
+		
+		calibrated = true;
+		error = true;
 	}
 	
 	@Override
@@ -141,12 +156,14 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 		}
 		else if(traveller.isTopLimitSwitchPressed())
 		{
-//			traveller.reset(TOWER_HEIGHT);
-//			calibrated = true;
+			traveller.reset(TOWER_HEIGHT);
+			calibrated = true;
 		}
 		
 		if (calibrated)
 		{
+			calibrationTime = 0;
+			
 			if(climbing)
 			{
 				if(pneumatics.isExtended())
@@ -165,41 +182,75 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 					pneumatics.lower();
 			}
 			
-			double height = traveller.getHeight();
-			double speed = travellerSpeed;
-			
-			double adjustedHeight = Math.pow(height, BUFFER_EXP);
-			
-			double lowerRangeStart = 0;
-			double lowerRangeEnd = Math.pow(BOTTOM_BUFFER_ZONE, BUFFER_EXP);
-			double lowerSpeedConstraint = RobotMath.linearMap(adjustedHeight, lowerRangeStart, lowerRangeEnd, 0, -1);
-			if(lowerSpeedConstraint > -MAX_SAFE_SPEED)
-				lowerSpeedConstraint = -MAX_SAFE_SPEED;
-			if(height < LOWER_STOP_HEIGHT)
-				lowerSpeedConstraint = 0;
-			
-			double upperRangeStart = Math.pow(TOWER_HEIGHT, BUFFER_EXP);
-			double upperRangeEnd = Math.pow(TOWER_HEIGHT - TOP_BUFFER_ZONE, BUFFER_EXP);
-			double upperSpeedConstraint = RobotMath.linearMap(adjustedHeight, upperRangeStart, upperRangeEnd, 0, 1);
-			if(upperSpeedConstraint < MAX_SAFE_SPEED)
-				upperSpeedConstraint = MAX_SAFE_SPEED;
-			
-			upperSpeedConstraint = 1;
-			lowerSpeedConstraint = -1;
-			
-			if(error)
+			if(hasTarget)
 			{
-				upperSpeedConstraint = MAX_SAFE_SPEED;
-				lowerSpeedConstraint = -MAX_SAFE_SPEED;
+				if (traveller.getError() > 0 && !pidSetForGoingUp)
+					setPidForGoingUp();
+				else if (traveller.getError() < 0 && pidSetForGoingUp)
+					setPidForGoingDown();
 			}
-			
-			speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
-
-			if(!hasTarget)
+			else
+			{
+				if (traveller.getMovementRate() < 0 && targetTravellerSpeed - travellerSpeed > ANTI_SKIP_RAMP_RATE)
+					travellerSpeed += ANTI_SKIP_RAMP_RATE;
+				else
+					travellerSpeed = targetTravellerSpeed;
+				
+				double height = traveller.getHeight();
+				double speed = travellerSpeed;
+				
+				double adjustedHeight = Math.pow(height, BUFFER_EXP);
+				
+				double lowerRangeStart = Math.pow(BOTTOM_STOP_HEIGHT, BUFFER_EXP);
+				double lowerRangeEnd = Math.pow(BOTTOM_BUFFER_ZONE + BOTTOM_STOP_HEIGHT, BUFFER_EXP);
+				double lowerSpeedConstraint = RobotMath.linearMap(adjustedHeight, lowerRangeStart, lowerRangeEnd, 0, -1);
+				if(lowerSpeedConstraint > -MAX_SAFE_SPEED)
+					lowerSpeedConstraint = -MAX_SAFE_SPEED;
+				if(height < BOTTOM_STOP_HEIGHT)
+					lowerSpeedConstraint = 0;
+				
+				double upperRangeStart = Math.pow(TOWER_HEIGHT - TOP_STOP_HEIGHT, BUFFER_EXP);
+				double upperRangeEnd = Math.pow(TOWER_HEIGHT - TOP_STOP_HEIGHT - TOP_BUFFER_ZONE, BUFFER_EXP);
+				double upperSpeedConstraint = RobotMath.linearMap(adjustedHeight, upperRangeStart, upperRangeEnd, 0, 1);
+				if(upperSpeedConstraint < MAX_SAFE_SPEED)
+					upperSpeedConstraint = MAX_SAFE_SPEED;
+				if(height > TOWER_HEIGHT - TOP_STOP_HEIGHT)
+					upperSpeedConstraint = 0;
+				
+				if(error)
+				{
+					upperSpeedConstraint = MAX_SAFE_SPEED;
+					lowerSpeedConstraint = -MAX_SAFE_SPEED;
+				}
+				
+				speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
+				
 				traveller.drive(speed);
+			}
 		}
 		else
+		{
 			traveller.drive(-MAX_SAFE_SPEED);
+			++calibrationTime;
+			
+			if(calibrationTime > CALLIBRATION_TIMEOUT)
+			{
+				calibrated = true;
+				error = true;
+			}
+		}
+	}
+	
+	private void setPidForGoingUp()
+	{
+		traveller.setPID(.8, 0.005, 0, 500, 50, .1, 1);
+		pidSetForGoingUp = true;
+	}
+	
+	private void setPidForGoingDown()
+	{
+		traveller.setPID(.2, 0.001, 0.03, 500, 50, .1, .8);
+		pidSetForGoingUp = false;
 	}
 	
 	@Override
@@ -215,8 +266,11 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 		{
 			try
 			{
-				data.write(DATA_FILE, new String[] { String.valueOf(traveller.getHeight()) });
-				System.out.println("Successfully saved talon state");
+				if (!error)
+				{
+					data.write(DATA_FILE, new String[] { String.valueOf(traveller.getHeight()) });
+					System.out.println("Successfully saved talon state");
+				}
 			}
 			catch(Exception e)
 			{

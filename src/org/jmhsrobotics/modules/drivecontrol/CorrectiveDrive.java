@@ -228,4 +228,16 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		
 		driveRaw(speed.get(), turn.get());
 	}
+
+	@Override
+	public Point getTargetPoint()
+	{
+		return targetPoint.get();
+	}
+
+	@Override
+	public Angle getTargetAngle()
+	{
+		return targetAngle.get();
+	}
 }
