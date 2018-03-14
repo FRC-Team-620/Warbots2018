@@ -21,8 +21,8 @@ public class MoveAndClimbWithXbox extends ControlScheme
 	private final static OutputSmoother ELEVATOR_SPEED = new DoubleDerivativeOutputSmoother(.7, .02, .02);
 	private final static OutputSmoother ELEVATOR_TURN = new DoubleDerivativeOutputSmoother(.7, .06, Double.POSITIVE_INFINITY);
 	
-	private final static OutputSmoother SLOW_ELEVATOR_SPEED = new DoubleDerivativeOutputSmoother(.3, .03, .05);
-	private final static OutputSmoother SLOW_ELEVATOR_TURN = new DoubleDerivativeOutputSmoother(.3, .08, Double.POSITIVE_INFINITY);
+	private final static OutputSmoother SLOW_ELEVATOR_SPEED = new DoubleDerivativeOutputSmoother(.4, .03, .05);
+	private final static OutputSmoother SLOW_ELEVATOR_TURN = new DoubleDerivativeOutputSmoother(.5, .08, Double.POSITIVE_INFINITY);
 	
 	private @Submodule DriveController drive;
 	private @Submodule ElevatorController elevator;
@@ -70,6 +70,9 @@ public class MoveAndClimbWithXbox extends ControlScheme
 		
 		if(xbox.getStartButtonPressed())
 			elevator.climbFullPower();
+		
+		if(xbox.getYButtonPressed())
+			elevator.setPneumatics(!elevator.isPneumaticsExtended());
 		
 		if(xbox.getBackButtonPressed())
 		{

@@ -21,16 +21,16 @@ public class ControlGrabberWithXbox extends ControlScheme
 	private @Submodule GrabberController grabber;
 
 	private XboxController xbox;
-	private Hand side;
-	private boolean useStick;
+	private Hand joystickSide;
+	private Hand ejectSide;
 
 	private int hasPrismTimer;
 
-	public ControlGrabberWithXbox(XboxController xbox, Hand side, boolean useStick)
+	public ControlGrabberWithXbox(XboxController xbox, Hand joystickSide, Hand ejectSide)
 	{
 		this.xbox = xbox;
-		this.side = side;
-		this.useStick = useStick;
+		this.joystickSide = joystickSide;
+		this.ejectSide = ejectSide;
 	}
 
 	@Override
@@ -43,10 +43,10 @@ public class ControlGrabberWithXbox extends ControlScheme
 	protected void execute()
 	{
 		double wheelSpeed, wheelJank;
-		if(useStick)
+		if(joystickSide != null)
 		{
-			wheelSpeed = -deadZone(xbox.getY(side), .2, .1);
-			wheelJank = deadZone(xbox.getX(side), .2, .1);
+			wheelSpeed = -deadZone(xbox.getY(joystickSide), .2, .1);
+			wheelJank = deadZone(xbox.getX(joystickSide), .2, .1);
 		}
 		else
 		{
@@ -90,7 +90,7 @@ public class ControlGrabberWithXbox extends ControlScheme
 		}
 		else if (armsAreClosing(left, right))
 			grabber.intake();
-		else if (xbox.getBumperPressed(side))
+		else if (xbox.getBumperPressed(ejectSide))
 		{
 			grabber.extake();
 			hasPrismTimer = -INITIAL_EJECTION_TIME;
@@ -111,6 +111,9 @@ public class ControlGrabberWithXbox extends ControlScheme
 				grabber.setWheels(wheelSpeed, wheelJank);
 		}
 
+		if(xbox.getAButtonPressed())
+			grabber.setRaised(!grabber.isRaised());
+		
 		if (xbox.getBackButton())
 			grabber.cancelAutomaticMovement();
 	}

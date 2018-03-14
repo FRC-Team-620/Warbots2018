@@ -16,15 +16,15 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 {
 	private final static String DATA_FILE = "elevator";
 	
-	private static int TOWER_HEIGHT = 12140;
+	private static int TOWER_HEIGHT = 12077;
 	
 	private static double BUFFER_EXP = 3;
 	private static double MAX_SAFE_SPEED = .2;
 	
-	private static int BOTTOM_BUFFER_ZONE = 1500;
-	private static int LOWER_STOP_HEIGHT = 300;
+	private static int BOTTOM_BUFFER_ZONE = 2000;
+	private static int LOWER_STOP_HEIGHT = 600;
 	
-	private static int TOP_BUFFER_ZONE = 1500;
+	private static int TOP_BUFFER_ZONE = 2000;
 	
 	private @Submodule Optional<PersistantDataModule> fileSystem;
 	private @Submodule Traveller traveller;
@@ -122,10 +122,9 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	protected void execute()
 	{	
-		traveller.printStuff();
-		
-		System.out.println("Height: " + traveller.getHeight());
-		System.out.println("Bot: " + traveller.isBottomLimitSwitchPressed() + " Top: " + traveller.isTopLimitSwitchPressed());
+		System.out.println("HEIGHT: " + traveller.getHeight());
+		System.out.println("LOWER: " + traveller.isBottomLimitSwitchPressed());
+		System.out.println("UPPER: " + traveller.isTopLimitSwitchPressed());
 		
 		if(traveller.isBottomLimitSwitchPressed())
 		{
@@ -142,8 +141,8 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 		}
 		else if(traveller.isTopLimitSwitchPressed())
 		{
-			traveller.reset(TOWER_HEIGHT);
-			calibrated = true;
+//			traveller.reset(TOWER_HEIGHT);
+//			calibrated = true;
 		}
 		
 		if (calibrated)
@@ -185,6 +184,9 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 			if(upperSpeedConstraint < MAX_SAFE_SPEED)
 				upperSpeedConstraint = MAX_SAFE_SPEED;
 			
+			upperSpeedConstraint = 1;
+			lowerSpeedConstraint = -1;
+			
 			if(error)
 			{
 				upperSpeedConstraint = MAX_SAFE_SPEED;
@@ -193,13 +195,8 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 			
 			speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
 
-			if(hasTarget)
-				System.out.println("Has Target");
-			else
-			{
-				System.out.println("Driving at " + speed);
+			if(!hasTarget)
 				traveller.drive(speed);
-			}
 		}
 		else
 			traveller.drive(-MAX_SAFE_SPEED);
@@ -219,6 +216,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 			try
 			{
 				data.write(DATA_FILE, new String[] { String.valueOf(traveller.getHeight()) });
+				System.out.println("Successfully saved talon state");
 			}
 			catch(Exception e)
 			{

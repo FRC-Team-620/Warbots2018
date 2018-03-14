@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 
 public class MockDrive extends PlainSendable implements Module, DriveMechanism
 {
+	private double speed, turn;
+	
 	@Override
 	public void initSendable(SendableBuilder builder)
 	{
@@ -16,9 +18,15 @@ public class MockDrive extends PlainSendable implements Module, DriveMechanism
 	}
 
 	@Override
+	@SuppressWarnings("hiding")
 	public void drive(double speed, double turn)
 	{
-//		System.out.println("Driving " + speed + " " + turn);
+		if(this.speed == speed && this.turn == turn)
+			return;
+		
+		System.out.println("Driving " + speed + " " + turn);
+		this.speed = speed;
+		this.turn = turn;
 	}
 
 	@Override

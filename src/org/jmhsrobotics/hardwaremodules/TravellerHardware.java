@@ -46,12 +46,6 @@ public class TravellerHardware extends PlainSendable implements Module, Travelle
 	}
 	
 	@Override
-	public void printStuff()
-	{
-		System.out.println("Error: " + motor.getClosedLoopError(0));
-	}
-	
-	@Override
 	public int getHeight()
 	{
 		return motor.getSensorCollection().getQuadraturePosition();
