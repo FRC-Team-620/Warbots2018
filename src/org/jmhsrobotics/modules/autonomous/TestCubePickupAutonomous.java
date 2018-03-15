@@ -9,6 +9,6 @@ public class TestCubePickupAutonomous extends AutonomousCommand
 	@Override
 	protected void loadPath(AutoStrategy strategy)
 	{
-		strategy.addSequential(new PickUpCube(new Point(0, 60)));
+		strategy.addSequential(new PickUpCube(new Point(0, 0)));
 	}
 }

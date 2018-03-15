@@ -18,10 +18,9 @@ import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwareinterface.GrabberController;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
-import org.jmhsrobotics.hardwaremodules.PneumaticCompressor;
+import org.jmhsrobotics.hardwaremodules.PWMDriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.TravellerHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
-import org.jmhsrobotics.mockhardware.MockDrive;
 import org.jmhsrobotics.mockhardware.MockGrabberPneumatics;
 import org.jmhsrobotics.mockhardware.MockGrabberWheels;
 import org.jmhsrobotics.mockhardware.MockTower;
@@ -29,17 +28,14 @@ import org.jmhsrobotics.modules.ElevatorControlCommand;
 import org.jmhsrobotics.modules.GrabberControlCommand;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
-import org.jmhsrobotics.modules.autonomous.AutoPlan;
-import org.jmhsrobotics.modules.autonomous.CenterSwitchAutonomous;
-import org.jmhsrobotics.modules.autonomous.CrossAutoLineAutonomous;
-import org.jmhsrobotics.modules.autonomous.SideAltSwitchAutonomous;
-import org.jmhsrobotics.modules.autonomous.SidePreferentialSwitchAutonomous;
-import org.jmhsrobotics.modules.autonomous.SwitchAutoSwitcher;
+import org.jmhsrobotics.modules.autonomous.TestCubePickupAutonomous;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
+import org.jmhsrobotics.modules.teleop.AutoTurnWithPOV;
 import org.jmhsrobotics.modules.teleop.ControlElevatorWithXbox;
 import org.jmhsrobotics.modules.teleop.ControlGrabberWithXbox;
+import org.jmhsrobotics.modules.teleop.MoveAndClimbWithXbox;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.SPI;
@@ -58,7 +54,8 @@ public class Robot extends HybridRobot
 {
 	private ModuleManager modules;
 	private SubsystemManager subsystems;
-	private AutoPlan autonomous;
+//	private AutoPlan autonomous;
+	private Command auto;
 
 	@Override
 	public void robotInit()
@@ -74,8 +71,8 @@ public class Robot extends HybridRobot
 		subsystems.addEmptySubsystem("TurnTable");
 		subsystems.addEmptySubsystem("Grabber");
 
-		modules.addModule(new MockDrive());
-//		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1)); //TODO Real bot
+//		modules.addModule(new MockDrive());
+		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1)); //TODO Real bot
 //		modules.addModule(new PWMDriveTrainHardware(1, 3, 2, 0)); //Test bot
 //		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false)); //TODO Real bot
@@ -90,7 +87,7 @@ public class Robot extends HybridRobot
 		modules.addModule(new Localization(new LinearAccelRiemannInterpolator(100)));
 		modules.addModule(new CorrectiveDrive());
 		
-		modules.addModule(new PneumaticCompressor(6));
+//		modules.addModule(new PneumaticCompressor(6));
 		
 		modules.addModule(new MockGrabberPneumatics());
 		modules.addModule(new MockGrabberWheels());
@@ -111,7 +108,7 @@ public class Robot extends HybridRobot
 //		modules.addModule(new MoveAndClimbWithXbox(driverController, Hand.kLeft));
 //		modules.addModule(new AutoTurnWithPOV(driverController));
 
-//		XboxController coDriverController = driverController;
+//		XboxController coDriverController = new XboxController(1);
 //		modules.addModule(new ControlGrabberWithXbox(coDriverController, Hand.kLeft, Hand.kLeft));
 //		modules.addModule(new ControlElevatorWithXbox(coDriverController, Hand.kRight));
 		
@@ -124,6 +121,8 @@ public class Robot extends HybridRobot
 //		modules.addModule(autonomous = new SwitchAutoSwitcher());
 		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");
+		
+		auto = new TestCubePickupAutonomous();
 	}
 
 	@Override
@@ -131,7 +130,8 @@ public class Robot extends HybridRobot
 	{
 		modules.getModule(GrabberController.class).get().setRaised(false);
 		activate();
-		autonomous.start();
+//		autonomous.start();
+		auto.start();
 	}
 
 	@Override
