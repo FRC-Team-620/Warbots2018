@@ -40,6 +40,7 @@ public interface ElevatorController
 	public void start();
 	public void cancel();
 	public void goTo(Position position);
+	public boolean onTarget();
 	public Position getCurrentLifterPosition();
 	public void goToRaw(int linearHeight, boolean raisePneumatics);
 	public void manualDrive(double speed);

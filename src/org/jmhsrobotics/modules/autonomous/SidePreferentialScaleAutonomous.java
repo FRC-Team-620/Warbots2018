@@ -2,7 +2,6 @@ package org.jmhsrobotics.modules.autonomous;
 
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
-import org.jmhsrobotics.hardwareinterface.ElevatorController;
 
 public class SidePreferentialScaleAutonomous extends AutonomousCommand
 {

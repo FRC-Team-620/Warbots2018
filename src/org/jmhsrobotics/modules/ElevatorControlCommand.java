@@ -18,6 +18,8 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 
 	private final static int CALLIBRATION_TIMEOUT = 1500;
 	
+	private final static int ALLOWABLE_SETPOINT_ERROR = 50;
+	
 	private final static int TOWER_HEIGHT = 12077;
 	
 	private final static double BUFFER_EXP = .5;
@@ -75,6 +77,12 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 		setPneumatics(raisePneumatics);
 		traveller.driveTo(linearHeight);
 		hasTarget = true;
+	}
+	
+	@Override
+	public boolean onTarget()
+	{
+		return traveller.getError() <= ALLOWABLE_SETPOINT_ERROR;
 	}
 
 	@Override
@@ -243,13 +251,13 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	
 	private void setPidForGoingUp()
 	{
-		traveller.setPID(.8, 0.005, 0, 500, 50, .1, 1);
+		traveller.setPID(.8, 0.005, 0, 500, ALLOWABLE_SETPOINT_ERROR, .1, 1);
 		pidSetForGoingUp = true;
 	}
 	
 	private void setPidForGoingDown()
 	{
-		traveller.setPID(.2, 0.001, 0.03, 500, 50, .1, .8);
+		traveller.setPID(.2, 0.001, 0.03, 500, ALLOWABLE_SETPOINT_ERROR, .1, .8);
 		pidSetForGoingUp = false;
 	}
 	
