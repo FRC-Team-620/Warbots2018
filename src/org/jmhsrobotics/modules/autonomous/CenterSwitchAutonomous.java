@@ -8,10 +8,21 @@ public class CenterSwitchAutonomous extends AutonomousCommand
 	@Override
 	protected void loadPath(AutoStrategy strategy)
 	{
-		Point firstTarget = new Point(116.306, Angle.fromDegrees(30.3)).plus(new Point(0, -12));
-		strategy.addSequential(firstTarget, 20);
-		strategy.addSequential(Angle.ZERO, Angle.fromDegrees(10));
+		AutoStrategy prepareToEject = strategy.createBranch();
+		
+		AutoStrategy prepareGrabber = prepareToEject.createBranch();
+		prepareGrabber.addSequential(new MoveElevator(7000, false));
+		prepareGrabber.addSequential(new SetGrabberRaised(false));
+		
+		prepareToEject.addParallel(prepareGrabber);
+		
+		Point firstTarget = new Point(116.306, Angle.fromDegrees(30.3)).plus(new Point(12, -12));
+		prepareToEject.addSequential(firstTarget, 20);
+		prepareToEject.addSequential(Angle.ZERO, Angle.fromDegrees(10));
+		
+		strategy.addSequential(prepareToEject);
+		
 		strategy.addSequential(new TimedDrive(2));
-		strategy.addSequential(new TimedCubeEject());
+		strategy.addSequential(new CubeDrop());		
 	}
 }

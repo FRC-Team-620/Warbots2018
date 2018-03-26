@@ -5,13 +5,22 @@ import org.jmhsrobotics.hardwareinterface.ElevatorController;
 
 public class MoveElevator extends PathNode
 {
-	private final static int TIME_TO_RAISE_PISTONS = 5;
+	private final static double TIME_TO_RAISE_PISTONS = 2.5;
 	
 	private @Submodule ElevatorController elevator;
 	
+	private boolean pistons;
+	private int linearHeight;
 	private boolean changingPistons;
 	
 	public MoveElevator(int linearHeight, boolean pistons)
+	{
+		this.linearHeight = linearHeight;
+		this.pistons = pistons;
+	}
+	
+	@Override
+	protected void initialize()
 	{
 		changingPistons = pistons != elevator.isPneumaticsExtended();
 		elevator.goToRaw(linearHeight, pistons);

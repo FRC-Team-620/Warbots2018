@@ -7,7 +7,7 @@ import org.jmhsrobotics.core.modulesystem.Submodule;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class SwitchAutoSwitcher extends AutoPlan
+public class TestAutoSwitching extends AutoPlan
 {
 	private @Submodule CenterSwitchAutonomous strategyCenter;
 	private @Submodule SidePreferentialSwitchAutonomous strategySameSide;
@@ -30,6 +30,9 @@ public class SwitchAutoSwitcher extends AutoPlan
 			StartingPosition position = getStartingPosition();
 			boolean onLeft = fieldLayout.isSwitchOnLeft();
 
+			System.out.println("Switch On Left: " + fieldLayout.isSwitchOnLeft());
+			System.out.println("Starting Position: " + position);
+			
 			AutonomousCommand auto;
 			switch (position)
 			{
@@ -55,14 +58,12 @@ public class SwitchAutoSwitcher extends AutoPlan
 					auto = strategyError;
 					break;
 			}
-			currentAuto = Optional.of(auto);
-			auto.start();
+			
+			System.out.println("Selected auto: " + auto);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			strategyError.start();
-			currentAuto = Optional.of(strategyError);
 		}
 	}
 

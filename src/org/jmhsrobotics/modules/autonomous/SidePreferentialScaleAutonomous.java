@@ -8,17 +8,19 @@ public class SidePreferentialScaleAutonomous extends AutonomousCommand
 	@Override
 	protected void loadPath(AutoStrategy strategy)
 	{
-		Point beforeSwitch = new Point(96.083, Angle.fromDegrees(4.4));
-		strategy.addSequential(beforeSwitch, 24);
+		AutoStrategy prepareToEject = strategy.createBranch();
 		
-		Point afterSwitch = beforeSwitch.plus(new Point(101.68, Angle.ZERO));
-		strategy.addSequential(afterSwitch, 24);
+		prepareToEject.addParallel(new SetGrabberRaised(false));
+
+		strategy.addSequential(new Point(305.2, Angle.fromDegrees(-2.2)), 8);
 		
-		Point atScale = afterSwitch.plus(new Point(60.85, Angle.fromDegrees(-160.8)));
-		AutoStrategy moveAndRaise = strategy.createFork();
-		moveAndRaise.addParallel(new DriveTo(atScale, 6));
+		AutoStrategy turnAndRaise = prepareToEject.createBranch();
+		turnAndRaise.addParallel(new TurnTo(Angle.INVERSE_RIGHT, Angle.fromDegrees(10)));
+		turnAndRaise.addParallel(new MoveElevator(11000, true));
+		strategy.addSequential(turnAndRaise);
 		
-		strategy.addSequential(new LowerGrabber());
-		strategy.addSequential(new TimedCubeEject());
+		strategy.addSequential(prepareToEject);
+		
+		strategy.addSequential(new CubeEject());
 	}
 }

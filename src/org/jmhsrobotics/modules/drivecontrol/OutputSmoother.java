@@ -1,6 +1,6 @@
 package org.jmhsrobotics.modules.drivecontrol;
 
-public interface OutputSmoother
+public interface OutputSmoother extends Cloneable
 {
 	public void setTarget(double target);
 	public double getTarget();
@@ -8,4 +8,5 @@ public interface OutputSmoother
 	public void update();
 	public double get();
 	public void copyRelevantData(OutputSmoother oldOutputSmoother);
+	public OutputSmoother clone();
 }

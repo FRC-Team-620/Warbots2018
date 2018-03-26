@@ -39,12 +39,12 @@ public class PneumaticCompressor implements Module, PerpetualCommand
 	@Override
 	public void start()
 	{
-		compressor.setClosedLoopControl(true);
+		compressor.start();
 	}
 
 	@Override
 	public void cancel()
 	{
-		compressor.setClosedLoopControl(false);
+		compressor.stop();
 	}
 }

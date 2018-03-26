@@ -49,4 +49,10 @@ public class ConstraintOutputSmoother implements OutputSmoother
 		target = oldOutputSmoother.getTarget();
 		value = oldOutputSmoother.get();
 	}
+	
+	@Override
+	public OutputSmoother clone()
+	{
+		return new ConstraintOutputSmoother(max);
+	}
 }

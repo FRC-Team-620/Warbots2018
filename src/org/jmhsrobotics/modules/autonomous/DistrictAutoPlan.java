@@ -7,11 +7,11 @@ import org.jmhsrobotics.core.modulesystem.Submodule;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
-public class SwitchAutoSwitcher extends AutoPlan
+public class DistrictAutoPlan extends AutoPlan
 {
 	private @Submodule CenterSwitchAutonomous strategyCenter;
-	private @Submodule SidePreferentialSwitchAutonomous strategySameSide;
-	private @Submodule SideAltSwitchAutonomous strategyAltSide;
+	private @Submodule SidePreferentialScaleAutonomous strategySameSide;
+	private @Submodule SideAltScaleAutonomous strategyAltSide;
 	private @Submodule CrossAutoLineAutonomous strategyError;
 
 	private Optional<AutonomousCommand> currentAuto;
@@ -28,25 +28,24 @@ public class SwitchAutoSwitcher extends AutoPlan
 		{
 			FieldLayout fieldLayout = readFieldLayout();
 			StartingPosition position = getStartingPosition();
-			boolean onLeft = fieldLayout.isSwitchOnLeft();
 
 			AutonomousCommand auto;
 			switch (position)
 			{
 				case center:
-					if (onLeft)
+					if (fieldLayout.isSwitchOnLeft())
 						auto = strategyCenter;
 					else
 						auto = strategyCenter.flipField();
 					break;
 				case left:
-					if (onLeft)
+					if (fieldLayout.isScaleOnLeft())
 						auto = strategySameSide;
 					else
 						auto = strategyAltSide;
 					break;
 				case right:
-					if (onLeft)
+					if (fieldLayout.isScaleOnLeft())
 						auto = strategyAltSide.flipField();
 					else
 						auto = strategySameSide.flipField();

@@ -27,11 +27,9 @@ class AutoStrategy
 		linker.link(m);
 	}
 	
-	public AutoStrategy createFork()
+	public AutoStrategy createBranch()
 	{
-		CommandGroup fork = new CommandGroup();
-		commandGroup.addSequential(fork);
-		return new AutoStrategy(fork, transform, linker);
+		return new AutoStrategy(new CommandGroup(), transform, linker);
 	}
 	
 	public void addSequential(PathNode m)
@@ -71,5 +69,25 @@ class AutoStrategy
 	{
 		process(m);
 		commandGroup.addParallel(m, timeout);
+	}
+	
+	public void addSequential(AutoStrategy branch)
+	{
+		commandGroup.addSequential(branch.commandGroup);
+	}
+	
+	public void addParallel(AutoStrategy branch)
+	{
+		commandGroup.addParallel(branch.commandGroup);
+	}
+	
+	public void addSequential(AutoStrategy branch, double timeout)
+	{
+		commandGroup.addSequential(branch.commandGroup, timeout);
+	}
+	
+	public void addParallel(AutoStrategy branch, double timeout)
+	{
+		commandGroup.addParallel(branch.commandGroup, timeout);
 	}
 }

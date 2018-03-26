@@ -24,6 +24,7 @@ public abstract class AutonomousCommand extends CommandGroupModule
 	public final void onLink(Sublinker linker)
 	{
 		AutoStrategy path = new AutoStrategy(this, transform, linker);
+		System.out.println("Calling loadPath");
 		loadPath(path);
 	}
 	

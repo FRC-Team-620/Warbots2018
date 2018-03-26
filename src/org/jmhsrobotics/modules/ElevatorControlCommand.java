@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class ElevatorControlCommand extends CommandModule implements PerpetualCommand, ElevatorController
 {
+	private final static boolean PRINT_ENCODER_AND_SWITCH_DATA = false;
+	
 	private final static String DATA_FILE = "elevator";
 
 	private final static int CALLIBRATION_TIMEOUT = 1500;
@@ -24,11 +26,11 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	
 	private final static double BUFFER_EXP = .8;
 	
-	private final static double MAX_SAFE_SPEED_DOWN = .2;
+	private final static double MAX_SAFE_SPEED_DOWN = .3;
 	private final static int BOTTOM_BUFFER_ZONE = 4000;
 	private final static int BOTTOM_STOP_HEIGHT = 200;
 	
-	private final static double MAX_SAFE_SPEED_UP = .4;
+	private final static double MAX_SAFE_SPEED_UP = .5;
 	private final static int TOP_BUFFER_ZONE = 2000;
 	private final static int TOP_STOP_HEIGHT = 0;
 	
@@ -50,6 +52,8 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	private boolean hasTarget;
 	
 	private boolean pidSetForGoingUp;
+	
+	private int pistonActivations;
 	
 	@Override
 	public void reset()
@@ -97,6 +101,9 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	public void setPneumatics(boolean state)
 	{
+		if (pneumaticsExtended && !state)
+			++pistonActivations;
+		
 		pneumaticsExtended = state;
 	}
 
@@ -115,6 +122,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	protected void initialize()
 	{
+		pistonActivations = 0;
 		calibrated = false;
 		calibrationTime = 0;
 		climbing = false;
@@ -144,9 +152,12 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	protected void execute()
 	{	
-		System.out.println("HEIGHT: " + traveller.getHeight());
-		System.out.println("LOWER: " + traveller.isBottomLimitSwitchPressed());
-		System.out.println("UPPER: " + traveller.isTopLimitSwitchPressed());
+		if (PRINT_ENCODER_AND_SWITCH_DATA)
+		{
+			System.out.println("HEIGHT: " + traveller.getHeight());
+			System.out.println("LOWER: " + traveller.isBottomLimitSwitchPressed());
+			System.out.println("UPPER: " + traveller.isTopLimitSwitchPressed());
+		}
 		
 		if(traveller.isBottomLimitSwitchPressed())
 		{
@@ -232,6 +243,7 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 				
 				speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
 				
+				System.out.println("Driving " + speed);
 				traveller.drive(speed);
 			}
 		}
@@ -269,6 +281,8 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 	@Override
 	protected void end()
 	{
+		System.out.println("Piston Activations: " + pistonActivations);
+		
 		fileSystem.ifPresent(data ->
 		{
 			try

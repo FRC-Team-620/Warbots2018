@@ -7,14 +7,14 @@ import org.jmhsrobotics.hardwareinterface.ElevatorController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 
-public class ControlElevatorWithXbox extends ControlScheme
+public class JunElevatorControl extends ControlScheme
 {
 	private @Submodule ElevatorController elevator;
 
 	private XboxController xbox;
 	private Hand hand;
 	
-	public ControlElevatorWithXbox(XboxController xbox, Hand hand)
+	public JunElevatorControl(XboxController xbox, Hand hand)
 	{
 		this.xbox = xbox;
 		this.hand = hand;
@@ -26,10 +26,13 @@ public class ControlElevatorWithXbox extends ControlScheme
 		double y = -deadZone(xbox.getY(hand), .2, .1);
 		elevator.manualDrive(y);
 		
-		if(xbox.getYButtonPressed())
-			elevator.setPneumatics(!elevator.isPneumaticsExtended());
+		if(xbox.getBumperPressed(Hand.kRight))
+			elevator.setPneumatics(true);
+		
+		if(xbox.getXButtonPressed())
+			elevator.setPneumatics(false);
 		
 		if(xbox.getBButtonPressed())
-			elevator.goToRaw(2000, false);
+			elevator.goToRaw(7500, false);
 	}
 }

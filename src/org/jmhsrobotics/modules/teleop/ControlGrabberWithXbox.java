@@ -16,7 +16,7 @@ public class ControlGrabberWithXbox extends ControlScheme
 	private final static int AUTO_GRAB_DECAY_RATE = 2;
 	private final static int DROP_TIME = 50;
 	private final static int INITIAL_EJECTION_TIME = 5;
-	private final static double[] TRIGGER_ARM_THRESHOLDS = { 0.2, 0.8 };
+	private final static double[] TRIGGER_ARM_THRESHOLDS = { 0.01, 0.99 };
 
 	private @Submodule GrabberController grabber;
 

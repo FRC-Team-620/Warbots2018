@@ -16,14 +16,14 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class GrabberControlCommand extends CommandModule implements GrabberController, PerpetualCommand
 {
-	private final static int INJECTION_TIMEOUT = (int)(2.5 * 50);
-	private final static int EJECTION_TIME = (int)(1 * 50);
+	private final static int INJECTION_TIMEOUT = (int)(1.5 * 50);
+	private final static int EJECTION_TIME = (int)(3 * 50);
 
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule GrabberWheels wheels;
 	private @Submodule GrabberPneumatics pneumatics;
 
-	private boolean la, lw, ra, rw, raise;
+	private boolean la, lw, ra, rw, raise = true;
 	private double wheelSpeed, wheelJank;
 
 	private int injectionTimer;
@@ -44,11 +44,20 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 			++injectionTimer;
 			
 			if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
+			{
+				System.out.println("Internal cancel of intake for wheels");
 				cancelIntake();
+			}
 			else if (injectionTimer > INJECTION_TIMEOUT)
+			{
+				System.out.println("Internal cancel of intake for timeout");
 				cancelIntake();
+			}
 			else if (wheels.hasPrism())
+			{
+				System.out.println("Internal cancel of intake for prism");
 				cancelIntake();
+			}
 			else
 				wheels.set(-1, 0);
 		}
@@ -189,6 +198,8 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	{
 		if(injectionTimer == -1)
 			return;
+		
+		System.out.println("cancelling intake" + System.currentTimeMillis());
 		
 		injectionTimer = -1;
 		wheelSpeed = wheelJank = 0;

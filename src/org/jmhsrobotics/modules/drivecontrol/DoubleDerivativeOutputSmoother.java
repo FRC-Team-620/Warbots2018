@@ -130,4 +130,10 @@ public class DoubleDerivativeOutputSmoother extends PlainSendable implements Out
 		else
 			currentDerivative = 0;
 	}
+	
+	@Override
+	public OutputSmoother clone()
+	{
+		return new DoubleDerivativeOutputSmoother(maxValue, maxFirstDerivative, maxSecondDerivative);
+	}
 }

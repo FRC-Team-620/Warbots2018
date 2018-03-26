@@ -24,7 +24,7 @@ public class TowerHardware implements Module, Tower
 	@Override
 	public void raise()
 	{
-		System.out.println("raising");
+//		System.out.println("raising");
 		climbingSolenoid.set(false);
 		drivingSolenoid.set(true);
 	}
@@ -32,7 +32,7 @@ public class TowerHardware implements Module, Tower
 	@Override
 	public void lower()
 	{
-		System.out.println("lowering");
+//		System.out.println("lowering");
 		drivingSolenoid.set(false);
 	}
 
@@ -40,7 +40,7 @@ public class TowerHardware implements Module, Tower
 	public void climb()
 	{
 		lower();
-		System.out.println("climbing");
+//		System.out.println("climbing");
 		climbingSolenoid.set(true);
 	}
 

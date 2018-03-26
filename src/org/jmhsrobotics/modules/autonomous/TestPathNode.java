@@ -22,4 +22,10 @@ public class TestPathNode extends PathNode
 	{
 		return timeSinceInitialized() > time;
 	}
+	
+	@Override
+	protected void end()
+	{
+		System.out.println("Ending Test node: " + message);
+	}
 }

@@ -8,7 +8,7 @@ import org.jmhsrobotics.hardwareinterface.GrabberController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.XboxController;
 
-public class SeanControlScheme extends ControlScheme
+public class ReallyOldSeanControlScheme extends ControlScheme
 {
 	private final static double[] triggerArmThresholds = { 0.2, 1.2 };
 
@@ -18,7 +18,7 @@ public class SeanControlScheme extends ControlScheme
 	private XboxController xbox;
 	private int hasCubeTimer;
 
-	public SeanControlScheme(XboxController xbox)
+	public ReallyOldSeanControlScheme(XboxController xbox)
 	{
 		this.xbox = xbox;
 	}
