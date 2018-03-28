@@ -17,14 +17,14 @@ import org.jmhsrobotics.core.modulesystem.ModuleManager;
 import org.jmhsrobotics.core.modulesystem.PerpetualCommand;
 import org.jmhsrobotics.core.util.HybridRobot;
 import org.jmhsrobotics.hardwareinterface.GrabberController;
-import org.jmhsrobotics.hardwaremodules.GrabberPneumaticsHardware;
-import org.jmhsrobotics.hardwaremodules.GrabberWheelsHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
+import org.jmhsrobotics.hardwaremodules.NoRaiseGrabberPneumaticsHardware;
 import org.jmhsrobotics.hardwaremodules.PWMDriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.PneumaticCompressor;
-import org.jmhsrobotics.hardwaremodules.TowerHardware;
+import org.jmhsrobotics.hardwaremodules.SingleSparkGrabberWheelsHardware;
 import org.jmhsrobotics.hardwaremodules.TravellerHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
+import org.jmhsrobotics.mockhardware.MockTower;
 import org.jmhsrobotics.modules.ElevatorControlCommand;
 import org.jmhsrobotics.modules.GrabberControlCommand;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
@@ -43,8 +43,8 @@ import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
 import org.jmhsrobotics.modules.teleop.AutoTurnWithPOV;
 import org.jmhsrobotics.modules.teleop.ControlGrabberWithXbox;
+import org.jmhsrobotics.modules.teleop.JunElevatorControl;
 import org.jmhsrobotics.modules.teleop.MoveAndClimbWithXbox;
-import org.jmhsrobotics.modules.teleop.SeanElevatorControl;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -82,11 +82,11 @@ public class Robot extends HybridRobot
 		subsystems.addEmptySubsystem("Grabber");
 
 //		modules.addModule(new MockDrive());
-		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1)); //TODO Real bot
-//		modules.addModule(new PWMDriveTrainHardware(1, 3, 2, 0)); //Test bot
+//		modules.addModule(new PWMDriveTrainHardware(4, 7, 5, 1)); //TODO Real bot
+		modules.addModule(new PWMDriveTrainHardware(1, 3, 2, 0)); //Test bot
 //		modules.addModule(new DriveTrainHardware(1, 2, 3, 4));
-		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false)); //TODO Real bot
-//		modules.addModule(new WheelEncodersHardware(0, 1, true, 2, 3, false)); //Test bot
+//		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false)); //TODO Real bot
+		modules.addModule(new WheelEncodersHardware(0, 1, true, 2, 3, false)); //Test bot
 		
 		modules.addModule(new NavXHardware(SPI.Port.kMXP));
 
@@ -101,27 +101,27 @@ public class Robot extends HybridRobot
 		
 //		modules.addModule(new MockGrabberPneumatics());
 //		modules.addModule(new MockGrabberWheels());
-//		modules.addModule(new NoRaiseGrabberPneumaticsHardware(6,2,3,0,1)); //Test bot
-//		modules.addModule(new SingleSparkGrabberWheelsHardware(4, 4)); //Test bot
-		modules.addModule(new GrabberPneumaticsHardware(7, 0, 4, 3, 2, 1)); //TODO Real bot
-		modules.addModule(new GrabberWheelsHardware(6, 2, 5)); //TODO Real bot
+		modules.addModule(new NoRaiseGrabberPneumaticsHardware(6,2,3,0,1)); //Test bot
+		modules.addModule(new SingleSparkGrabberWheelsHardware(4, 4)); //Test bot
+//		modules.addModule(new GrabberPneumaticsHardware(7, 0, 4, 3, 2, 1)); //TODO Real bot
+//		modules.addModule(new GrabberWheelsHardware(6, 2, 5)); //TODO Real bot
 		
-		modules.addModule(new TowerHardware(6, 1, 0)); //TODO Real bot
-		modules.addModule(new TravellerHardware(5)); //TODO Real bot
-//		modules.addModule(new TravellerHardware(1)); //Test bot
-//		modules.addModule(new MockTower());
+//		modules.addModule(new TowerHardware(6, 1, 0)); //TODO Real bot
+//		modules.addModule(new TravellerHardware(5)); //TODO Real bot
+		modules.addModule(new TravellerHardware(1)); //Test bot
+		modules.addModule(new MockTower()); //Test bot
 
 		modules.addModule(new GrabberControlCommand());
 		modules.addModule(new ElevatorControlCommand());
 		
-//		XboxController driverController = new XboxController(0);
-//		modules.addModule(new MoveAndClimbWithXbox(driverController, Hand.kLeft));
-//		modules.addModule(new AutoTurnWithPOV(driverController));
+		XboxController driverController = new XboxController(0);
+		modules.addModule(new MoveAndClimbWithXbox(driverController, Hand.kLeft));
+		modules.addModule(new AutoTurnWithPOV(driverController));
 
-		XboxController coDriverController = new XboxController(0);
+		XboxController coDriverController = new XboxController(1);
 		modules.addModule(new ControlGrabberWithXbox(coDriverController, Hand.kLeft, Hand.kLeft));
-		modules.addModule(new SeanElevatorControl(coDriverController, Hand.kRight));
-//		modules.addModule(new JunElevatorControl(coDriverController, Hand.kRight));
+//		modules.addModule(new SeanElevatorControl(coDriverController, Hand.kRight));
+		modules.addModule(new JunElevatorControl(coDriverController, Hand.kRight));
 		
 		modules.addModule(new CenterSwitchAutonomous());
 		modules.addModule(new SideAltSwitchAutonomous());

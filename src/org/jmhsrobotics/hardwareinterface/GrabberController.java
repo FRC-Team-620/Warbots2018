@@ -28,4 +28,8 @@ public interface GrabberController
 	public void extake();
 	
 	public void cancelAutomaticMovement();
+
+	public boolean isIntaking();
+	
+	public boolean isExtaking();
 }

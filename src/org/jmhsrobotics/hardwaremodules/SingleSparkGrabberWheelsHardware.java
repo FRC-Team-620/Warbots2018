@@ -22,13 +22,13 @@ public class SingleSparkGrabberWheelsHardware implements Module, GrabberWheels
 	@Override
 	public void set(double speed, double jank)
 	{
-		controller.set(speed);
+		controller.set(.5 * speed);
 	}
 
 	@Override
 	public boolean hasPrism()
 	{
-		return button.get();
+		return !button.get();
 	}
 
 	@Override

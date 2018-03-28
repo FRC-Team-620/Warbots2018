@@ -33,12 +33,12 @@ public class SeanElevatorControl extends ControlScheme
 			elevator.setPneumatics(false);
 		
 		if(xbox.getBButtonPressed())
-			elevator.goToRaw(7500, elevator.isPneumaticsExtended());
+			elevator.goToRaw(7500);
 		
 		if(xbox.getXButtonPressed())
-			elevator.goToRaw(100, elevator.isPneumaticsExtended());
+			elevator.goToRaw(100);
 		
 		if(xbox.getPOV() == 0)
-			elevator.goToRaw(11000, elevator.isPneumaticsExtended());
+			elevator.goToRaw(11000);
 	}
 }

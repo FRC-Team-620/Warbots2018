@@ -7,6 +7,7 @@ import org.jmhsrobotics.hardwareinterface.GrabberController;
 import org.jmhsrobotics.hardwareinterface.GrabberController.Position;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class ControlGrabberWithXbox extends ControlScheme
@@ -15,7 +16,7 @@ public class ControlGrabberWithXbox extends ControlScheme
 	private final static int AUTO_GRAB_HOLD_TIME = 200;
 	private final static int AUTO_GRAB_DECAY_RATE = 2;
 	private final static int DROP_TIME = 50;
-	private final static int INITIAL_EJECTION_TIME = 5;
+	
 	private final static double[] TRIGGER_ARM_THRESHOLDS = { 0.01, 0.99 };
 
 	private @Submodule GrabberController grabber;
@@ -24,7 +25,14 @@ public class ControlGrabberWithXbox extends ControlScheme
 	private Hand joystickSide;
 	private Hand ejectSide;
 
-	private int hasPrismTimer;
+	private boolean holding;
+	
+	private int pushingCubeTimer;
+	private boolean overridingDriver;
+	private int overrideDriverTimer;
+	
+	private boolean dropping;
+	private int dropTimer;
 
 	public ControlGrabberWithXbox(XboxController xbox, Hand joystickSide, Hand ejectSide)
 	{
@@ -36,7 +44,13 @@ public class ControlGrabberWithXbox extends ControlScheme
 	@Override
 	protected void initialize()
 	{
-		hasPrismTimer = 0;
+		holding = grabber.hasPrism();
+		
+		pushingCubeTimer = 0;
+		overridingDriver = false;
+		overrideDriverTimer = 0;
+		dropping = false;
+		dropTimer = 0;
 	}
 
 	@Override
@@ -56,71 +70,118 @@ public class ControlGrabberWithXbox extends ControlScheme
 		Position left = getGrabberArmPosition(Hand.kLeft);
 		Position right = getGrabberArmPosition(Hand.kRight);
 
-		if (left != Position.contracted || right != Position.contracted)
+		int autoWheelSpeed = 0;
+		
+		if (open(left, right))
+		{
 			if (grabber.hasPrism())
 			{
-				if (hasPrismTimer < AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME)
-					++hasPrismTimer;
+				if (overridingDriver)
+				{
+					++overrideDriverTimer;
+					if(overrideDriverTimer > AUTO_GRAB_HOLD_TIME)
+					{
+						overrideDriverTimer = 0;
+						overridingDriver = false;
+					}
+				}
+				else if (holding)
+				{
+					dropping = true;
+					dropTimer = 0;
+				}
 				else
-					hasPrismTimer = AUTO_GRAB_TIME - DROP_TIME;
+				{
+					++pushingCubeTimer;
+					if(pushingCubeTimer > AUTO_GRAB_TIME)
+					{
+						holding = true;
+						pushingCubeTimer = 0;
+						overridingDriver = true;
+						overrideDriverTimer = 0;
+					}
+				}
 			}
-			else
-				hasPrismTimer = Math.max(hasPrismTimer - AUTO_GRAB_DECAY_RATE, 0);
-		else if (grabber.hasPrism() && hasPrismTimer >= 0)
-			hasPrismTimer = AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME;
-		else if (hasPrismTimer > 0)
-		{
-			grabber.intake();
-			hasPrismTimer = 0;
-		}
-
-		if (hasPrismTimer > AUTO_GRAB_TIME && hasPrismTimer < AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME)
-		{
-			System.out.println("Contracting");
-			grabber.setLeftArm(Position.contracted);
-			grabber.setRightArm(Position.contracted);
-
-			if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
+			else if (dropping)
 			{
-				hasPrismTimer = AUTO_GRAB_TIME + AUTO_GRAB_HOLD_TIME;
-				grabber.setWheels(wheelSpeed, wheelJank);
+				holding = false;
+				
+				++dropTimer;
+				if(dropTimer > DROP_TIME)
+				{
+					dropTimer = 0;
+					dropping = false;
+				}
 			}
 			else
-				grabber.setWheels(0, 0);
-		}
-		else if (armsAreClosing(left, right))
-			grabber.intake();
-		else if (xbox.getBumperPressed(ejectSide))
-		{
-			grabber.extake();
-			hasPrismTimer = -INITIAL_EJECTION_TIME;
+			{
+				pushingCubeTimer = Math.max(pushingCubeTimer - AUTO_GRAB_DECAY_RATE, 0);
+				autoWheelSpeed = -1;
+			}
 		}
 		else
 		{
+			overridingDriver = false;
+			overrideDriverTimer = 0;
+			dropping = false;
+			dropTimer = 0;
+			
+			if (xbox.getBumperPressed(ejectSide))
+			{
+				holding = false;
+				grabber.extake();
+			}
+			
+			if (grabber.hasPrism() && !grabber.isExtaking())
+				holding = true;
+			else
+			{
+				if (holding)
+					grabber.intake();
+				
+				holding = false;
+				
+				if (open())
+					grabber.intake();
+			}
+		}
+		
+		if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
+			grabber.setWheels(wheelSpeed, wheelJank);
+		else
+			grabber.setWheels(autoWheelSpeed, 0);
+		
+		if (overridingDriver)
+		{
+			xbox.setRumble(RumbleType.kLeftRumble, 1);
+			xbox.setRumble(RumbleType.kRightRumble, 1);
+			
+			grabber.setLeftArm(Position.contracted);
+			grabber.setRightArm(Position.contracted);
+		}
+		else
+		{
+			xbox.setRumble(RumbleType.kLeftRumble, 0);
+			xbox.setRumble(RumbleType.kRightRumble, 0);
+			
 			grabber.setLeftArm(left);
 			grabber.setRightArm(right);
-
-			if (open())
-				if (RobotMath.oneNonZero(wheelSpeed, wheelJank))
-					grabber.setWheels(wheelSpeed, wheelJank);
-				else if (hasPrismTimer == 0)
-					grabber.setWheels(-1, 0);
-				else
-					grabber.setWheels(0, 0);
-			else
-				grabber.setWheels(wheelSpeed, wheelJank);
 		}
-
+		
+//		System.out.println("*");
+//		System.out.println("Holding: " + holding);
+//		System.out.println("Pushing Cube Timer: " + pushingCubeTimer);
+//		System.out.println("Overriding Driver: " + overridingDriver);
+//		System.out.println("Override Driver Timer: " + overrideDriverTimer);
+//		System.out.println("Dropping: " + dropping);
+//		System.out.println("Drop Timer: " + dropTimer);
+//		System.out.println("*");
+		
 		if(xbox.getAButtonPressed())
 			grabber.setRaised(!grabber.isRaised());
 		
 		if (xbox.getBackButton())
 			grabber.cancelAutomaticMovement();
-	}
-
-	private Position getGrabberArmPosition(Hand hand)
-	{
-		return getGrabberArmPosition(xbox.getTriggerAxis(hand));
 	}
 
 	private static Position getGrabberArmPosition(double axis)
@@ -131,26 +192,33 @@ public class ControlGrabberWithXbox extends ControlScheme
 
 		return Position.values()[posNum];
 	}
-
-	private boolean armsAreClosing(Position newLeftArmPosition, Position newRightArmPosition)
+	
+	private Position getGrabberArmPosition(Hand hand)
 	{
-		if (newLeftArmPosition != Position.contracted)
-			return false;
-
-		if (newRightArmPosition != Position.contracted)
-			return false;
-
-		return open();
+		return getGrabberArmPosition(xbox.getTriggerAxis(hand));
 	}
 
+	private static boolean open(Position left, Position right)
+	{
+		if (left != Position.contracted)
+			return true;
+		
+		if (right != Position.contracted)
+			return true;
+		
+		return false;
+	}
+	
 	private boolean open()
 	{
-		if (grabber.getLeftArmPosition() != Position.contracted)
-			return true;
-
-		if (grabber.getRightArmPosition() != Position.contracted)
-			return true;
-
-		return false;
+		return open(grabber.getLeftArmPosition(), grabber.getRightArmPosition());
+	}
+	
+	private boolean armsAreClosing(Position newLeftArmPosition, Position newRightArmPosition)
+	{
+		if (open(newLeftArmPosition, newRightArmPosition))
+			return false;
+		
+		return open();
 	}
 }

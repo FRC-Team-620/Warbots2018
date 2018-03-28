@@ -25,7 +25,7 @@ public class GrabberWheelsHardware extends CommandModule implements PerpetualCom
 		rightWheels = new Spark(rightWheelsPort);
 		cubeLimitSwitch = new DigitalInput(cubeLimitSwitchPort);
 		
-		left = new DoubleDerivativeOutputSmoother(1, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		left = new DoubleDerivativeOutputSmoother(.5, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
 		right = left.clone();
 	}
 	

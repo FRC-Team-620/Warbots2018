@@ -32,7 +32,20 @@ public class JunElevatorControl extends ControlScheme
 		if(xbox.getXButtonPressed())
 			elevator.setPneumatics(false);
 		
-		if(xbox.getBButtonPressed())
-			elevator.goToRaw(7500, false);
+		switch (xbox.getPOV())
+		{
+			case 0:
+				elevator.goToRaw(11000);
+				break;
+				
+			case 2:
+			case 6:
+				elevator.goToRaw(7500);
+				break;
+				
+			case 4:
+				elevator.goToRaw(100);
+				break;
+		}
 	}
 }

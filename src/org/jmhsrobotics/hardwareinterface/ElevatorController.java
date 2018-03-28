@@ -43,6 +43,12 @@ public interface ElevatorController
 	public boolean onTarget();
 	public Position getCurrentLifterPosition();
 	public void goToRaw(int linearHeight, boolean raisePneumatics);
+	
+	public default void goToRaw(int linearHeight)
+	{
+		goToRaw(linearHeight, isPneumaticsExtended());
+	}
+	
 	public void manualDrive(double speed);
 	public void setPneumatics(boolean extended);
 	public boolean isPneumaticsExtended();
