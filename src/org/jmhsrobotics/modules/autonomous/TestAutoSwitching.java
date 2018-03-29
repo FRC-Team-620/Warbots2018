@@ -3,15 +3,21 @@ package org.jmhsrobotics.modules.autonomous;
 import java.util.Optional;
 
 import org.jmhsrobotics.core.modulesystem.Submodule;
+import org.jmhsrobotics.modules.autonomous.AutoPlan.FieldLayout;
+import org.jmhsrobotics.modules.autonomous.AutoPlan.StartingPosition;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class TestAutoSwitching extends AutoPlan
 {
-	private @Submodule CenterSwitchAutonomous strategyCenter;
-	private @Submodule SidePreferentialSwitchAutonomous strategySameSide;
-	private @Submodule SideAltSwitchAutonomous strategyAltSide;
+private @Submodule CenterSwitchAutonomous strategyCenter;
+	
+	private @Submodule SidePreferentialScalePreferentialSwitchAutonomous strategySpp;
+	private @Submodule SidePreferentialScaleAltSwitchAutonomous strategySpa;
+	private @Submodule SideAltScalePreferentialSwitchAutonomous strategySap;
+	private @Submodule SideAltScaleAltSwitchAutonomous strategySaa;
+	
 	private @Submodule CrossAutoLineAutonomous strategyError;
 
 	private Optional<AutonomousCommand> currentAuto;
@@ -28,42 +34,54 @@ public class TestAutoSwitching extends AutoPlan
 		{
 			FieldLayout fieldLayout = readFieldLayout();
 			StartingPosition position = getStartingPosition();
-			boolean onLeft = fieldLayout.isSwitchOnLeft();
+			boolean switchOnLeft = fieldLayout.isSwitchOnLeft();
+			boolean scaleOnLeft = fieldLayout.isScaleOnLeft();
 
-			System.out.println("Switch On Left: " + fieldLayout.isSwitchOnLeft());
-			System.out.println("Starting Position: " + position);
-			
 			AutonomousCommand auto;
 			switch (position)
 			{
 				case center:
-					if (onLeft)
+					if (switchOnLeft)
 						auto = strategyCenter;
 					else
 						auto = strategyCenter.flipField();
 					break;
 				case left:
-					if (onLeft)
-						auto = strategySameSide;
+					if (scaleOnLeft)
+						if (switchOnLeft)
+							auto = strategySpp;
+						else
+							auto = strategySpa;
 					else
-						auto = strategyAltSide;
+						if (switchOnLeft)
+							auto = strategySap;
+						else
+							auto = strategySaa;
 					break;
 				case right:
-					if (onLeft)
-						auto = strategyAltSide.flipField();
+					if (scaleOnLeft)
+						if (switchOnLeft)
+							auto = strategySaa.flipField();
+						else
+							auto = strategySap.flipField();
 					else
-						auto = strategySameSide.flipField();
+						if (switchOnLeft)
+							auto = strategySpa.flipField();
+						else
+							auto = strategySpp.flipField();
 					break;
 				default:
 					auto = strategyError;
 					break;
 			}
-			
-			System.out.println("Selected auto: " + auto);
+			currentAuto = Optional.of(auto);
+			auto.start();
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			strategyError.start();
+			currentAuto = Optional.of(strategyError);
 		}
 	}
 

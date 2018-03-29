@@ -10,8 +10,8 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 public class ScaleAutoSwitcher extends AutoPlan
 {
 	private @Submodule CenterScaleAutonomous strategyCenter;
-	private @Submodule SideAltScaleAutonomous strategySameSide;
-	private @Submodule SidePreferentialScaleAutonomous strategyAltSide;
+	private @Submodule SideAltScaleAutonomous strategyAltSide;
+	private @Submodule SidePreferentialScaleAutonomous strategySameSide;
 	private @Submodule CrossAutoLineAutonomous strategyError;
 
 	private Optional<AutonomousCommand> currentAuto;
@@ -34,7 +34,7 @@ public class ScaleAutoSwitcher extends AutoPlan
 			switch (position)
 			{
 				case center:
-					if (onLeft)
+					if (fieldLayout.isSwitchOnLeft())
 						auto = strategyCenter;
 					else
 						auto = strategyCenter.flipField();

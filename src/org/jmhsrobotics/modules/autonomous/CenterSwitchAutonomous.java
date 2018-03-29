@@ -22,7 +22,8 @@ public class CenterSwitchAutonomous extends AutonomousCommand
 		
 		strategy.addSequential(prepareToEject);
 		
-		strategy.addSequential(new TimedDrive(2));
-		strategy.addSequential(new CubeDrop());		
+		strategy.addSequential(new TimedDrive(1.5));
+		strategy.addSequential(new CubeEject());
+		strategy.addSequential(new CubeDrop());
 	}
 }

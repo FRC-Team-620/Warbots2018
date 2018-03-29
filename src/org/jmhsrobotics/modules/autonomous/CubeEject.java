@@ -5,23 +5,17 @@ import org.jmhsrobotics.hardwareinterface.GrabberController;
 
 public class CubeEject extends PathNode
 {
-private @Submodule GrabberController grabber;
+	private @Submodule GrabberController grabber;
 	
 	@Override
-	protected void execute()
+	protected void initialize()
 	{
-		grabber.setWheels(1, 0);
+		grabber.extake();
 	}
 	
 	@Override
 	protected boolean isFinished()
 	{
-		return timeSinceInitialized() > 1.5;
-	}
-	
-	@Override
-	protected void end()
-	{
-		grabber.setWheels(0, 0);
+		return !grabber.isExtaking();
 	}
 }

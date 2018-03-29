@@ -33,11 +33,15 @@ import org.jmhsrobotics.modules.autonomous.AutoPlan;
 import org.jmhsrobotics.modules.autonomous.CenterScaleAutonomous;
 import org.jmhsrobotics.modules.autonomous.CenterSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.CrossAutoLineAutonomous;
+import org.jmhsrobotics.modules.autonomous.SideAltScaleAltSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.SideAltScaleAutonomous;
+import org.jmhsrobotics.modules.autonomous.SideAltScalePreferentialSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.SideAltSwitchAutonomous;
+import org.jmhsrobotics.modules.autonomous.SidePreferentialScaleAltSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.SidePreferentialScaleAutonomous;
+import org.jmhsrobotics.modules.autonomous.SidePreferentialScalePreferentialSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.SidePreferentialSwitchAutonomous;
-import org.jmhsrobotics.modules.autonomous.SwitchAutoSwitcher;
+import org.jmhsrobotics.modules.autonomous.TwoPrismAutoSwitcher;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
@@ -131,12 +135,18 @@ public class Robot extends HybridRobot
 		modules.addModule(new SideAltScaleAutonomous());
 		modules.addModule(new SidePreferentialScaleAutonomous());
 		
+		modules.addModule(new SidePreferentialScalePreferentialSwitchAutonomous());
+		modules.addModule(new SideAltScalePreferentialSwitchAutonomous());
+		modules.addModule(new SideAltScaleAltSwitchAutonomous());
+		modules.addModule(new SidePreferentialScaleAltSwitchAutonomous());
+		
 		modules.addModule(new CrossAutoLineAutonomous());
 		
 //		modules.addModule(autonomous = new StrategyTestAutoSwitcher(new TestCubePickupAutonomous()));
 //		modules.addModule(autonomous = new TestAutoSwitching());
-		modules.addModule(autonomous = new SwitchAutoSwitcher());
+//		modules.addModule(autonomous = new SwitchAutoSwitcher());
 //		modules.addModule(autonomous = new ScaleAutoSwitcher());
+		modules.addModule(autonomous = new TwoPrismAutoSwitcher());
 		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");
 	}
