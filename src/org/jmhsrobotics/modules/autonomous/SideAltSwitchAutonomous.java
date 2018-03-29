@@ -7,7 +7,9 @@ public class SideAltSwitchAutonomous extends AutonomousCommand
 {
 	@Override
 	public void loadPath(AutoStrategy strategy)
-	{
+	{	
+		Point origin = AutonomousCommand.getLeftOrigin();
+		
 		AutoStrategy prepareToEject = strategy.createBranch();
 		
 		AutoStrategy prepareGrabber = prepareToEject.createBranch();

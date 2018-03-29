@@ -4,6 +4,8 @@ import java.awt.geom.AffineTransform;
 
 import org.jmhsrobotics.core.modulesystem.CommandGroupModule;
 import org.jmhsrobotics.core.modulesystem.Sublinker;
+import org.jmhsrobotics.core.util.Point;
+import org.jmhsrobotics.modules.autonomous.AutoPlan.StartingPosition;
 
 public abstract class AutonomousCommand extends CommandGroupModule
 {
@@ -29,4 +31,14 @@ public abstract class AutonomousCommand extends CommandGroupModule
 	}
 	
 	protected abstract void loadPath(AutoStrategy strategy);
+	
+	public final static Point getLeftOrigin()
+	{
+		return new Point(0, 0);
+	}
+	
+	public final static Point getCenterOrigin()
+	{
+		return new Point(0, 0);
+	}
 }
