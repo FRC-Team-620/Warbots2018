@@ -9,6 +9,6 @@ public class TestCubePickupAutonomous extends AutonomousCommand
 	{
 		strategy.addSequential(new SetGrabberRaised(false));
 		strategy.addSequential(new TestPathNode("soup", 1));
-		strategy.addSequential(new PickUpCube(new Point(0, 60)));
+		strategy.addSequential(new PickUpCube(new Point(0, 101.5)));
 	}
 }

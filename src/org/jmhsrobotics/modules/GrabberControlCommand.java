@@ -39,8 +39,6 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 	@Override
 	protected void execute()
 	{
-		System.out.println("Has prism: " + wheels.hasPrism());
-		
 		if (intakeTimer > -1)
 		{
 			++intakeTimer;
