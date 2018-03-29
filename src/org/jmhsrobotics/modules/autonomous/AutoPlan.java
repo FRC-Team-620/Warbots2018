@@ -50,6 +50,7 @@ public abstract class AutoPlan implements Module
 		startingPosition.addDefault("Center", StartingPosition.center);
 		startingPosition.addObject("Left", StartingPosition.left);
 		startingPosition.addObject("Right", StartingPosition.right);
+		startingPosition.addObject("Cross Auto Line", null);
 		SmartDashboard.putData("Starting Position", startingPosition);
 	}
 	

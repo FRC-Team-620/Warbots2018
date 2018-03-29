@@ -3,7 +3,7 @@ package org.jmhsrobotics.modules.autonomous;
 import org.jmhsrobotics.core.util.Angle;
 import org.jmhsrobotics.core.util.Point;
 
-public class SidePreferentialScaleAltSwitch extends SidePreferentialScaleAutonomous
+public class SidePreferentialScaleAltSwitchAutonomous extends SidePreferentialScaleAutonomous
 {
 	@Override
 	protected void loadPath(AutoStrategy strategy)

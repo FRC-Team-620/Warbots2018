@@ -7,6 +7,6 @@ public class CrossAutoLineAutonomous extends AutonomousCommand
 	@Override
 	protected void loadPath(AutoStrategy strategy)
 	{
-		strategy.addSequential(new Point(Double.POSITIVE_INFINITY, 0), 0);
+		strategy.addSequential(new Point(30, 100), 0);
 	}
 }
