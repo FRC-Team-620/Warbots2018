@@ -34,7 +34,7 @@ public abstract class AutonomousCommand extends CommandGroupModule
 	
 	public final static Point getLeftOrigin()
 	{
-		return new Point(0, 0);
+		return new Point(96.262, 304);
 	}
 	
 	public final static Point getCenterOrigin()
