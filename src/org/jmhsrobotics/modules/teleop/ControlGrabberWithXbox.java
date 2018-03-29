@@ -213,12 +213,4 @@ public class ControlGrabberWithXbox extends ControlScheme
 	{
 		return open(grabber.getLeftArmPosition(), grabber.getRightArmPosition());
 	}
-	
-	private boolean armsAreClosing(Position newLeftArmPosition, Position newRightArmPosition)
-	{
-		if (open(newLeftArmPosition, newRightArmPosition))
-			return false;
-		
-		return open();
-	}
 }
