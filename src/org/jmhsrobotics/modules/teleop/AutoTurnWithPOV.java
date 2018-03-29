@@ -23,6 +23,6 @@ public class AutoTurnWithPOV extends ControlScheme
 	{
 		int pov = xbox.getPOV();
 		if(pov != -1)
-			drive.setRelativeTarget(Angle.fromTurns((double) pov / 8));
+			drive.setRelativeTarget(Angle.fromDegrees(pov));
 	}
 }

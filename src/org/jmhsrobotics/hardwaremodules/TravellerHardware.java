@@ -78,7 +78,7 @@ public class TravellerHardware extends PlainSendable implements Module, Travelle
 		motor.config_IntegralZone(0, integralZone, 0);
 		motor.configAllowableClosedloopError(0, maxError, 0);
 		motor.configClosedloopRamp(rampRate, 0);
-		motor.configClosedLoopPeakOutput(0, maxOutput, 0);
+//		motor.configClosedLoopPeakOutput(0, maxOutput, 0);
 	}
 
 	@Override

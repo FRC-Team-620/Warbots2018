@@ -38,12 +38,12 @@ public class JunElevatorControl extends ControlScheme
 				elevator.goToRaw(11000);
 				break;
 				
-			case 2:
-			case 6:
+			case 90:
+			case 270:
 				elevator.goToRaw(7500);
 				break;
 				
-			case 4:
+			case 180:
 				elevator.goToRaw(100);
 				break;
 		}

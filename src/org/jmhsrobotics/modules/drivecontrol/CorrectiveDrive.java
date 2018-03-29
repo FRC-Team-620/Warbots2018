@@ -148,6 +148,13 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	}
 	
 	@Override
+	public void setOvershootTarget(Point point, double overshoot, boolean reverse)
+	{
+		Point target = point.plus(new Point(overshoot, localization.getAngleTo(point)));
+		setTarget(target, reverse);
+	}
+	
+	@Override
 	public void setTarget(Angle angle)
 	{
 		if(angle == null)

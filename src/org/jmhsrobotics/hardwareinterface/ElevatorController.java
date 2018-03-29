@@ -46,6 +46,7 @@ public interface ElevatorController
 	
 	public default void goToRaw(int linearHeight)
 	{
+		System.out.println("Going To " + linearHeight);
 		goToRaw(linearHeight, isPneumaticsExtended());
 	}
 	
