@@ -16,13 +16,13 @@ public class SidePreferentialScaleAutonomous extends AutonomousCommand
 		strategy.addSequential(thePoint, 8);
 		
 		AutoStrategy turnAndRaise = prepareToEject.createBranch();
-		turnAndRaise.addParallel(new TurnTo(Angle.INVERSE_RIGHT, Angle.fromDegrees(10)));
 		turnAndRaise.addParallel(new MoveElevator(11000, true));
+		turnAndRaise.addParallel(new TurnTo(Angle.RIGHT, Angle.fromDegrees(10)));
 		strategy.addSequential(turnAndRaise);
 		
 		strategy.addSequential(prepareToEject);
 		
-		strategy.addSequential(thePoint.plus(new Point(8, 0)), 6);
+		strategy.addSequential(thePoint.plus(new Point(35, 0)), 10);
 		strategy.addSequential(new CubeEject());
 	}
 }

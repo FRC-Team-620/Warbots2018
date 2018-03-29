@@ -243,7 +243,6 @@ public class ElevatorControlCommand extends CommandModule implements PerpetualCo
 				
 				speed = RobotMath.constrain(speed, lowerSpeedConstraint, upperSpeedConstraint);
 				
-				System.out.println("Driving " + speed);
 				traveller.drive(speed);
 			}
 		}

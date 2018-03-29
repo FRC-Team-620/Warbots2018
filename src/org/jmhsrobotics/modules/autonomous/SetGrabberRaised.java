@@ -12,6 +12,7 @@ public class SetGrabberRaised extends PathNode
 	public SetGrabberRaised(boolean raised)
 	{
 		this.raised = raised;
+		this.raised = true; //TODO delete this
 	}
 	
 	@Override

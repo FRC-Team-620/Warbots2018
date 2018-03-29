@@ -22,6 +22,7 @@ import org.jmhsrobotics.hardwaremodules.GrabberWheelsHardware;
 import org.jmhsrobotics.hardwaremodules.NavXHardware;
 import org.jmhsrobotics.hardwaremodules.PWMDriveTrainHardware;
 import org.jmhsrobotics.hardwaremodules.PneumaticCompressor;
+import org.jmhsrobotics.hardwaremodules.PressureSensor;
 import org.jmhsrobotics.hardwaremodules.TowerHardware;
 import org.jmhsrobotics.hardwaremodules.TravellerHardware;
 import org.jmhsrobotics.hardwaremodules.WheelEncodersHardware;
@@ -30,18 +31,13 @@ import org.jmhsrobotics.modules.GrabberControlCommand;
 import org.jmhsrobotics.modules.NormalizeDriveTrain;
 import org.jmhsrobotics.modules.PersistantDataModule;
 import org.jmhsrobotics.modules.autonomous.AutoPlan;
-import org.jmhsrobotics.modules.autonomous.CenterScaleAutonomous;
 import org.jmhsrobotics.modules.autonomous.CenterSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.CrossAutoLineAutonomous;
-import org.jmhsrobotics.modules.autonomous.SideAltScaleAltSwitchAutonomous;
+import org.jmhsrobotics.modules.autonomous.ScaleAutoSwitcher;
 import org.jmhsrobotics.modules.autonomous.SideAltScaleAutonomous;
-import org.jmhsrobotics.modules.autonomous.SideAltScalePreferentialSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.SideAltSwitchAutonomous;
-import org.jmhsrobotics.modules.autonomous.SidePreferentialScaleAltSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.SidePreferentialScaleAutonomous;
-import org.jmhsrobotics.modules.autonomous.SidePreferentialScalePreferentialSwitchAutonomous;
 import org.jmhsrobotics.modules.autonomous.SidePreferentialSwitchAutonomous;
-import org.jmhsrobotics.modules.autonomous.TwoPrismAutoSwitcher;
 import org.jmhsrobotics.modules.drivecontrol.CorrectiveDrive;
 import org.jmhsrobotics.modules.drivecontrol.LinearAccelRiemannInterpolator;
 import org.jmhsrobotics.modules.drivecontrol.Localization;
@@ -92,6 +88,8 @@ public class Robot extends HybridRobot
 		modules.addModule(new WheelEncodersHardware(2, 3, true, 0, 1, false)); //TODO Real bot
 //		modules.addModule(new WheelEncodersHardware(0, 1, true, 2, 3, false)); //Test bot
 		
+		modules.addModule(new PressureSensor(0));
+		
 		modules.addModule(new NavXHardware(SPI.Port.kMXP));
 
 		modules.addModule(new PersistantDataModule());
@@ -131,22 +129,21 @@ public class Robot extends HybridRobot
 		modules.addModule(new SideAltSwitchAutonomous());
 		modules.addModule(new SidePreferentialSwitchAutonomous());
 		
-		modules.addModule(new CenterScaleAutonomous());
 		modules.addModule(new SideAltScaleAutonomous());
 		modules.addModule(new SidePreferentialScaleAutonomous());
 		
-		modules.addModule(new SidePreferentialScalePreferentialSwitchAutonomous());
-		modules.addModule(new SideAltScalePreferentialSwitchAutonomous());
-		modules.addModule(new SideAltScaleAltSwitchAutonomous());
-		modules.addModule(new SidePreferentialScaleAltSwitchAutonomous());
+//		modules.addModule(new SidePreferentialScalePreferentialSwitchAutonomous());
+//		modules.addModule(new SideAltScalePreferentialSwitchAutonomous());
+//		modules.addModule(new SideAltScaleAltSwitchAutonomous());
+//		modules.addModule(new SidePreferentialScaleAltSwitchAutonomous());
 		
 		modules.addModule(new CrossAutoLineAutonomous());
 		
 //		modules.addModule(autonomous = new StrategyTestAutoSwitcher(new TestCubePickupAutonomous()));
 //		modules.addModule(autonomous = new TestAutoSwitching());
 //		modules.addModule(autonomous = new SwitchAutoSwitcher());
-//		modules.addModule(autonomous = new ScaleAutoSwitcher());
-		modules.addModule(autonomous = new TwoPrismAutoSwitcher());
+		modules.addModule(autonomous = new ScaleAutoSwitcher());
+//		modules.addModule(autonomous = new TwoPrismAutoSwitcher());
 		
 		System.out.println("Built and linked all modules in " + (System.nanoTime() - time) / 1E9 + " seconds.");
 	}

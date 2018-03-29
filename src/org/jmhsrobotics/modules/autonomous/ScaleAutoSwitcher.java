@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.command.InstantCommand;
 
 public class ScaleAutoSwitcher extends AutoPlan
 {
-	private @Submodule CenterScaleAutonomous strategyCenter;
+	private @Submodule CenterSwitchAutonomous strategyCenter;
 	private @Submodule SideAltScaleAutonomous strategyAltSide;
 	private @Submodule SidePreferentialScaleAutonomous strategySameSide;
 	private @Submodule CrossAutoLineAutonomous strategyError;
@@ -47,9 +47,9 @@ public class ScaleAutoSwitcher extends AutoPlan
 					break;
 				case right:
 					if (onLeft)
-						auto = strategySameSide.flipField();
-					else
 						auto = strategyAltSide.flipField();
+					else
+						auto = strategySameSide.flipField();
 					break;
 				default:
 					auto = strategyError;
@@ -64,6 +64,8 @@ public class ScaleAutoSwitcher extends AutoPlan
 			strategyError.start();
 			currentAuto = Optional.of(strategyError);
 		}
+		
+		System.out.println("Ran Auto: " + currentAuto);
 	}
 
 	public void cancel()

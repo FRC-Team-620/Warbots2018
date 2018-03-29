@@ -10,12 +10,12 @@ public class SideAltScaleAutonomous extends AutonomousCommand
 	{
 		AutoStrategy prepareToEject = strategy.createBranch();
 		
-		prepareToEject.addParallel(new SetGrabberRaised(false));
+		prepareToEject.addParallel(new SetGrabberRaised(true));
 
 		Point firstCorner = new Point(217.2, Angle.fromDegrees(0));
 		strategy.addSequential(firstCorner, 12);
 		
-		Point secondCorner = firstCorner.plus(new Point(204.9, Angle.RIGHT));
+		Point secondCorner = firstCorner.plus(new Point(240, Angle.RIGHT));
 		strategy.addSequential(secondCorner, 30);
 		
 		Point nextToScale = secondCorner.plus(new Point(89, Angle.fromDegrees(0)));
@@ -27,6 +27,10 @@ public class SideAltScaleAutonomous extends AutonomousCommand
 		strategy.addSequential(turnAndRaise);
 		
 		strategy.addSequential(prepareToEject);
+		
+		strategy.addSequential(nextToScale.plus(new Point(-12, 0)), 6);
+		
+		strategy.addSequential(new SetGrabberRaised(false));
 		
 		strategy.addSequential(new CubeEject());
 	}

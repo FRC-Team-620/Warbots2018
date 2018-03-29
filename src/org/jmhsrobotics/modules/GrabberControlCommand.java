@@ -75,7 +75,8 @@ public class GrabberControlCommand extends CommandModule implements GrabberContr
 		else
 			wheels.set(wheelSpeed, wheelJank);
 
-		pneumatics.setRaised(raise);
+		pneumatics.setRaised(raise); //TODO replace this
+//		pneumatics.setRaised(true);
 		pneumatics.setLeftWristContracted(lw);
 		pneumatics.setRightWristContracted(rw);
 		pneumatics.setLeftArmContracted(la);

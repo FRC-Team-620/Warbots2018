@@ -11,12 +11,12 @@ public class CenterSwitchAutonomous extends AutonomousCommand
 		AutoStrategy prepareToEject = strategy.createBranch();
 		
 		AutoStrategy prepareGrabber = prepareToEject.createBranch();
-		prepareGrabber.addSequential(new MoveElevator(7000, false));
+		prepareGrabber.addSequential(new MoveElevator(7500, false));
 		prepareGrabber.addSequential(new SetGrabberRaised(false));
 		
 		prepareToEject.addParallel(prepareGrabber);
 		
-		Point firstTarget = new Point(116.306, Angle.fromDegrees(30.3)).plus(new Point(12, -12));
+		Point firstTarget = new Point(116.306, Angle.fromDegrees(-30.3)).plus(new Point(12, -12));
 		prepareToEject.addSequential(firstTarget, 20);
 		prepareToEject.addSequential(Angle.ZERO, Angle.fromDegrees(10));
 		

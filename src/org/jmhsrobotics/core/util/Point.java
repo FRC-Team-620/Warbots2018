@@ -12,7 +12,7 @@ public class Point
 	
 	public Point(double r, Angle theta)
 	{
-		this(-r * theta.sin(), r * theta.cos());
+		this(r * theta.sin(), r * theta.cos());
 	}
 	
 	public double getX()

@@ -132,11 +132,11 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	
 	@Override
 	public void setTarget(Point point, boolean reverse)
-	{
+	{	
 		if(point == null)
 			throw new NullPointerException();
 		
-		System.out.println("Setting target to: " + point + (reverse ? " in reverse" : ""));
+		System.out.println("Setting target to: " + point + (reverse ? " in reverse" : "") + " " + System.nanoTime());
 		targetReverse = reverse;
 		targetPoint = Optional.of(point);
 	}
@@ -207,7 +207,7 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 	@Override
 	public void reset()
 	{
-		System.out.println("Resetting corrective drive");
+		System.out.println("Resetting corrective drive " + System.nanoTime());
 		targetPoint = Optional.empty();
 		targetAngle = Optional.empty();
 	}
