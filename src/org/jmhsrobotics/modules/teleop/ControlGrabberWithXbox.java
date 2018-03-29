@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 
 public class ControlGrabberWithXbox extends ControlScheme
 {
-	private final static int AUTO_GRAB_TIME = 10;
+	private final static int AUTO_GRAB_TIME = 3;
 	private final static int AUTO_GRAB_HOLD_TIME = 200;
 	private final static int AUTO_GRAB_DECAY_RATE = 2;
 	private final static int DROP_TIME = 50;
