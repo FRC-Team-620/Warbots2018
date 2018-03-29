@@ -17,15 +17,14 @@ public class SideAltSwitchAutonomous extends AutonomousCommand
 		prepareGrabber.addSequential(new SetGrabberRaised(false));
 		prepareToEject.addParallel(prepareGrabber);
 		
-		prepareToEject.addSequential(origin.plus(new Point(134, 88.75)), 30);
-		prepareToEject.addSequential(origin.plus(new Point(100, 88.75)), 15);
-		prepareToEject.addSequential(origin.plus(new Point(-55.36, 92.23)), 8);
+		prepareToEject.addSequential(origin.plus(new Point(-134, -88.75)), 30);
+		prepareToEject.addSequential(origin.plus(new Point(-100, -88.75)), 15);
+		prepareToEject.addSequential(origin.plus(new Point(55.36, -92.23)), 8);
 		prepareToEject.addSequential(Angle.REVERSE, Angle.fromDegrees(5));
-		prepareToEject.addSequential(origin.plus(new Point(-55.36, 109.25)), 6);
+		prepareToEject.addSequential(origin.plus(new Point(55.36, -109.25)), 6);
 		
 		strategy.addSequential(prepareToEject);
 		
-		strategy.addSequential(new TimedDrive(2));
 		strategy.addSequential(new CubeEject());
 	}
 }
