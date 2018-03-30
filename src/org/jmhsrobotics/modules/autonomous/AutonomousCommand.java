@@ -30,7 +30,7 @@ public abstract class AutonomousCommand extends CommandGroupModule
 	{
 		AutoStrategy path = new AutoStrategy(this, transform, linker);
 		System.out.println("Calling loadPath");
-		path.addSequential(new ConfigureDriveSpeed(new ConstraintOutputSmoother(1), new ConstraintOutputSmoother(1)));
+		path.addSequential(new ConfigureDriveSpeed(new ConstraintOutputSmoother(0.5), new ConstraintOutputSmoother(0.5)));
 		loadPath(path);
 		path.addSequential(new ConfigureDriveSpeed(null, null));
 	}
