@@ -16,6 +16,14 @@ public class TimedDrive extends PathNode
 	}
 	
 	@Override
+	protected void initialize()
+	{
+		System.out.println("Starting Timed Drive");
+		// TODO Auto-generated method stub
+		super.initialize();
+	}
+	
+	@Override
 	protected void execute()
 	{
 		drive.drive(.7, Angle.ZERO);

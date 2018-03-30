@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CorrectiveDrive extends DriveController implements PerpetualCommand
 {
-	private final static OutputSmoother DEFAULT_SPEED_SMOOTHER = new ConstraintOutputSmoother(1);
-	private final static OutputSmoother DEFAULT_TURN_SMOOTHER = new ConstraintOutputSmoother(1);
+	private final OutputSmoother DEFAULT_SPEED_SMOOTHER = new ConstraintOutputSmoother(1);
+	private final OutputSmoother DEFAULT_TURN_SMOOTHER = new ConstraintOutputSmoother(1);
 	
 	private @Submodule Optional<SubsystemManager> subsystems;
 	private @Submodule Localization localization;
@@ -43,7 +43,7 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		turn = DEFAULT_TURN_SMOOTHER;
 		
 		angleSensor = PIDSensor.fromDispAndRate(localization::getAngleDegrees, localization::getDegreesPerSecond);
-		angleController = new PIDCalculator(0.035, 0, 10, angleSensor, turn::setTarget);
+		angleController = new PIDCalculator(0.035, 0, 10, angleSensor, o -> turn.setTarget(o));
 		angleController.setInputRange(0, 360);
 		angleController.setContinuous();
 		angleController.setOutputRange(-1, 1);
@@ -232,6 +232,9 @@ public class CorrectiveDrive extends DriveController implements PerpetualCommand
 		
 		speed.update();
 		turn.update();
+		
+		System.out.println("Target: " + targetPoint + " Target Angle: " + targetAngle);
+		System.out.println("Speed Constraint: " + speed + "> " + speed.get() + " Turn Constraint: " + turn + "> " + turn.get());
 		
 		driveRaw(speed.get(), turn.get());
 	}
