@@ -153,7 +153,7 @@ public class Robot extends HybridRobot
 	{
 		modules.getModule(GrabberController.class).get().setRaised(false);
 		activate();
-		autonomous.start();
+		autonomous.start();//TODO Turn off auto 
 	}
 
 	@Override
