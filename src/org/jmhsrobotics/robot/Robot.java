@@ -120,8 +120,10 @@ public class Robot extends HybridRobot
 		modules.addModule(new MoveAndClimbWithXbox(driverController, Hand.kLeft));
 		modules.addModule(new AutoTurnWithPOV(driverController));
 
-		XboxController coDriverController = new XboxController(1);
-		modules.addModule(new ControlGrabberWithXbox(coDriverController, Hand.kLeft, Hand.kLeft));
+//		XboxController coDriverController = new XboxController(1);
+		XboxController coDriverController = driverController;
+//		modules.addModule(new ControlGrabberWithXbox(coDriverController, Hand.kLeft, Hand.kLeft));
+		modules.addModule(new ControlGrabberWithXbox(coDriverController, null, Hand.kLeft));
 //		modules.addModule(new SeanElevatorControl(coDriverController, Hand.kRight));
 		modules.addModule(new JunElevatorControl(coDriverController, Hand.kRight));
 		
@@ -151,9 +153,9 @@ public class Robot extends HybridRobot
 	@Override
 	public void autonomousInit()
 	{
-		modules.getModule(GrabberController.class).get().setRaised(false);
+//		modules.getModule(GrabberController.class).get().setRaised(false);
 		activate();
-		autonomous.start();//TODO Turn off auto 
+//		autonomous.start();//TODO Turn off auto 
 	}
 
 	@Override

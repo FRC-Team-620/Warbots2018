@@ -23,8 +23,11 @@ public class JunElevatorControl extends ControlScheme
 	@Override
 	protected void execute()
 	{
-		double y = -deadZone(xbox.getY(hand), .2, .1);
-		elevator.manualDrive(y);
+		if (hand != null)
+		{
+			double y = -deadZone(xbox.getY(hand), .2, .1);
+			elevator.manualDrive(y);
+		}
 		
 		if(xbox.getBumperPressed(Hand.kRight))
 			elevator.setPneumatics(true);
